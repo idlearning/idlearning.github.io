@@ -1,8 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { Page, PageHeading } from "../components/Page";
+import { useT } from "../lib/i18n";
 import { getSortedNews, NEWS_IMG_DEFAULT, NEWS_WRAP_DEFAULT } from "../data/news";
 
-export const Route = createFileRoute("/news")({
+export const Route = createFileRoute("/news/")({
   head: () => ({
     meta: [
       { title: "News — IDL Lab" },
@@ -25,31 +27,32 @@ export const Route = createFileRoute("/news")({
 });
 
 function NewsPage() {
+  const t = useT();
   const news = getSortedNews();
 
   return (
-    <main className="pb-20 pt-12 px-8 max-w-7xl mx-auto">
-      <section className="mb-8">
-        <h1 className="text-3xl font-bold text-idl-blue mb-8">News</h1>
-      </section>
+    <Page>
+      <PageHeading>{t.news.title}</PageHeading>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {news.map((item) => (
-          <article
-            key={`${item.title}-${item.date}`}
-            className="bg-white rounded-lg overflow-hidden border border-gray-100 shadow-sm flex flex-col h-full hover:shadow-md transition-shadow"
+          <Link
+            key={item.slug}
+            to="/news/$slug"
+            params={{ slug: item.slug }}
+            className="group bg-card rounded-lg overflow-hidden border border-border shadow-sm flex flex-col h-full hover:shadow-md hover:border-idl-blue/40 transition-all"
           >
             <div className={item.wrapClass ?? NEWS_WRAP_DEFAULT}>
               <img alt={item.title} className={item.imgClass ?? NEWS_IMG_DEFAULT} src={item.img} />
             </div>
             <div className="p-4 flex flex-col flex-grow justify-between">
-              <h2 className="text-sm font-bold text-center mb-4 line-clamp-2 leading-tight">
+              <h2 className="text-sm font-bold text-center mb-4 line-clamp-2 leading-tight text-text-main group-hover:text-idl-blue transition-colors">
                 {item.title}
               </h2>
-              <time className="text-xs text-gray-400 block mt-auto">{item.date}</time>
+              <time className="text-xs text-text-muted block mt-auto text-center">{item.date}</time>
             </div>
-          </article>
+          </Link>
         ))}
       </div>
-    </main>
+    </Page>
   );
 }

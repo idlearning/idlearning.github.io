@@ -1,47 +1,105 @@
 import { Link } from "@tanstack/react-router";
+import { Languages, Menu, Moon, Sun, X } from "lucide-react";
+import { useState } from "react";
+
+import { useT } from "../lib/i18n";
+import { usePreferences } from "../lib/preferences";
 
 const LOGO_URL =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuDJTSnRxAJWf2nbKksMPCLamUEvUd98SPVymSG_zu92nnUAIlCtCtY3I6hWUperwjQgxzvgJcekBce5FmQnltCIasXXWyqTGpOh5W2RolCbVAfqasfBwcBz_hMk3rh5y7phWUV_ngbUg4Os-H5xYtlmlrrvNhVLxxrHtl5M0IviRl14XV9cmA6PyBTkycqkA6QJMq4wO4tmo3P2HF3dD9p7zSmRx7iO2Y7y5hkYW44_Po1NG6nbg_oYKyZUpfAe5DmVtg";
 
-const NAV_ITEMS = [
-  { label: "Home", to: "/" },
-  { label: "People", to: "/people" },
-  { label: "Projects", to: "/projects" },
-  { label: "Publications", to: "/publications" },
-  { label: "News", to: "/news" },
-] as const;
-
 export function SiteHeader() {
+  const t = useT();
+  const { theme, toggleTheme, lang, toggleLang } = usePreferences();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const navItems = [
+    { label: t.nav.home, to: "/" },
+    { label: t.nav.people, to: "/people" },
+    { label: t.nav.projects, to: "/projects" },
+    { label: t.nav.publications, to: "/publications" },
+    { label: t.nav.news, to: "/news" },
+  ] as const;
+
   return (
-    <header className="w-full border-b border-gray-100 py-4 bg-white sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-        <Link className="flex-shrink-0 flex items-center" to="/">
-          <img
-            alt="IDL Lab Logo"
-            className="h-10 w-auto object-contain"
-            src={LOGO_URL}
-          />
+    <header className="sticky top-0 z-50 w-full border-b-2 border-idl-blue/40 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex justify-between items-center">
+        <Link
+          className="flex-shrink-0 flex items-center"
+          to="/"
+          onClick={() => setMobileOpen(false)}
+        >
+          <img alt="IDL Lab Logo" className="h-8 w-auto object-contain" src={LOGO_URL} />
         </Link>
-        <nav className="hidden md:flex space-x-8">
-          {NAV_ITEMS.map((item) => (
+
+        <div className="flex items-center gap-1 sm:gap-4">
+          <nav className="hidden md:flex space-x-6">
+            {navItems.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                activeOptions={{ exact: item.to === "/" }}
+                activeProps={{
+                  className: "text-idl-blue font-semibold border-b-2 border-idl-blue pb-0.5",
+                }}
+                inactiveProps={{
+                  className: "text-text-main hover:text-idl-blue transition-colors",
+                }}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={toggleLang}
+              aria-label="Toggle language"
+              className="flex items-center gap-1 rounded-md px-2 py-1.5 text-sm font-medium text-text-main hover:text-idl-blue hover:bg-idl-blue/10 transition-colors"
+            >
+              <Languages className="w-4 h-4" />
+              <span className="tabular-nums">{lang === "ko" ? "KO" : "EN"}</span>
+            </button>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label="Toggle dark mode"
+              className="rounded-md p-1.5 text-text-main hover:text-idl-blue hover:bg-idl-blue/10 transition-colors"
+            >
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+            <button
+              type="button"
+              onClick={() => setMobileOpen((o) => !o)}
+              aria-label="Toggle menu"
+              className="md:hidden rounded-md p-1.5 text-text-main hover:text-idl-blue hover:bg-idl-blue/10 transition-colors"
+            >
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile nav */}
+      {mobileOpen && (
+        <nav className="md:hidden border-t border-idl-blue/20 bg-background px-4 py-3 flex flex-col gap-1">
+          {navItems.map((item) => (
             <Link
               key={item.to}
               to={item.to}
+              onClick={() => setMobileOpen(false)}
               activeOptions={{ exact: item.to === "/" }}
-              activeProps={{
-                className:
-                  "text-idl-blue font-semibold border-b-2 border-idl-blue pb-1 text-lg",
-              }}
+              activeProps={{ className: "text-idl-blue font-semibold py-1.5" }}
               inactiveProps={{
-                className:
-                  "text-text-main hover:text-idl-blue transition-colors text-lg",
+                className: "text-text-main hover:text-idl-blue transition-colors py-1.5",
               }}
             >
               {item.label}
             </Link>
           ))}
         </nav>
-      </div>
+      )}
     </header>
   );
 }

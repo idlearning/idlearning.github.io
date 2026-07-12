@@ -4,22 +4,29 @@
 // items via `getLatestNews()`. Keep dates in ISO `YYYY-MM-DD` format so they
 // sort correctly as strings.
 
-export type NewsItem = {
+type NewsInput = {
   title: string;
   /** ISO date, `YYYY-MM-DD`. */
   date: string;
   img: string;
+  /** Optional longer body shown on the news detail page. */
+  content?: string;
   /** Optional Tailwind classes for the image wrapper (falls back to a default). */
   wrapClass?: string;
   /** Optional Tailwind classes for the <img> (falls back to a default). */
   imgClass?: string;
 };
 
+export type NewsItem = NewsInput & {
+  /** Stable URL slug used by the detail route `/news/$slug`. */
+  slug: string;
+};
+
 export const NEWS_WRAP_DEFAULT =
-  "h-40 overflow-hidden bg-gray-100 flex items-center justify-center";
+  "h-40 overflow-hidden bg-gray-100 dark:bg-white/5 flex items-center justify-center";
 export const NEWS_IMG_DEFAULT = "w-full h-full object-cover";
 
-export const NEWS: NewsItem[] = [
+const NEWS_INPUT: NewsInput[] = [
   {
     title: "2025년도 교육정보미디어연구 학술우수상 수상",
     date: "2025-06-18",
@@ -113,9 +120,21 @@ export const NEWS: NewsItem[] = [
   },
 ];
 
+// Attach a stable, unique slug to each item (date, with a suffix when a date
+// repeats). Slugs stay stable as long as the authored order above is stable.
+const slugCounts: Record<string, number> = {};
+export const NEWS: NewsItem[] = NEWS_INPUT.map((item) => {
+  const n = (slugCounts[item.date] = (slugCounts[item.date] ?? 0) + 1);
+  return { ...item, slug: n > 1 ? `${item.date}-${n}` : item.date };
+});
+
 /** Returns news sorted newest-first. */
 export const getSortedNews = (): NewsItem[] =>
   [...NEWS].sort((a, b) => b.date.localeCompare(a.date));
 
 /** Returns the `count` most recent news items, newest-first. */
 export const getLatestNews = (count: number): NewsItem[] => getSortedNews().slice(0, count);
+
+/** Finds a single news item by its slug. */
+export const getNewsBySlug = (slug: string): NewsItem | undefined =>
+  NEWS.find((item) => item.slug === slug);
