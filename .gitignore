@@ -10,6 +10,11 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+
+# This project uses bun.lock; ignore lockfiles from other package managers.
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 .output
 .vinxi
 .tanstack/**
