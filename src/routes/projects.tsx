@@ -42,8 +42,6 @@ function ProjectCard({ project }: { project: Project }) {
   const hasMore = Boolean(project.description) || relatedPubs.length > 0;
 
   const fields = [
-    { label: t.projects.koreanName, value: project.titleKo || project.titleEn },
-    { label: t.projects.englishName, value: project.titleEn },
     { label: t.projects.period, value: project.period },
     { label: t.projects.funder, value: project.funder },
     { label: t.projects.members, value: project.members },
@@ -52,14 +50,13 @@ function ProjectCard({ project }: { project: Project }) {
   return (
     <article className="border-b border-border pb-10 last:border-b-0">
       <div className="flex flex-col md:flex-row gap-8">
-        <div className="md:w-48 flex-shrink-0">
+        <div className="md:w-48 flex-shrink-0" />
+        <div className="flex-grow">
           <h2 className="text-lg font-bold text-text-main leading-snug">{primaryTitle}</h2>
           {secondaryTitle && (
-            <p className="mt-2 text-sm text-text-muted leading-relaxed">{secondaryTitle}</p>
+            <p className="mt-1 text-sm text-text-muted leading-relaxed">{secondaryTitle}</p>
           )}
-        </div>
-        <div className="flex-grow">
-          <dl className="grid grid-cols-1 gap-x-8 gap-y-3 text-sm md:grid-cols-[8rem_1fr]">
+          <dl className="mt-5 grid grid-cols-1 gap-x-8 gap-y-1.5 text-sm md:grid-cols-[8rem_1fr]">
             {fields.map((field) => (
               <div key={field.label} className="contents">
                 <dt className="font-bold text-text-main">{field.label}</dt>
