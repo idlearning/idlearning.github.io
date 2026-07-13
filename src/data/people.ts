@@ -43,6 +43,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Hyo-Jeong So",
     role: "professor",
     email: "hyojeongso@ewha.ac.kr",
+    img: "https://cdn.imweb.me/thumbnail/20250305/1ecffa243b6be.png",
     scholar: "https://scholar.google.com/citations?user=dI0biU8AAAAJ&hl=kr&oi=ao",
     homepage:
       "https://www.ewha.ac.kr/ewha/professor/info.do?mode=view&pId=aUu8X%2F6dSe7uJ%2F5ElYusAA%3D%3D",
@@ -53,6 +54,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Sungeun Kim",
     role: "doctoral",
     email: "soul_81@naver.com",
+    img: "https://cdn.imweb.me/thumbnail/20250121/06e4bc3f64575.jpg",
     interests: "GBL, CSCL",
     education: ["이화여자대학교 교육대학원 교육공학과 석사", "이화여자대학교 경영학과 학사"],
   },
@@ -62,6 +64,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Hyosung Park",
     role: "doctoral",
     email: "hyosungpark@ewhain.net",
+    img: "https://cdn.imweb.me/thumbnail/20250311/4f8019b864911.jpeg",
     interests: "AIED, GBL",
     education: [
       "이화여자대학교 교육대학원 교육공학과 석사",
@@ -78,6 +81,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Ga Young Lee",
     role: "doctoral",
     email: "lgy1202@gmail.com",
+    img: "https://cdn.imweb.me/thumbnail/20250121/e933fc9b06d68.jpg",
     interests: "Human-Computer Interaction (HCI), Affective Computing",
     education: [
       "고려대학교 영재교육원 강사 (2023.3 – 현재)",
@@ -91,6 +95,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Jieun Choi",
     role: "doctoral",
     email: "merry0916@naver.com",
+    img: "https://cdn.imweb.me/thumbnail/20250331/dd7c0789a6bbe.jpg",
     interests: "ID/ISD, CSCL, K-12",
     education: [
       "경희사이버대학교 교수설계 (2020.6 – 2022.6)",
@@ -106,6 +111,7 @@ export const PEOPLE: Person[] = [
     role: "doctoral",
     international: true,
     email: "jinlingxi@ewha.ac.kr",
+    img: "https://cdn.imweb.me/thumbnail/20250121/01f9c366cc917.jpg",
     interests:
       "AIED, Human-Computer Interaction (HCI), Learning Experience Design, Learning Analytics",
     education: [
@@ -124,6 +130,7 @@ export const PEOPLE: Person[] = [
     role: "doctoral",
     international: true,
     email: "iriswang@ewhain.net",
+    img: "https://cdn.imweb.me/thumbnail/20250331/bc169f2566cac.png",
     interests:
       "Language learning with technology; Ethical education game design; Personalized learning",
     education: [
@@ -141,6 +148,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Juyeong Song",
     role: "doctoral",
     email: "sjy93@ewha.ac.kr",
+    img: "https://cdn.imweb.me/thumbnail/20250330/8898c29e408aa.jpg",
     interests: "테크놀로지 활용 교육, AI 융합 교육",
     education: [
       "한국교육개발원 연구원 (2023.6 – 현재)",
@@ -157,6 +165,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Eunyoung Kim",
     role: "doctoral",
     email: "eykim@ewha.ac.kr",
+    img: "https://cdn.imweb.me/thumbnail/20260323/768ea49fc8570.jpg",
     interests: "AIED, Learning Sciences, Human-AI Collaboration, Human-Computer Interaction (HCI)",
     education: [
       "국립암센터 연구원 (2025.3 – 현재)",
@@ -174,6 +183,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Minseon Kim",
     role: "doctoral",
     email: "min5929@ewha.ac.kr",
+    img: "https://cdn.imweb.me/thumbnail/20250904/904e69279ddd0.jpg",
     interests: "AIED, 학습과학, CSCL, K-12",
     education: [
       "한국교육개발원 연구원 (2024.8 – 2025.8)",
@@ -189,6 +199,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Su Yeoun Kim",
     role: "doctoral",
     email: "suyunguya@naver.com",
+    img: "https://cdn.imweb.me/thumbnail/20260117/bff8e614c8a3b.jpg",
     interests: "PBL, CSCL, SEA, 테크놀로지 기반학습",
     education: [
       "충청남도교육청 소속 미술 중등교사 (2020.3 – 현재)",
@@ -204,6 +215,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Minjeong Kim",
     role: "masters",
     email: "bomkmj@ewhain.net",
+    img: "https://cdn.imweb.me/thumbnail/20250121/a4ae059045b94.jpg",
     interests: "e-learning, CBL, 교사교육",
     education: [
       "(주)챔프스터디 해커스 HRD 사업팀 e-learning 교수설계자 (2024.7 – 현재)",
@@ -217,6 +229,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Yelim Song",
     role: "masters",
     email: "yelmtic@ewha.ac.kr",
+    img: "https://cdn.imweb.me/thumbnail/20250330/e2669f34da797.jpg",
     interests: "AIED, ITS, 적응형 학습 시스템",
     education: ["강원대학교 교육학과 학사"],
   },
@@ -226,6 +239,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Kyuwon Kim",
     role: "masters",
     email: "kyuwonkim95@ewha.ac.kr",
+    img: "https://cdn.imweb.me/thumbnail/20260319/88c8505789a2b.jpg",
     interests: "Human-Computer Interaction (HCI), AIED",
     education: ["이화여자대학교 교육공학 / 소프트웨어 연계전공 학사"],
     scholar: "https://scholar.google.com/citations?user=oYoOlXgAAAAJ&hl=ko",
@@ -237,6 +251,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Jean Hee Lee",
     role: "masters",
     email: "jinnylee26@ewha.ac.kr",
+    img: "https://cdn.imweb.me/thumbnail/20250331/ea677e12e29ef.png",
     interests: "TEL, AIED, Science Education",
     education: [
       "이화여자대학교 과학교육과 화학교육전공 / 통합과학 연계전공 / 커뮤니케이션·미디어학부 학사",
@@ -248,6 +263,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Yoon Kyeong Lee",
     role: "masters",
     email: "yklee26@ewha.ac.kr",
+    img: "https://cdn.imweb.me/thumbnail/20250404/84c03eba44ac2.png",
     interests: "AIED, K-12, ID/ISD, 학습과학",
     education: [
       "경기도성남교육지원청 소속 유치원교사 (2022.3 – 2025.2)",
@@ -261,6 +277,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Sieun Park",
     role: "masters",
     email: "sieunp25@ewha.ac.kr",
+    img: "https://cdn.imweb.me/thumbnail/20250614/4f692616ce1a2.jpg",
     interests: "Student-centered Learning, TEL, PBL",
     education: [
       "(주)자라나는씨앗 독서토론 교수설계 (2024.7 – 2025.1)",
@@ -273,6 +290,7 @@ export const PEOPLE: Person[] = [
     role: "masters",
     international: true,
     email: "elaineyiyi@ewha.ac.kr",
+    img: "https://cdn.imweb.me/thumbnail/20250620/79a3b0af13787.jpg",
     interests: "AIED, Gamification, STEM Education",
     education: ["Bachelor of Science Education, Jiangsu Second Normal University"],
   },
@@ -282,6 +300,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Pyunghwa Kim",
     role: "masters",
     email: "ph.kim@ewha.ac.kr",
+    img: "https://cdn.imweb.me/thumbnail/20260117/e6dde54b40c45.jpg",
     interests: "Place-Based Learning, Design Thinking, Informal Learning, LXD",
     education: [
       "부강비케이 바이오연료팀 PM (2024.5 – 2025.5)",
@@ -298,6 +317,7 @@ export const PEOPLE: Person[] = [
     nameEn: "Jihyun Park",
     role: "masters",
     email: "gh4920@naver.com",
+    img: "https://cdn.imweb.me/thumbnail/20260117/c6c04efba372a.jpeg",
     interests: "GBL, Gamification, AI Ethics Education",
     education: ["동국대학교 서울캠퍼스 (2025.2 – 2026.2)", "동국대학교 철학과 / 법학과 학사"],
   },
