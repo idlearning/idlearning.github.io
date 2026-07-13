@@ -157,7 +157,7 @@ function PersonCard({
   variant?: "student" | "alumni";
 }) {
   const t = useT();
-  const clickable = hasModalDetail(person);
+  const clickable = variant !== "alumni" && hasModalDetail(person);
   const showPhoto = variant !== "alumni";
   const degreeLabel = person.alumniDegree ? DEGREE_LABEL[person.alumniDegree] : null;
 
@@ -189,6 +189,18 @@ function PersonCard({
         )}
         <PersonName person={person} size="md" />
         {person.email && <p className="text-text-muted mb-3">{person.email}</p>}
+        {variant === "alumni" && person.affiliation && (
+          <p className="text-text-muted mb-2">{person.affiliation}</p>
+        )}
+        {variant === "alumni" && person.dissertation && (
+          <DetailRow label={t.people.dissertation}>
+            <DocLine
+              title={person.dissertation}
+              url={person.dissertationUrl}
+              label={t.people.dissertation}
+            />
+          </DetailRow>
+        )}
         {person.interests && <DetailRow label={t.people.interests}>{person.interests}</DetailRow>}
         {person.thesis && (
           <DetailRow label={t.people.thesis}>
@@ -306,9 +318,7 @@ const STUDENT_SECTIONS: { role: PersonRole; key: "doctoral" | "masters" }[] = [
 ];
 
 /** Groups alumni by graduation year, newest first; those without a year go last. */
-function groupAlumniByYear(
-  people: Person[],
-): { key: string; label: string; people: Person[] }[] {
+function groupAlumniByYear(people: Person[]): { key: string; label: string; people: Person[] }[] {
   const byYear = new Map<number, Person[]>();
   const noYear: Person[] = [];
   for (const p of people) {
