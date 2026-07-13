@@ -24,6 +24,7 @@ type Dict = {
     affiliation: string;
     dissertation: string;
     dissertationMa: string;
+    profile: string;
   };
   projects: {
     title: string;
@@ -74,6 +75,7 @@ const DICTS: Record<Lang, Dict> = {
       affiliation: "소속",
       dissertation: "학위논문",
       dissertationMa: "학위논문",
+      profile: "프로필",
     },
     projects: {
       title: "Projects",
@@ -127,6 +129,7 @@ const DICTS: Record<Lang, Dict> = {
       affiliation: "Affiliation",
       dissertation: "Dissertation",
       dissertationMa: "Thesis",
+      profile: "Profile",
     },
     projects: {
       title: "Projects",

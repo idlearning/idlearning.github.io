@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { FileText, Globe, X } from "lucide-react";
+import { Globe, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Page, PageHeading } from "../components/Page";
@@ -53,7 +53,7 @@ function ProfileLinks({ person }: { person: Person }) {
   // Stop clicks from bubbling up to a clickable card.
   const stop = (e: React.MouseEvent) => e.stopPropagation();
   return (
-    <div className="flex gap-3 mt-2">
+    <div className="flex gap-3">
       {person.scholar && (
         <a
           href={person.scholar}
@@ -111,24 +111,19 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
   );
 }
 
-/** Title text followed by a small link icon that opens a PDF, when a URL is set. */
-function DocLine({ title, url, label }: { title: string; url?: string; label: string }) {
+/** Title text, underlined and clickable when a URL is set. */
+function DocLine({ title, url }: { title: string; url?: string }) {
+  if (!url) return <span>{title}</span>;
   return (
-    <span className="inline-flex items-start gap-1.5">
-      {url && (
-        <a
-          href={url}
-          onClick={(e) => e.stopPropagation()}
-          target="_blank"
-          rel="noreferrer"
-          aria-label={`${label} (PDF)`}
-          className="mt-0.5 shrink-0 text-text-muted hover:text-idl-blue transition-colors"
-        >
-          <FileText className="w-4 h-4" />
-        </a>
-      )}
-      <span>{title}</span>
-    </span>
+    <a
+      href={url}
+      onClick={(e) => e.stopPropagation()}
+      target="_blank"
+      rel="noreferrer"
+      className="underline decoration-text-muted/50 underline-offset-2 hover:text-idl-blue transition-colors"
+    >
+      {title}
+    </a>
   );
 }
 
@@ -191,23 +186,28 @@ function PersonCard({
         )}
         <PersonName person={person} size="md" />
         {person.email && <p className="text-text-muted mb-3">{person.email}</p>}
-        <ProfileLinks person={person} />
+        {variant !== "alumni" && (person.scholar || person.homepage) && (
+          <div className="mt-2 mb-6">
+            <ProfileLinks person={person} />
+          </div>
+        )}
         {variant === "alumni" && person.affiliation && (
           <p className="text-text-muted mt-3 mb-2">{person.affiliation}</p>
         )}
         {variant === "alumni" && person.dissertation && (
           <DetailRow label={dissertationLabel}>
-            <DocLine
-              title={person.dissertation}
-              url={person.dissertationUrl}
-              label={dissertationLabel}
-            />
+            <DocLine title={person.dissertation} url={person.dissertationUrl} />
+          </DetailRow>
+        )}
+        {variant === "alumni" && (person.scholar || person.homepage) && (
+          <DetailRow label={t.people.profile}>
+            <ProfileLinks person={person} />
           </DetailRow>
         )}
         {person.interests && <DetailRow label={t.people.interests}>{person.interests}</DetailRow>}
         {person.thesis && (
           <DetailRow label={t.people.thesis}>
-            <DocLine title={person.thesis} url={person.thesisUrl} label={t.people.thesis} />
+            <DocLine title={person.thesis} url={person.thesisUrl} />
           </DetailRow>
         )}
       </div>
@@ -257,7 +257,9 @@ function StudentModal({ person, onClose }: { person: Person; onClose: () => void
           <div className="min-w-0">
             <PersonName person={person} size="lg" />
             {person.email && <p className="text-text-muted text-sm mb-1">{person.email}</p>}
-            <ProfileLinks person={person} />
+            <div className="mt-2">
+              <ProfileLinks person={person} />
+            </div>
           </div>
         </div>
 
@@ -275,7 +277,7 @@ function StudentModal({ person, onClose }: { person: Person; onClose: () => void
           )}
           {person.thesis && (
             <DetailRow label={t.people.thesis}>
-              <DocLine title={person.thesis} url={person.thesisUrl} label={t.people.thesis} />
+              <DocLine title={person.thesis} url={person.thesisUrl} />
             </DetailRow>
           )}
           {person.affiliation && (
@@ -283,11 +285,7 @@ function StudentModal({ person, onClose }: { person: Person; onClose: () => void
           )}
           {person.dissertation && (
             <DetailRow label={t.people.dissertation}>
-              <DocLine
-                title={person.dissertation}
-                url={person.dissertationUrl}
-                label={t.people.dissertation}
-              />
+              <DocLine title={person.dissertation} url={person.dissertationUrl} />
             </DetailRow>
           )}
         </div>
@@ -357,7 +355,9 @@ function PeoplePage() {
             <div>
               <PersonName person={professor} size="lg" />
               {professor.email && <p className="text-text-muted text-sm mb-1">{professor.email}</p>}
-              <ProfileLinks person={professor} />
+              <div className="mt-2">
+                <ProfileLinks person={professor} />
+              </div>
             </div>
           </div>
         )}
