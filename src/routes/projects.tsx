@@ -50,13 +50,15 @@ function ProjectCard({ project }: { project: Project }) {
   return (
     <article className="border-b border-border pb-10 last:border-b-0">
       <div className="flex flex-col md:flex-row gap-8">
-        <div className="md:w-48 flex-shrink-0" />
+        <div className="md:w-48 flex-shrink-0">
+          <div className="aspect-square w-full rounded-md bg-gray-200 dark:bg-gray-700" />
+        </div>
         <div className="flex-grow">
           <h2 className="text-lg font-bold text-text-main leading-snug">{primaryTitle}</h2>
           {secondaryTitle && (
             <p className="mt-1 text-sm text-text-muted leading-relaxed">{secondaryTitle}</p>
           )}
-          <dl className="mt-5 grid grid-cols-1 gap-x-8 gap-y-1.5 text-sm md:grid-cols-[8rem_1fr]">
+          <dl className="mt-5 grid grid-cols-1 gap-x-8 gap-y-1 text-sm md:grid-cols-[8rem_1fr]">
             {fields.map((field) => (
               <div key={field.label} className="contents">
                 <dt className="font-bold text-text-main">{field.label}</dt>
