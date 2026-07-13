@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ChevronDown, FileText, Globe } from "lucide-react";
-import { useState } from "react";
+import { FileText, Globe, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { Page, PageHeading } from "../components/Page";
 import { GoogleScholarIcon } from "../components/icons";
@@ -36,7 +36,11 @@ function PersonName({ person, size }: { person: Person; size: "lg" | "md" }) {
   const secondary = showKorean ? (lang === "ko" ? person.nameEn : person.nameKo) : null;
   return (
     <div className="flex items-end gap-2 mb-1">
-      <h3 className={`font-bold text-text-main ${size === "lg" ? "text-xl" : "text-lg"}`}>
+      <h3
+        className={`font-bold text-text-main transition-colors group-hover:text-idl-blue ${
+          size === "lg" ? "text-xl" : "text-lg"
+        }`}
+      >
         {primary}
       </h3>
       {secondary && <span className="text-text-muted text-sm mb-0.5">{secondary}</span>}
@@ -46,11 +50,14 @@ function PersonName({ person, size }: { person: Person; size: "lg" | "md" }) {
 
 function ProfileLinks({ person }: { person: Person }) {
   if (!person.scholar && !person.homepage) return null;
+  // Stop clicks from bubbling up to a clickable card.
+  const stop = (e: React.MouseEvent) => e.stopPropagation();
   return (
     <div className="flex gap-3 mt-2">
       {person.scholar && (
         <a
           href={person.scholar}
+          onClick={stop}
           target="_blank"
           rel="noreferrer"
           aria-label="Google Scholar"
@@ -62,6 +69,7 @@ function ProfileLinks({ person }: { person: Person }) {
       {person.homepage && (
         <a
           href={person.homepage}
+          onClick={stop}
           target="_blank"
           rel="noreferrer"
           aria-label="Homepage"
@@ -111,6 +119,7 @@ function DocLine({ title, url, label }: { title: string; url?: string; label: st
       {url && (
         <a
           href={url}
+          onClick={(e) => e.stopPropagation()}
           target="_blank"
           rel="noreferrer"
           aria-label={`${label} (PDF)`}
@@ -123,86 +132,157 @@ function DocLine({ title, url, label }: { title: string; url?: string; label: st
   );
 }
 
-function StudentCard({ person }: { person: Person }) {
-  const t = useT();
-  const [open, setOpen] = useState(false);
-
-  const hasDetail =
+/** True when the person has extra detail worth opening the modal for. */
+function hasModalDetail(person: Person): boolean {
+  return (
     Boolean(person.education?.length) ||
-    Boolean(person.thesis) ||
     Boolean(person.affiliation) ||
-    Boolean(person.dissertation);
+    Boolean(person.dissertation) ||
+    Boolean(person.thesis)
+  );
+}
+
+function StudentCard({ person, onOpen }: { person: Person; onOpen: (p: Person) => void }) {
+  const t = useT();
+  const clickable = hasModalDetail(person);
 
   return (
-    <div className="flex flex-col sm:flex-row gap-6 items-start">
-      <Avatar person={person} className="w-36 h-36 rounded-lg shrink-0" />
+    <div
+      onClick={clickable ? () => onOpen(person) : undefined}
+      role={clickable ? "button" : undefined}
+      tabIndex={clickable ? 0 : undefined}
+      onKeyDown={
+        clickable
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onOpen(person);
+              }
+            }
+          : undefined
+      }
+      className={`group flex flex-col sm:flex-row gap-6 items-start rounded-xl border border-border p-4 shadow-sm transition-all ${
+        clickable ? "cursor-pointer hover:border-idl-blue/40 hover:shadow-md" : ""
+      }`}
+    >
+      <Avatar person={person} className="w-32 h-32 rounded-lg shrink-0" />
       <div className="text-sm min-w-0">
         <PersonName person={person} size="md" />
         {person.email && <p className="text-text-muted mb-3">{person.email}</p>}
         {person.interests && <DetailRow label={t.people.interests}>{person.interests}</DetailRow>}
-        <ProfileLinks person={person} />
-
-        {hasDetail && (
-          <>
-            {open && (
-              <div className="mt-3">
-                {person.education && person.education.length > 0 && (
-                  <DetailRow label={t.people.education}>
-                    {person.education.map((line, i) => (
-                      <span key={i}>
-                        {line}
-                        {i < person.education!.length - 1 && <br />}
-                      </span>
-                    ))}
-                  </DetailRow>
-                )}
-                {person.thesis && (
-                  <DetailRow label={t.people.thesis}>
-                    <DocLine title={person.thesis} url={person.thesisUrl} label={t.people.thesis} />
-                  </DetailRow>
-                )}
-                {person.affiliation && (
-                  <DetailRow label={t.people.affiliation}>{person.affiliation}</DetailRow>
-                )}
-                {person.dissertation && (
-                  <DetailRow label={t.people.dissertation}>
-                    <DocLine
-                      title={person.dissertation}
-                      url={person.dissertationUrl}
-                      label={t.people.dissertation}
-                    />
-                  </DetailRow>
-                )}
-              </div>
-            )}
-            <button
-              type="button"
-              onClick={() => setOpen((o) => !o)}
-              aria-expanded={open}
-              className="mt-3 inline-flex items-center gap-1 text-idl-blue hover:text-idl-blue/70 text-sm font-medium transition-colors"
-            >
-              {open ? t.common.showLess : t.common.readMore}
-              <ChevronDown
-                className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`}
-              />
-            </button>
-          </>
+        {person.thesis && (
+          <DetailRow label={t.people.thesis}>
+            <DocLine title={person.thesis} url={person.thesisUrl} label={t.people.thesis} />
+          </DetailRow>
         )}
+        <ProfileLinks person={person} />
       </div>
     </div>
   );
 }
 
-const STUDENT_SECTIONS: { role: PersonRole; key: "doctoral" | "masters" | "alumni" }[] = [
+function StudentModal({ person, onClose }: { person: Person; onClose: () => void }) {
+  const t = useT();
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50"
+      onClick={onClose}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={person.nameEn}
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-2xl bg-card p-6 sm:p-8 shadow-xl"
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute top-4 right-4 text-text-muted hover:text-idl-blue transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        <div className="flex flex-col sm:flex-row gap-6 items-start">
+          <Avatar person={person} className="w-32 h-32 rounded-lg shrink-0" />
+          <div className="min-w-0">
+            <PersonName person={person} size="lg" />
+            {person.email && <p className="text-text-muted text-sm mb-1">{person.email}</p>}
+            <ProfileLinks person={person} />
+          </div>
+        </div>
+
+        <div className="mt-6 text-sm">
+          {person.interests && <DetailRow label={t.people.interests}>{person.interests}</DetailRow>}
+          {person.education && person.education.length > 0 && (
+            <DetailRow label={t.people.education}>
+              {person.education.map((line, i) => (
+                <span key={i}>
+                  {line}
+                  {i < person.education!.length - 1 && <br />}
+                </span>
+              ))}
+            </DetailRow>
+          )}
+          {person.thesis && (
+            <DetailRow label={t.people.thesis}>
+              <DocLine title={person.thesis} url={person.thesisUrl} label={t.people.thesis} />
+            </DetailRow>
+          )}
+          {person.affiliation && (
+            <DetailRow label={t.people.affiliation}>{person.affiliation}</DetailRow>
+          )}
+          {person.dissertation && (
+            <DetailRow label={t.people.dissertation}>
+              <DocLine
+                title={person.dissertation}
+                url={person.dissertationUrl}
+                label={t.people.dissertation}
+              />
+            </DetailRow>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PeopleGrid({ people, onOpen }: { people: Person[]; onOpen: (p: Person) => void }) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12">
+      {people.map((person) => (
+        <StudentCard key={person.id} person={person} onOpen={onOpen} />
+      ))}
+    </div>
+  );
+}
+
+const STUDENT_SECTIONS: { role: PersonRole; key: "doctoral" | "masters" }[] = [
   { role: "doctoral", key: "doctoral" },
   { role: "masters", key: "masters" },
-  { role: "alumni", key: "alumni" },
 ];
 
 function PeoplePage() {
   const t = useT();
+  const [selected, setSelected] = useState<Person | null>(null);
 
   const professor = getPeopleByRole("professor")[0];
+  const alumni = getPeopleByRole("alumni");
 
   return (
     <Page>
@@ -222,7 +302,7 @@ function PeoplePage() {
       </section>
 
       {/* Students, split into subsections by role */}
-      <section>
+      <section className="mb-16">
         <h2 className="text-2xl font-bold text-idl-blue mb-8">{t.people.students}</h2>
         <div className="flex flex-col gap-14">
           {STUDENT_SECTIONS.map((sec) => {
@@ -233,16 +313,22 @@ function PeoplePage() {
                 <h3 className="text-lg font-bold text-text-main mb-6 pb-2 border-b border-border">
                   {t.people[sec.key]}
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12">
-                  {people.map((person) => (
-                    <StudentCard key={person.id} person={person} />
-                  ))}
-                </div>
+                <PeopleGrid people={people} onOpen={setSelected} />
               </div>
             );
           })}
         </div>
       </section>
+
+      {/* Alumni, its own top-level section */}
+      {alumni.length > 0 && (
+        <section>
+          <h2 className="text-2xl font-bold text-idl-blue mb-8">{t.people.alumni}</h2>
+          <PeopleGrid people={alumni} onOpen={setSelected} />
+        </section>
+      )}
+
+      {selected && <StudentModal person={selected} onClose={() => setSelected(null)} />}
     </Page>
   );
 }

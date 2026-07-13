@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import { useT } from "../lib/i18n";
 import { usePreferences } from "../lib/preferences";
-import { FlagGB, FlagKR } from "./icons";
 
 const LOGO_URL =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuDJTSnRxAJWf2nbKksMPCLamUEvUd98SPVymSG_zu92nnUAIlCtCtY3I6hWUperwjQgxzvgJcekBce5FmQnltCIasXXWyqTGpOh5W2RolCbVAfqasfBwcBz_hMk3rh5y7phWUV_ngbUg4Os-H5xYtlmlrrvNhVLxxrHtl5M0IviRl14XV9cmA6PyBTkycqkA6QJMq4wO4tmo3P2HF3dD9p7zSmRx7iO2Y7y5hkYW44_Po1NG6nbg_oYKyZUpfAe5DmVtg";
@@ -59,11 +58,12 @@ export function SiteHeader() {
               aria-label="Toggle language"
               className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium text-text-main hover:text-idl-blue hover:bg-idl-blue/10 transition-colors"
             >
-              {lang === "ko" ? (
-                <FlagKR className="w-5 h-auto rounded-[2px] shadow-sm" />
-              ) : (
-                <FlagGB className="w-5 h-auto rounded-[2px] shadow-sm" />
-              )}
+              <img
+                src={lang === "ko" ? "/flags/kr.svg" : "/flags/gb.svg"}
+                alt=""
+                aria-hidden="true"
+                className="w-5 h-auto rounded-[2px] shadow-sm"
+              />
               <span className="tabular-nums">{lang === "ko" ? "KO" : "EN"}</span>
             </button>
             <button
