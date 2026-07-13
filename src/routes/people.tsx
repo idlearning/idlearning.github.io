@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Globe } from "lucide-react";
-import { useState } from "react";
 
 import { Page, PageHeading } from "../components/Page";
 import { GoogleScholarIcon } from "../components/icons";
@@ -141,7 +140,7 @@ function StudentCard({ person }: { person: Person }) {
   );
 }
 
-const ROLE_TABS: { role: PersonRole; key: "doctoral" | "masters" | "alumni" }[] = [
+const STUDENT_SECTIONS: { role: PersonRole; key: "doctoral" | "masters" | "alumni" }[] = [
   { role: "doctoral", key: "doctoral" },
   { role: "masters", key: "masters" },
   { role: "alumni", key: "alumni" },
@@ -149,10 +148,8 @@ const ROLE_TABS: { role: PersonRole; key: "doctoral" | "masters" | "alumni" }[] 
 
 function PeoplePage() {
   const t = useT();
-  const [activeRole, setActiveRole] = useState<PersonRole>("doctoral");
 
   const professor = getPeopleByRole("professor")[0];
-  const students = getPeopleByRole(activeRole);
 
   return (
     <Page>
@@ -171,35 +168,27 @@ function PeoplePage() {
         )}
       </section>
 
-      {/* Students */}
+      {/* Students, split into subsections by role */}
       <section>
-        <h2 className="text-2xl font-bold text-idl-blue mb-6">{t.people.students}</h2>
-        <div className="flex flex-wrap gap-3 mb-10">
-          {ROLE_TABS.map((tab) => (
-            <button
-              key={tab.role}
-              type="button"
-              onClick={() => setActiveRole(tab.role)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                activeRole === tab.role
-                  ? "bg-idl-blue text-white"
-                  : "bg-idl-blue/10 text-text-muted hover:bg-idl-blue/20"
-              }`}
-            >
-              {t.people[tab.key]}
-            </button>
-          ))}
+        <h2 className="text-2xl font-bold text-idl-blue mb-8">{t.people.students}</h2>
+        <div className="flex flex-col gap-14">
+          {STUDENT_SECTIONS.map((sec) => {
+            const people = getPeopleByRole(sec.role);
+            if (people.length === 0) return null;
+            return (
+              <div key={sec.role}>
+                <h3 className="text-lg font-bold text-text-main mb-6 pb-2 border-b border-border">
+                  {t.people[sec.key]}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12">
+                  {people.map((person) => (
+                    <StudentCard key={person.id} person={person} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
-
-        {students.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12">
-            {students.map((person) => (
-              <StudentCard key={person.id} person={person} />
-            ))}
-          </div>
-        ) : (
-          <p className="text-text-muted text-sm">—</p>
-        )}
       </section>
     </Page>
   );

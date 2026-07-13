@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Award } from "lucide-react";
+import { Award, Link2 } from "lucide-react";
 import { Fragment, useState } from "react";
 
 import { Page, PageHeading } from "../components/Page";
@@ -43,10 +43,32 @@ function Badge({ badge }: { badge: PubBadge }) {
       </span>
     );
   }
+  // SSCI gets a filled sky-blue treatment; other index badges stay neutral.
+  if (badge.label === "SSCI") {
+    return (
+      <span className="inline-block px-2 py-0.5 bg-sky-500 text-white text-xs font-bold rounded uppercase tracking-wider">
+        {badge.label}
+      </span>
+    );
+  }
   return (
     <span className="inline-block px-2 py-0.5 border border-border text-xs text-text-muted rounded uppercase tracking-wider">
       {badge.label}
     </span>
+  );
+}
+
+function DoiButton({ doi }: { doi: string }) {
+  return (
+    <a
+      href={`https://doi.org/${doi}`}
+      target="_blank"
+      rel="noreferrer"
+      className="inline-flex items-center gap-1 px-2 py-0.5 border border-border text-xs text-text-muted rounded uppercase tracking-wider hover:border-idl-blue hover:text-idl-blue transition-colors"
+    >
+      <Link2 className="w-3.5 h-3.5" />
+      DOI
+    </a>
   );
 }
 
@@ -62,7 +84,7 @@ function AuthorList({ authors }: { authors: string[] }) {
                 href={person.homepage}
                 target="_blank"
                 rel="noreferrer"
-                className="text-idl-blue hover:underline"
+                className="rounded px-0.5 transition-colors hover:bg-yellow-200/70"
               >
                 {name}
               </a>
@@ -78,29 +100,16 @@ function AuthorList({ authors }: { authors: string[] }) {
 }
 
 function PublicationItem({ pub }: { pub: Publication }) {
+  const hasMeta = Boolean(pub.doi) || (pub.badges && pub.badges.length > 0);
   return (
     <article>
       <h4 className="text-base font-bold text-text-main mb-2">{pub.title}</h4>
       <AuthorList authors={pub.authors} />
-      <p className="text-sm text-text-muted mb-3">
-        {pub.venue}
-        {pub.doi && (
-          <>
-            {" "}
-            <a
-              href={`https://doi.org/${pub.doi}`}
-              target="_blank"
-              rel="noreferrer"
-              className="text-idl-blue hover:underline break-all"
-            >
-              https://doi.org/{pub.doi}
-            </a>
-          </>
-        )}
-      </p>
-      {pub.badges && pub.badges.length > 0 && (
-        <div className="flex gap-2 flex-wrap">
-          {pub.badges.map((badge) => (
+      <p className="text-sm text-text-muted mb-3">{pub.venue}</p>
+      {hasMeta && (
+        <div className="flex gap-2 flex-wrap items-center">
+          {pub.doi && <DoiButton doi={pub.doi} />}
+          {pub.badges?.map((badge) => (
             <Badge key={badge.label} badge={badge} />
           ))}
         </div>
@@ -131,32 +140,29 @@ function PublicationsPage() {
     <Page>
       <PageHeading>{t.publications.title}</PageHeading>
 
-      {/* Filters: label + buttons on one line */}
-      <section className="mb-12 flex flex-wrap items-center gap-3">
-        <h2 className="text-base font-bold text-text-main">{t.publications.type}</h2>
-        <div className="flex flex-wrap gap-2 text-sm">
-          {FILTERS.map((f) => (
-            <button
-              key={f.value}
-              type="button"
-              onClick={() => setFilter(f.value)}
-              className={`px-4 py-1.5 rounded-full transition-colors ${
-                filter === f.value
-                  ? "bg-idl-blue text-white font-medium"
-                  : "border border-border text-text-muted hover:bg-idl-blue/10"
-              }`}
-            >
-              {t.publications[f.key]}
-            </button>
-          ))}
-        </div>
+      {/* Filters, left-aligned */}
+      <section className="mb-12 flex flex-wrap gap-2 text-sm">
+        {FILTERS.map((f) => (
+          <button
+            key={f.value}
+            type="button"
+            onClick={() => setFilter(f.value)}
+            className={`px-4 py-1.5 rounded-full transition-colors ${
+              filter === f.value
+                ? "bg-idl-blue text-white font-medium"
+                : "border border-border text-text-muted hover:bg-idl-blue/10"
+            }`}
+          >
+            {t.publications[f.key]}
+          </button>
+        ))}
       </section>
 
       {groups.length === 0 && <p className="text-text-muted text-sm">—</p>}
 
       {groups.map((group) => (
         <section key={group.year} className="mb-4">
-          <h3 className="text-3xl font-bold text-idl-blue/30 mb-8">{group.year}</h3>
+          <h3 className="text-3xl font-bold text-[#BFBFBF] mb-8">{group.year}</h3>
           {group.types.map((typeGroup, idx) => (
             <div key={typeGroup.type}>
               {idx > 0 && <hr className="border-border my-8" />}

@@ -51,7 +51,7 @@ function ProjectCard({ project }: { project: Project }) {
           />
         </div>
         <div className="w-full md:w-2/3 flex flex-col justify-center">
-          <h2 className="text-xl font-bold text-idl-blue mb-1">{title}</h2>
+          <h2 className="text-xl font-bold text-text-main mb-1">{title}</h2>
           <p className="text-sm text-text-muted mb-6">{subtitle}</p>
           <table className="text-sm text-text-muted w-full max-w-md">
             <tbody>

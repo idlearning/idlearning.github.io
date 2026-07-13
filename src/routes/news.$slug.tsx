@@ -40,7 +40,7 @@ function NewsDetailPage() {
           <time className="text-sm text-text-muted mt-2 block">{item.date}</time>
         </header>
         <div className="p-6">
-          <div className="w-full flex items-center justify-center bg-gray-50 dark:bg-white/5 rounded-lg overflow-hidden mb-6">
+          <div className="w-full flex items-center justify-center bg-gray-50 rounded-lg overflow-hidden mb-6">
             <img alt={item.title} className="max-h-[28rem] w-auto object-contain" src={item.img} />
           </div>
           {item.content && (

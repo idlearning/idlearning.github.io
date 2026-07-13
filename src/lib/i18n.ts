@@ -33,7 +33,6 @@ type Dict = {
   };
   publications: {
     title: string;
-    type: string;
     all: string;
     journal: string;
     conference: string;
@@ -55,9 +54,9 @@ const DICTS: Record<Lang, Dict> = {
     common: { more: "더보기", readMore: "더보기", showLess: "접기", backToList: "목록으로" },
     home: {
       researchProjects: "Research Projects",
-      moreProjects: "프로젝트 더보기",
+      moreProjects: "More Projects",
       latestNews: "Latest News",
-      moreNews: "뉴스 더보기",
+      moreNews: "More News",
     },
     people: {
       professor: "Professor",
@@ -80,11 +79,10 @@ const DICTS: Record<Lang, Dict> = {
     },
     publications: {
       title: "Publications",
-      type: "논문 유형",
       all: "전체",
-      journal: "저널",
-      conference: "학술대회",
-      book: "도서",
+      journal: "Journal",
+      conference: "Conference",
+      book: "Book",
     },
     news: { title: "News", latest: "Latest News" },
     footer: { rights: "All rights reserved." },
@@ -130,7 +128,6 @@ const DICTS: Record<Lang, Dict> = {
     },
     publications: {
       title: "Publications",
-      type: "Publication Type",
       all: "All",
       journal: "Journal",
       conference: "Conference",

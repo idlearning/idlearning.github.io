@@ -23,7 +23,7 @@ export type NewsItem = NewsInput & {
 };
 
 export const NEWS_WRAP_DEFAULT =
-  "h-40 overflow-hidden bg-gray-100 dark:bg-white/5 flex items-center justify-center";
+  "h-40 overflow-hidden bg-gray-100 flex items-center justify-center";
 export const NEWS_IMG_DEFAULT = "w-full h-full object-cover";
 
 const NEWS_INPUT: NewsInput[] = [

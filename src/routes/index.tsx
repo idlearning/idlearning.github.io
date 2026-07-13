@@ -53,7 +53,7 @@ function FeaturedCarousel() {
     <div>
       <Link
         to="/projects"
-        className="relative block rounded-2xl overflow-hidden shadow-lg group bg-gray-100 dark:bg-white/5"
+        className="relative block rounded-2xl overflow-hidden shadow-lg group bg-gray-100"
       >
         <img
           alt={title}
@@ -95,7 +95,9 @@ function HomePage() {
       <section className="pt-10 pb-8 flex flex-col lg:flex-row gap-10">
         <div className="lg:w-1/2">
           <h1 className="text-3xl md:text-4xl font-bold text-idl-blue mb-6 leading-tight tracking-tight">
-            Interaction Design for Learning Lab
+            Interaction Design for
+            <br />
+            Learning Lab
           </h1>
           <p
             className="text-base text-text-main leading-relaxed text-justify"
@@ -129,7 +131,7 @@ function HomePage() {
               key={item.slug}
               to="/news/$slug"
               params={{ slug: item.slug }}
-              className="group bg-card rounded-xl border border-border shadow-sm overflow-hidden flex flex-col hover:shadow-md hover:border-idl-blue/40 transition-all"
+              className="group bg-card rounded-xl border border-border shadow-sm overflow-hidden flex flex-col hover:shadow-md hover:border-amber-400 transition-all"
             >
               <div className={item.wrapClass ?? NEWS_WRAP_DEFAULT}>
                 <img
@@ -139,7 +141,7 @@ function HomePage() {
                 />
               </div>
               <div className="p-3 flex flex-col flex-grow">
-                <h3 className="text-sm font-medium text-text-main mb-2 line-clamp-2 text-center group-hover:text-idl-blue transition-colors">
+                <h3 className="text-sm font-medium text-text-main mb-2 line-clamp-2 text-center group-hover:text-amber-500 transition-colors">
                   {item.title}
                 </h3>
                 <div className="mt-auto pt-3 text-xs text-text-muted text-center">{item.date}</div>
@@ -147,11 +149,11 @@ function HomePage() {
             </Link>
           ))}
         </div>
-        {/* More News below the grid */}
-        <div className="mt-8 flex justify-center">
+        {/* More News below the grid, aligned right — same style as More Projects */}
+        <div className="mt-6 flex justify-end">
           <Link
             to="/news"
-            className="inline-flex items-center gap-1 text-sm font-medium text-idl-blue hover:underline"
+            className="text-text-muted hover:text-idl-blue flex items-center gap-1 text-sm transition-colors"
           >
             {t.home.moreNews}
             <ArrowRight className="w-4 h-4" />

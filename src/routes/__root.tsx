@@ -118,9 +118,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="ko">
+    <html lang="en">
       <head>
-        {/* Apply saved theme before first paint to avoid a flash of the wrong theme. */}
+        {/* Reflect the saved language on <html lang> before first paint. */}
         <script dangerouslySetInnerHTML={{ __html: preferencesHeadScript }} />
         <HeadContent />
       </head>
