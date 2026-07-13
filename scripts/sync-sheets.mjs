@@ -1,9 +1,9 @@
 // Pull lab content from a public Google Sheet and regenerate the JSON seeds in
 // src/data/generated/*.json that the data modules import.
 //
-// The sheet is read as CSV via Google's gviz endpoint (no API key needed; the
-// sheet must be "published to the web"). Column mapping is by header NAME, so
-// column order is irrelevant and Google Form response tabs work too.
+// The sheet is read as CSV (no API key needed; sharing must be set to "Anyone
+// with the link" as Viewer). Column mapping is by header NAME, so column order
+// is irrelevant and Google Form response tabs work too.
 //
 // Safe by design:
 //   - If scripts/sheets.config.json has no spreadsheetId, this is a no-op and the
@@ -223,7 +223,33 @@ const TRANSFORMS = {
   news: transformNews,
 };
 
-async function fetchCsv(spreadsheetId, tabName) {
+// Google's gviz CSV endpoint (tqx=out:csv&sheet=<name>) can serve a stale cached
+// response for a few minutes right after an edit. The /export?format=csv&gid=<id>
+// endpoint reliably reflects the latest content, but needs a numeric gid rather
+// than a tab name. We discover name->gid by scraping the public htmlview page
+// (which lists every tab's gid), then fetch export by gid. If that discovery
+// fails for any reason, fall back to the gviz-by-name endpoint.
+async function fetchTabGids(spreadsheetId) {
+  const res = await fetch(`https://docs.google.com/spreadsheets/d/${spreadsheetId}/htmlview`);
+  if (!res.ok) throw new Error(`htmlview HTTP ${res.status}`);
+  const html = await res.text();
+  const gids = {};
+  const re = /items\.push\(\{name:\s*"((?:[^"\\]|\\.)*)"[^}]*?gid:\s*"(\d+)"/g;
+  let m;
+  while ((m = re.exec(html))) {
+    gids[m[1].replace(/\\"/g, '"')] = m[2];
+  }
+  return gids;
+}
+
+async function fetchCsv(spreadsheetId, tabName, gidByName) {
+  const gid = gidByName?.[tabName];
+  if (gid != null) {
+    const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv&gid=${gid}`;
+    const res = await fetch(url, { redirect: "follow" });
+    if (res.ok) return res.text();
+    // fall through to the gviz fallback below on failure
+  }
   const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}`;
   const res = await fetch(url, { redirect: "follow" });
   if (!res.ok) throw new Error(`HTTP ${res.status} for tab "${tabName}"`);
@@ -236,11 +262,18 @@ async function main() {
     console.log("[sync] No spreadsheetId configured in scripts/sheets.config.json — keeping existing seeds.");
     return;
   }
+  let gidByName = {};
+  try {
+    gidByName = await fetchTabGids(spreadsheetId);
+  } catch (err) {
+    console.warn(`[sync] could not discover tab gids (${err.message}) — falling back to gviz by name.`);
+  }
+
   let anyChange = false;
   for (const [key, tabName] of Object.entries(config.tabs)) {
     const outPath = resolve(genDir, `${key}.json`);
     try {
-      const csv = await fetchCsv(spreadsheetId, tabName);
+      const csv = await fetchCsv(spreadsheetId, tabName, gidByName);
       const rows = parseCSV(csv);
       const data = TRANSFORMS[key](rows);
       if (!data.length) throw new Error(`tab "${tabName}" produced 0 rows`);
