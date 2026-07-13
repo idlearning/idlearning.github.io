@@ -49,9 +49,17 @@ function ProjectCard({ project }: { project: Project }) {
 
   return (
     <article className="border-b border-border pb-10 last:border-b-0">
-      <div className="flex flex-col md:flex-row gap-8">
+      <div className="flex flex-col md:flex-row gap-8 md:items-start">
         <div className="md:w-48 flex-shrink-0">
-          <div className="aspect-square w-full rounded-md bg-gray-200 dark:bg-gray-700" />
+          {project.img ? (
+            <img
+              src={project.img}
+              alt={primaryTitle}
+              className="w-full h-auto rounded-md object-contain"
+            />
+          ) : (
+            <div className="aspect-square w-full rounded-md bg-gray-200 dark:bg-gray-700" />
+          )}
         </div>
         <div className="flex-grow">
           <h2 className="text-lg font-bold text-text-main leading-snug">{primaryTitle}</h2>
@@ -66,55 +74,57 @@ function ProjectCard({ project }: { project: Project }) {
               </div>
             ))}
           </dl>
-        </div>
-      </div>
 
-      {hasMore && (
-        <div className="mt-5 md:ml-56">
-          <button
-            type="button"
-            onClick={() => setOpen((o) => !o)}
-            aria-expanded={open}
-            className="inline-flex items-center gap-1 text-sm font-medium text-idl-blue hover:underline"
-          >
-            {open ? t.common.showLess : t.common.readMore}
-            <ChevronDown className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`} />
-          </button>
+          {hasMore && (
+            <div className="mt-5">
+              <button
+                type="button"
+                onClick={() => setOpen((o) => !o)}
+                aria-expanded={open}
+                className="inline-flex items-center gap-1 text-sm font-medium text-idl-blue hover:underline"
+              >
+                {open ? t.common.showLess : t.common.readMore}
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`}
+                />
+              </button>
 
-          {open && (
-            <div className="mt-4 flex flex-col gap-6">
-              {project.description && (
-                <section>
-                  <h3 className="text-sm font-bold text-text-main mb-2">
-                    {t.projects.description}
-                  </h3>
-                  <p
-                    className="text-sm text-text-muted text-justify leading-relaxed"
-                    style={{ wordBreak: "keep-all" }}
-                  >
-                    {project.description}
-                  </p>
-                </section>
-              )}
-              {relatedPubs.length > 0 && (
-                <section>
-                  <h3 className="text-sm font-bold text-text-main mb-2">
-                    {t.projects.relatedPublications}
-                  </h3>
-                  <ul className="flex flex-col gap-2">
-                    {relatedPubs.map((pub) => (
-                      <li key={pub.id} className="text-sm text-text-muted">
-                        <span className="text-text-main">{pub.title}</span>
-                        <span className="text-text-muted"> — {pub.venue}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
+              {open && (
+                <div className="mt-4 flex flex-col gap-6">
+                  {project.description && (
+                    <section>
+                      <h3 className="text-sm font-bold text-text-main mb-2">
+                        {t.projects.description}
+                      </h3>
+                      <p
+                        className="text-sm text-text-muted text-justify leading-relaxed"
+                        style={{ wordBreak: "keep-all" }}
+                      >
+                        {project.description}
+                      </p>
+                    </section>
+                  )}
+                  {relatedPubs.length > 0 && (
+                    <section>
+                      <h3 className="text-sm font-bold text-text-main mb-2">
+                        {t.projects.relatedPublications}
+                      </h3>
+                      <ul className="flex flex-col gap-2">
+                        {relatedPubs.map((pub) => (
+                          <li key={pub.id} className="text-sm text-text-muted">
+                            <span className="text-text-main">{pub.title}</span>
+                            <span className="text-text-muted"> — {pub.venue}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  )}
+                </div>
               )}
             </div>
           )}
         </div>
-      )}
+      </div>
     </article>
   );
 }

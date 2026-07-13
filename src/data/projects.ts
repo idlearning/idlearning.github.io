@@ -21,7 +21,7 @@ export const PROJECTS: Project[] = [
     period: "2024/05/01 - 2026/04/30",
     funder: "한국연구재단",
     members: "소효정, 김성은, Wang Yue, 고예지, 김규원, 이진희, 박시은",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAc7S4MGNhfrJQmmkFYEhVswEqvccCyyw7YQf6Y2IbGu-ogDBvy4gGYEXo2hCFceuNpjU4iAijKWbZkgjkXbMUEYtjeeaK84JeYFbVJfDaKbm0Gt16iGkAlp6ZZ1GiVt_M8P0b-DttaLvmtHDPXx3Awfed6NxOXjTboHs4D5A7Sv7fi8yPU2ECXLUxeEwDr7pbWaMQzknKTw85KL8yLNYpcpGUJkK0U3LQKZ27KDDYDcldemqr3_7fU",
+    img: "https://cdn.imweb.me/thumbnail/20260207/c689fd8c93248.png",
     description:
       "인공지능(AI)이 우리 사회 전반에 적용되면서 AI의 긍정적인 기능뿐만 아니라 데이터 편향성, 책임 귀속 문제 등 다양한 윤리적 이슈에 대한 사회적 담론이 형성되고 있다. 특히, 오늘날의 AI는 의사 결정을 수행하는 자율 시스템으로 발전하면서 기술과 인간을 둘러싼 복합적인 문제가 발생하고 있으며, 이에 따라 기존의 도덕적, 사회문화적, 법적 규범을 고려한 인간의 윤리적 판단이 더욱 중요해지고 있다. 그러나 이러한 사회적 요구와 필요성에도 불구하고, AI 윤리를 효과적으로 교육하기 위한 교수·학습 방법에 대한 논의는 아직 부족한 실정이다. 현재 AI 윤리 교육은 주로 교과서 중심의 개념적 학습이나 교화적인 원칙 중심 방식으로 이루어져 있어, 학습자들이 AI 윤리 쟁점에 내재된 다양한 요소들의 복잡성을 이해하고 도덕적 추론을 수행하는 데 어려움을 겪을 수 있다. 이러한 문제를 해결하기 위해, 본 연구는 도덕적 추론과 사고 중심의 AI 윤리 교수·학습을 지원하는 대화형 게임 플랫폼을 개발하고, 이를 실제 교육 현장에 적용하여 효과성을 검증하고자 한다. 이를 통해 학습자들이 보다 능동적으로 AI 윤리를 탐구하고, 윤리적 사고력을 키울 수 있는 새로운 학습 방식을 제안하고자 한다.",
     relatedPubIds: ["conf-persona-ai"],
@@ -34,7 +34,7 @@ export const PROJECTS: Project[] = [
     period: "2023/10/01 - 2024/09/30",
     funder: "한국연구재단",
     members: "소효정, 이초희, 김수진",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBpkyZAaFRnbUgt28_XqF6yV7rwuZNZQg7jQV_m19ReAnuiPCCgmGW5oTSrsTjrXZ-1wVlHVqlmWGiQ20DV54tPi6B51XJSLfdqh7MsnbikPUmnVPRJdgk6VxhJG0eVhV7JGg9vnlyRoCpwf9bVtfvQ9M8e1-Zj1ZKJcK9LNPtNlulSmodpYrYe4GI6O4r9_rU35zNv2xy6CFwb7FQu-gRF7zF9IHHqyHMNPASjzyNyoZG6bwyKLZoV",
+    img: "https://cdn.imweb.me/thumbnail/20250306/0996707e8239a.png",
     description:
       "생성형AI와 같은 기술이 보편화되면서, 학습자에게는 이러한 지능형 도구를 활용해 창의적으로 문제를 해결할 수 있는 역량이 요구되고 있다. 본 연구는 풍부한 교육 테크놀로지 기반 연구 경험을 갖춘 한국 이화여자대학교와, 실천 중심 교사 연구에 대한 전문성을 갖춘 인도네시아 Universitas Sebelas Maret 연구진의 협력을 통해 교사들이 생성형AI 시대에 학습자의 창의적 문제해결 능력을 효과적으로 지원할 수 있도록 돕는 교사 역량 강화 프로그램을 설계하고 적용하는 것을 목표로 하였다. 이를 통해 양국의 공통 교육 과제인 창의적 인재 양성과 AI 활용 교육 분야의 발전에 기여하고, 장기적인 국제 연구 협력의 기반을 마련하고자 하였다.",
     relatedPubIds: ["jour-chatgpt-essay-engagement"],
@@ -46,7 +46,7 @@ export const PROJECTS: Project[] = [
     period: "2021/10/01 - 2021/12/31",
     funder: "Google for Education",
     members: "소효정, 이가영(이화여대), 김동심(한신대), 박주연(덕성여대)",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCCH2vK2ev7FymduQTLzzwL6vDdDJstzPaVNMQjTkoeMO7YN1yl2ziYtKVj6Xf_GZTQtmVmbuh75t3FMIEfhHAxgRI7AHVGTN6Q6BIi3zKsJAKZsuyq9OdRLFHPL6zSD08G_Pj0sUthztQEn-NSVE20bQVnNP5tUbDckB_OY6UqDR1CM7EHtZapWTDfbvjpShg3gRLr0Cu2gr-2Xjep_MxqAymY2umjL5EryelWeeplne-2l5WLyze6",
+    img: "https://cdn.imweb.me/thumbnail/20250331/86bb75d9d5eba.png",
     description:
       "정책적으로 SW 및 AI융합교육이 확장되는 시점에서 학교의 준비도 및 교사와 학생에 대한 인식을 살펴보는 것은 정책의 효과성을 판단하기 위해 중요한 절차이다. 본 연구는 SW/AI교육의 확산을 위하여 학교 현장의 현황을 점검해보고, 교사를 중심으로 실제 현장에서의 요구를 조사하기 위한 목적으로 실시되었다. 이를 위하여 전국의 교사 710명, 학생 265명을 대상으로 설문조사를 실시하였으며, SW/AI교육을 성공적으로 실천하고 있는 교사 13명을 인터뷰하여 전반적인 현황파악 및 정책적 시사점을 도출하고자 하였다.",
   },
@@ -58,6 +58,7 @@ export const PROJECTS: Project[] = [
     period: "2021/08/01 - 2021/12/15",
     funder: "한국전자통신연구원(ETRI)",
     members: "소효정, 김성은, 박효성, 박미진, 장혜지",
+    img: "https://cdn.imweb.me/thumbnail/20250331/d1cb4e257fd41.png",
     description:
       "본 연구는 발달장애인을 대상으로 개발된 바리스타 가상훈련 콘텐츠를 일반인과 발달장애인에게 각각 적용하여 사전-사후-전이 수행도와 훈련 과정에서의 직무 수행도 측정을 통해 가상 중재의 효과성을 검증하고자 하였다. 특히, 가상훈련 콘텐츠 내에 포함되어 있는 가상 중재 요소(시각적 위치단서, 음성안내, 동영상 시청)를 교수자 중재와 비교하여 효과성을 확인하고, 가상훈련 콘텐츠로 학습한 내용 유지에 미치는 영향을 확인하고자 하였다.",
   },
@@ -69,6 +70,7 @@ export const PROJECTS: Project[] = [
     funder: "한국교육학술정보원(KERIS)",
     members:
       "소효정, Kevin Buchanan, 하승혜, 이지향, 이혜란, 김은영, 온가영, 이녹경(이화여대), 연경심(부산국제교류재단)",
+    img: "https://cdn.imweb.me/thumbnail/20250311/d4e8109f9161f.png",
     description:
       "지난 수십 년 동안 한국은 교수학습 방법을 혁신하기 위해 다양한 테크놀로지의 통합을 추진하였다. 현재 국제 사회는 과학과 기술의 발전으로 인한 지식 기반 경제로 빠르게 변화하고 있으며, 그 결과 국가 간의 경쟁 속도가 가속화되고 있다. 한국이 이렇게 변화하는 환경에 적응하고 글로벌 경쟁력을 유지하기 위해서는 전략적 장기 비전을 개발하는 것이 필수적이다. 한국전쟁 이후 경제 발전의 핵심 요소는 인적 자본에 대한 막대한 투자에 기반하고 있다. 특히 인적 자본구축에 가장 중요한 요소인 교육에 대한 정책적 관심과 투자가 활발하였다. 국제학력비교평가에서의 높은 순위는 한국 교육시스템의 우수성을 보여준다. 정보통신기술(ICT)은 한국 교육시스템과 경제 발전 가속화에 핵심적 역할을 하였다. 특히, 한국은 ICT 숙련 인력을 양성하고 학교에서의 ICT 통합을 촉진하기 위해 교육 정보화계획을 체계적으로 수립하여 추진하였다. 지금까지 한국 교육정보화 성과의 성공 요인은 기술 준비도와 혁신 역량 구축을 위한 지속적 노력에 기인한다고 볼 수 있다. 이러한 한국의 역사적 경험을 기반으로 한국 교육이 ICT를 어떻게 효과적으로 통합했는지 지식공유에 대한 요청이 개발도상국과 국제기구로부터 증가하고 있다. “K-Edu 교육정보화: 정책적 가이드라인과 역사”는 한국이 지난 수십 년간 축적한 경험을 개발도상국의 정책 입안자들과 공유하여 자국의 교육정보화 정책을 수립하고 실행하는데 도움을 주기 위해 작성되었다. 이 책은 한국 교육정보화의 주요 정책과제, 성과 및 교훈을 포함한 여정을 담고 있다.",
   },
@@ -80,6 +82,7 @@ export const PROJECTS: Project[] = [
     period: "2020/07/01 - 2020/09/30",
     funder: "APEC국제교육협력원",
     members: "소효정, 이혜란, 서민휘",
+    img: "https://cdn.imweb.me/thumbnail/20250311/04739d82673a6.png",
     description:
       "최근 전 세계적으로 코로나-19로 인해 대면 교육이 어려워지면서 원격교육이 대안적인 교육 방식으로 자리 잡고 있다. 그러나 단순히 대면 교육을 원격교육으로 전환하는 것이 아니라, 원격 환경에 적합한 새로운 교육 설계와 구조를 마련하는 것이 필수적이다. 교육부와 APEC 국제교육협력원은 그동안 개발도상국 교원을 대상으로 대면 초청 연수를 중심으로 연수를 진행해 왔다. 그러나 2020년 코로나-19로 인해 대면 연수가 불가능해지면서, 온라인 매체를 활용한 전면 원격연수를 처음으로 시행하게 되었다. 향후 코로나-19 이후에도 온라인 매체를 활용한 교육은 지속적으로 확대될 것으로 예상되므로, 장기적인 관점에서 원격연수 체제를 확립하기 위한 체계적인 전략 수립이 필요하다. 이에 따라 본 연구는 개발도상국 교원 역량개발을 위한 모바일 기반 연수체제의 설계, 개발 및 운영 전략을 제시하기 위한 목적으로 실시되었다. 구체적으로는 (1) 교류협력국의 모바일 학습 환경을 점검하고, (2) 기존의 교원대상 원격연수 사례를 수집 및 분석하고, (3) 효과적인 모바일 기반 교육 콘텐츠의 설계·개발 전략을 제시하며, (4) 향후 모바일 기반 원격연수 체제로의 전환을 위한 중장기 전략을 제시하는 것으로 목표로 하였다. 이를 통해 IACE가 비대면 교육이라는 시대적 요구에 적합하게 대응하며, 더불어 향후 지속가능한 원격연수 체제로의 전환에 필요한 기반 마련에 기여하고자 하였다.",
   },
@@ -92,6 +95,7 @@ export const PROJECTS: Project[] = [
     period: "2020/06/01 - 2022/08/31",
     funder: "한국연구재단",
     members: "소효정, 이혜란, Jin Lingxi, 송주영, 황우린, 장혜지",
+    img: "https://cdn.imweb.me/thumbnail/20250311/bc703eaa6e05a.png",
     description:
       "최근 인공지능(AI) 기반 교육 플랫폼이 급격히 확대되면서 학습자들이 AI 기술을 이해하는 방식도 다양해지고 있다. 그러나 많은 AI 기반 플랫폼이 기술에 대한 정확한 정보를 제공하지 않거나, 기능을 추상적으로 서술하거나 과대포장하는 경향이 있어, 사용자들이 적절한 학습 도구를 선택하는 데 어려움을 겪고 있다. 이러한 문제를 해결하기 위해, 학습자의 개별적인 학습 특성과 필요에 맞는 콘텐츠를 추천할 수 있는 시스템이 필요하다. 본 연구는 학습자가 단순한 추천 시스템의 사용자가 아니라 정보 제공자의 역할도 수행하는 참여적 추천 매커니즘을 제안하는 것을 목표로 한다. 또한, 학습자의 기존 선호도를 반영한 ‘선호 일치(preference-consistent)’ 추천 방식과, 새로운 학습 기회를 제공할 수 있는 ‘선호 불일치(preference-inconsistent)’ 추천 방식을 적용하여 각 유형의 추천 방식이 학습 경험에 미치는 영향을 검증하고자 하였다.",
   },
@@ -104,6 +108,7 @@ export const PROJECTS: Project[] = [
     funder: "The HEAD Foundation",
     members:
       "Hyo-Jeong So, Hyeran Lee, Yue Wang (Ewha Womans University), Ching Sing Chai (Chinese University of Hong Kong), Nur Arifah Drajati, Khotimah Mahmudah, Ba'diatul Azmina (Universitas Sebelas Maret, Indonesia), Uma Natarajan (HEAD Foundation)",
+    img: "https://cdn.imweb.me/thumbnail/20250402/2476ec056e085.png",
     description:
       "The main purpose of this project was to support teachers’ competency in creating technology-integrated learning activities based on multimodal literacy and TPACK. The research team focused on supporting teachers to design and implement multimodal lessons through face-to-face consultation and the social media platform. Overall, the results indicate that students improved their English competency after participating in the intervention. Despite the gains in the cognitive domain, the affective learning domain such as engagement and motivational belief did not change significantly. We speculate that the students were highly engaged in multimodal literacy activities even before the intervention. Due to the ceiling effect, the survey instrument could not measure significant gains. The results of the multimodal literacy test indicate that student performance varies across the classes. It is possible that the test was not rigorously administered in some classes, since we observed several missing data. Despite this limitation, our analysis shows that students overall showed a good level of competency in multimodal literacy items, in both decoding and encoding skills.",
   },
@@ -115,6 +120,7 @@ export const PROJECTS: Project[] = [
     period: "2018/05/01 - 2020/10/31",
     funder: "한국연구재단",
     members: "소효정, 이지향, 박현진, 김은영, 하승혜",
+    img: "https://cdn.imweb.me/thumbnail/20250407/1ca0c38116ac9.png",
     description:
       "본 연구는 온라인 동영상 학습 상황에서 학습을 촉진하고 정서적 지원을 제공하기 위한 정서적 피드백의 제공 방안을 설계하였다. 이를 위해 1차년도 연구를 통해 감성컴퓨팅 플랫폼 조사와 동영상 학습 중 발생하는 학습 정서에 대한 분석을 실시하였다. 감성컴퓨팅 플랫폼 조사 결과 기존의 감성컴퓨팅 플랫폼을 1) 표정 기반 플랫폼, 2) 생체 인식 기반 플랫폼, 3) 문자/음성 기반 플랫폼, 4) 혼합양식 플랫폼과 같은 분류 기준에 따라 분석하였다. 또한 이러한 플랫폼을 1) 감성컴퓨팅의 범주, 2) 기술 특성(입력 방법, 입력 데이터, 출력 데이터 및 인터넷 액세스), 3) 적용 분야에 따라 분석하였다. 연구 결과 본 연구진은 일부 플랫폼이 기술의 확산을 장려하기 위해 무료 소프트웨어(SDK/API)를 제공하지만 분석 방법과 응용 분야가 상업적 및 마케팅적 측면으로 제한됨을 발견했다. 다음으로 동영상 학습 중 발생하는 학습 정서의 분석을 위해 1인의 연구 대상자를 탐색적 분석으로 분석하였다. 그 결과 동영상 학습 환경에서 발생하는 정서를 분석하여 학습 정서와 표정을 분석하는 새로운 분류체계를 도출하였으며 학습 상황에서 부정 정서에 초점을 맞춘 연구의 필요성을 제시하였다.",
   },
@@ -126,6 +132,7 @@ export const PROJECTS: Project[] = [
       "1단계 2017/09/01 - 2018/02/28, 2단계 2018/09/01 - 2019/02/28, 3단계 2019/09/01 - 2020/02/29",
     funder: "이화여자대학교",
     members: "소효정, 이지향, 이혜란, 류다현, 김남희",
+    img: "https://cdn.imweb.me/thumbnail/20250407/ecec4d8e5b0a8.png",
     description:
       "본 연구는 이화여자대학교의 THE 인재상을 바탕으로 이화핵심역량(ECCA: Ewha Core Competency Assessment) 평가 도구를 개발하고 타당성을 검증하는 것을 목표로 하였다. 연구는 기존 탐색된 핵심역량(지식탐구역량, 창의융합역량, 문화예술역량, 공존공감역량, 세계시민역량)을 측정할 수 있도록 조작적 정의를 수정하고, 초기 174개 문항을 개발하였다. 이후 전문가 검토와 학생 피드백을 거쳐 133개 문항으로 축소하였으며, 본교 재학생 392명을 대상으로 설문조사를 실시하였다. 수집된 데이터 중 불성실 응답을 제외한 383명을 대상으로 탐색적 요인분석과 확인적 요인분석을 수행한 결과, 51개 문항이 탈락하고 최종적으로 82개 문항이 확정되었다. 분석 결과, 핵심역량과 15개 세부역량을 측정할 수 있는 문항이 포함되어 있어 요인 구조의 타당성이 확인되었다. 국내외적으로 학부교육이 지식전달 중심에서 학생의 역량 개발로 전환되는 가운데, 이화여자대학교도 학생 중심적이며 미래지향적인 융합인재 양성을 위해 교육 개선을 추진해왔다. 그러나 기존 역량 측정 도구(K-CESA, EWHA-CQ)는 일부 학생만을 대상으로 하거나 특정 역량에 편중되는 한계가 있었다. 이에 본 연구는 이화핵심역량을 종합적으로 평가할 수 있는 체계적이고 신뢰할 수 있는 도구를 개발함으로써 학부교육의 질적 향상에 기여하고자 하였다.",
   },
@@ -137,6 +144,7 @@ export const PROJECTS: Project[] = [
     period: "2016/10/12 - 2017/03/31",
     funder: "마이크로소프트",
     members: "소효정, 이혜란, 서민휘, Matthew Gaydos(SUNY-KOREA), 이재오(SUNY-KOREA)",
+    img: "https://cdn.imweb.me/thumbnail/20250407/c493eaa278bc6.png",
     description:
       "While there exist many factors affecting the slow adoption of learning technologies in Korean schools, one of the critical factors is the lack of compelling evidence and scalable models showing the means by which digital learning solutions can be leveraged for teaching and learning, especially across contexts and over time. In this project, we aim to examine the relationship between design technologies and student learning and argue that such work is critical in order to deeply understand the impact of digital learning solutions beyond narrow, measures and indicators limited by classroom observation or test outcomes.",
   },
@@ -148,6 +156,7 @@ export const PROJECTS: Project[] = [
     period: "2016/10/01 - 2017/01/31",
     funder: "국가과학기술인력개발원(KIRD)",
     members: "소효정, 이지향, 이혜란, 노석준(성신여대), 오정은",
+    img: "https://cdn.imweb.me/thumbnail/20250407/491b403a7a354.png",
     description:
       "본 연구는 국가과학기술인력개발원(KIRD)이 대상으로 하는 과학기술 인력 성인학습자를 위한 비정형 학습을 지원하기 위한 지식콘텐츠 개발 및 도입의 방향성 설정을 목표로 하였다. 궁극적으로 지식콘텐츠 확충을 위한 단계별 중장기 계획을 수립하고자 하였다. 과학기술 전문인력의 비정형 학습환경에서 기본 소양 및 전문성 개발을 지원하는 지식콘텐츠의 주제를 도출하며, 향후 KIRD가 지식콘텐츠를 개발 및 도입하기 위한 중장기 계획을 수립하였다.",
   },
@@ -160,6 +169,7 @@ export const PROJECTS: Project[] = [
     funder: "Digital Learning for Development (DL4D) funded by IDRC, UK Aid, FIT-ED",
     members:
       "Hyo-Jeong So, Jihyang Lee, Minhwi Seo, Davaasuren Bolor (Ewha Womans University), Lung-Hsiang Wong (Nanyang Technological University), Christine Shin, Shinae Lee, Nichole Kieun Kim, Nomin Margad-Erdene, Odbileg Ganbaatar (Mongolia International University)",
+    img: "https://cdn.imweb.me/thumbnail/20250402/92406ab2f4f61.png",
     description:
       "The researchers aimed to design and implement a participatory model of mobile-assisted language learning (MALL) in order to enhance English education experience in public schools in Mongolia. In particular, the researchers sought to examine three research questions concerning the implementation of digital learning innovations in developing contexts or resource-poor areas: (a) localization and customization, (b) quality and equity, and (c) sustainability. The whole implementation progressed through the following three phases: Phase 1 – baseline study, Phase 2 – teacher professional development, and Phase 3 – intervention implementation. The main research intervention took place in the three public high schools in Ulaanbaatar with three teachers (two 10th-grade and one 6th-grade teachers) and their students (N=67). The proposed solution for digital learning focuses on the integration of gamification, social media, and mobile devices to design and implement a participatory style language-learning model. The researchers collected multiple sources of data such as the student perception survey, English proficiency test, and interviews with students and teachers. Overall, the results indicate that the digital learning solution made positive impacts on both the cognitive and affective dimensions. The test results provide the empirical support that the students who participated in the main research intervention were able to improve their English competency, especially in reading. In addition, the teachers’ pedagogical approaches showed a shift from contentcentered to participation-centered methods. In conclusion, this study demonstrates that the potential of adopting and sustaining digital learning innovations in Mongolian public schools can be enhanced (a) when the solution leverages the existing resources and cultural practices, and (b) when continuous efforts are made for building local teachers’ pedagogical knowledge and skills.",
   },
@@ -171,6 +181,7 @@ export const PROJECTS: Project[] = [
     period: "2015/07/01 - 2017/06/30",
     funder: "한국연구재단",
     members: "소효정, 이지향, 서민휘(이화여자대학교), 오승재(POSTECH)",
+    img: "https://cdn.imweb.me/thumbnail/20250402/296a6550782bd.png",
     description:
       "본 연구는 1) 제스처 컴퓨팅, 2) 증강현실, 3) 웨어러블 기기의 세 가지 영역의 유기적 융합을 통해 체감형 참여 시뮬레이션을 개발하고, 그 효과성을 인간대상 연구 방법을 통해 심도 있게 검증하였다. 특히 전시물에서 구체적으로 다루는 주제 영역은 직관적으로 이해가 힘든 추상적 과학개념인 ‘빛의 굴절’과 ‘전기와 저항’으로 설정하고, 이에 관한 체감형 시뮬레이션을 개발하였다. 사용자의 제스처를 인식하기 위한 개인 기기로써의 AR 글라스인 홀로렌즈와 키넥트를 활용하여 체감적 학습을 가능하도록 하였다. 또한 사용자의 체험을 일회성이 아닌 일상으로 확장하여 지속성을 가질 수 있도록 지원하는 온라인 플랫폼을 활용한 시뮬레이션의 확장 가능성을 모색하였다. 개발된 체감형 참여 시뮬레이션은 사용자를 대상으로 한 효과성 검증 연구를 실시하여, 기술/콘텐츠 개발과 더불어 교육적 효과성 검증이 결합된 심도 있는 연구결과를 제시하였다.",
   },
