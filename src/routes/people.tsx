@@ -142,9 +142,24 @@ function hasModalDetail(person: Person): boolean {
   );
 }
 
-function StudentCard({ person, onOpen }: { person: Person; onOpen: (p: Person) => void }) {
+const DEGREE_LABEL: Record<NonNullable<Person["alumniDegree"]>, string> = {
+  phd: "Ph.D.",
+  ma: "M.A.",
+};
+
+function PersonCard({
+  person,
+  onOpen,
+  variant = "student",
+}: {
+  person: Person;
+  onOpen: (p: Person) => void;
+  variant?: "student" | "alumni";
+}) {
   const t = useT();
   const clickable = hasModalDetail(person);
+  const showPhoto = variant !== "alumni";
+  const degreeLabel = person.alumniDegree ? DEGREE_LABEL[person.alumniDegree] : null;
 
   return (
     <div
@@ -161,12 +176,17 @@ function StudentCard({ person, onOpen }: { person: Person; onOpen: (p: Person) =
             }
           : undefined
       }
-      className={`group flex flex-col sm:flex-row gap-6 items-start rounded-xl border border-border p-4 shadow-sm transition-all ${
-        clickable ? "cursor-pointer hover:border-idl-blue/40 hover:shadow-md" : ""
+      className={`group flex flex-col sm:flex-row gap-6 items-start ${
+        clickable ? "cursor-pointer" : ""
       }`}
     >
-      <Avatar person={person} className="w-32 h-32 rounded-lg shrink-0" />
+      {showPhoto && <Avatar person={person} className="w-32 h-32 rounded-lg shrink-0" />}
       <div className="text-sm min-w-0">
+        {degreeLabel && (
+          <div className="text-xs font-semibold uppercase tracking-wider text-idl-blue mb-1">
+            {degreeLabel}
+          </div>
+        )}
         <PersonName person={person} size="md" />
         {person.email && <p className="text-text-muted mb-3">{person.email}</p>}
         {person.interests && <DetailRow label={t.people.interests}>{person.interests}</DetailRow>}
@@ -262,11 +282,19 @@ function StudentModal({ person, onClose }: { person: Person; onClose: () => void
   );
 }
 
-function PeopleGrid({ people, onOpen }: { people: Person[]; onOpen: (p: Person) => void }) {
+function PeopleGrid({
+  people,
+  onOpen,
+  variant,
+}: {
+  people: Person[];
+  onOpen: (p: Person) => void;
+  variant?: "student" | "alumni";
+}) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12">
       {people.map((person) => (
-        <StudentCard key={person.id} person={person} onOpen={onOpen} />
+        <PersonCard key={person.id} person={person} onOpen={onOpen} variant={variant} />
       ))}
     </div>
   );
@@ -277,12 +305,34 @@ const STUDENT_SECTIONS: { role: PersonRole; key: "doctoral" | "masters" }[] = [
   { role: "masters", key: "masters" },
 ];
 
+/** Groups alumni by graduation year, newest first; those without a year go last. */
+function groupAlumniByYear(
+  people: Person[],
+): { key: string; label: string; people: Person[] }[] {
+  const byYear = new Map<number, Person[]>();
+  const noYear: Person[] = [];
+  for (const p of people) {
+    if (p.gradYear == null) {
+      noYear.push(p);
+    } else {
+      const arr = byYear.get(p.gradYear) ?? [];
+      arr.push(p);
+      byYear.set(p.gradYear, arr);
+    }
+  }
+  const groups = [...byYear.entries()]
+    .sort(([a], [b]) => b - a)
+    .map(([year, ppl]) => ({ key: String(year), label: String(year), people: ppl }));
+  if (noYear.length > 0) groups.push({ key: "other", label: "—", people: noYear });
+  return groups;
+}
+
 function PeoplePage() {
   const t = useT();
   const [selected, setSelected] = useState<Person | null>(null);
 
   const professor = getPeopleByRole("professor")[0];
-  const alumni = getPeopleByRole("alumni");
+  const alumniGroups = groupAlumniByYear(getPeopleByRole("alumni"));
 
   return (
     <Page>
@@ -320,11 +370,20 @@ function PeoplePage() {
         </div>
       </section>
 
-      {/* Alumni, its own top-level section */}
-      {alumni.length > 0 && (
+      {/* Alumni, its own top-level section, grouped by graduation year */}
+      {alumniGroups.length > 0 && (
         <section>
           <h2 className="text-2xl font-bold text-idl-blue mb-8">{t.people.alumni}</h2>
-          <PeopleGrid people={alumni} onOpen={setSelected} />
+          <div className="flex flex-col gap-14">
+            {alumniGroups.map((g) => (
+              <div key={g.key}>
+                <h3 className="text-lg font-bold text-text-main mb-6 pb-2 border-b border-border">
+                  {g.label}
+                </h3>
+                <PeopleGrid people={g.people} onOpen={setSelected} variant="alumni" />
+              </div>
+            ))}
+          </div>
         </section>
       )}
 

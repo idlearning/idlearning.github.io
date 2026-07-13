@@ -26,6 +26,10 @@ export type Person = {
   dissertation?: string;
   /** Dissertation PDF URL — renders a link icon next to the title. */
   dissertationUrl?: string;
+  /** Degree earned in the lab, for alumni. Renders a "Ph.D." / "M.A." tag. */
+  alumniDegree?: "phd" | "ma";
+  /** Graduation year, for alumni. Used to group the Alumni section by year. */
+  gradYear?: number;
   /** Google Scholar profile URL. */
   scholar?: string;
   /** Personal homepage URL. Also used to link this person's name in publications. */
@@ -103,6 +107,8 @@ export const PEOPLE: Person[] = [
     nameKo: "장혜지",
     nameEn: "Hyeji Jang",
     role: "alumni",
+    alumniDegree: "ma",
+    gradYear: 2024,
   },
 ];
 
