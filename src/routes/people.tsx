@@ -115,7 +115,6 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
 function DocLine({ title, url, label }: { title: string; url?: string; label: string }) {
   return (
     <span className="inline-flex items-start gap-1.5">
-      <span>{title}</span>
       {url && (
         <a
           href={url}
@@ -128,6 +127,7 @@ function DocLine({ title, url, label }: { title: string; url?: string; label: st
           <FileText className="w-4 h-4" />
         </a>
       )}
+      <span>{title}</span>
     </span>
   );
 }
@@ -160,6 +160,8 @@ function PersonCard({
   const clickable = variant !== "alumni" && hasModalDetail(person);
   const showPhoto = variant !== "alumni";
   const degreeLabel = person.alumniDegree ? DEGREE_LABEL[person.alumniDegree] : null;
+  const dissertationLabel =
+    person.alumniDegree === "ma" ? t.people.dissertationMa : t.people.dissertation;
 
   return (
     <div
@@ -176,11 +178,11 @@ function PersonCard({
             }
           : undefined
       }
-      className={`group flex flex-col sm:flex-row gap-6 items-start ${
-        clickable ? "cursor-pointer" : ""
+      className={`flex flex-col sm:flex-row gap-6 items-start ${
+        clickable ? "group cursor-pointer" : ""
       }`}
     >
-      {showPhoto && <Avatar person={person} className="w-32 h-32 rounded-lg shrink-0" />}
+      {showPhoto && <Avatar person={person} className="w-40 h-40 rounded-lg shrink-0" />}
       <div className="text-sm min-w-0">
         {degreeLabel && (
           <div className="text-xs font-semibold uppercase tracking-wider text-idl-blue mb-1">
@@ -189,15 +191,16 @@ function PersonCard({
         )}
         <PersonName person={person} size="md" />
         {person.email && <p className="text-text-muted mb-3">{person.email}</p>}
+        <ProfileLinks person={person} />
         {variant === "alumni" && person.affiliation && (
-          <p className="text-text-muted mb-2">{person.affiliation}</p>
+          <p className="text-text-muted mt-3 mb-2">{person.affiliation}</p>
         )}
         {variant === "alumni" && person.dissertation && (
-          <DetailRow label={t.people.dissertation}>
+          <DetailRow label={dissertationLabel}>
             <DocLine
               title={person.dissertation}
               url={person.dissertationUrl}
-              label={t.people.dissertation}
+              label={dissertationLabel}
             />
           </DetailRow>
         )}
@@ -207,7 +210,6 @@ function PersonCard({
             <DocLine title={person.thesis} url={person.thesisUrl} label={t.people.thesis} />
           </DetailRow>
         )}
-        <ProfileLinks person={person} />
       </div>
     </div>
   );
