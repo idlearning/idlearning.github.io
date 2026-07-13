@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Globe, X } from "lucide-react";
+import { Globe, Link2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Page, PageHeading } from "../components/Page";
@@ -111,7 +111,7 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
   );
 }
 
-/** Title text, underlined and clickable when a URL is set. */
+/** Title text with a small link icon appended right after it, when a URL is set. */
 function DocLine({ title, url }: { title: string; url?: string }) {
   if (!url) return <span>{title}</span>;
   return (
@@ -120,9 +120,10 @@ function DocLine({ title, url }: { title: string; url?: string }) {
       onClick={(e) => e.stopPropagation()}
       target="_blank"
       rel="noreferrer"
-      className="underline decoration-text-muted/50 underline-offset-2 hover:text-idl-blue transition-colors"
+      className="hover:text-idl-blue transition-colors"
     >
       {title}
+      <Link2 className="inline-block w-3.5 h-3.5 ml-1 -translate-y-px" />
     </a>
   );
 }
