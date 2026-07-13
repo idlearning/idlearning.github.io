@@ -46,7 +46,7 @@ function Badge({ badge }: { badge: PubBadge }) {
   // SSCI gets a filled sky-blue treatment; other index badges stay neutral.
   if (badge.label === "SSCI") {
     return (
-      <span className="inline-block px-2 py-0.5 bg-sky-500 text-white text-xs font-bold rounded uppercase tracking-wider">
+      <span className="inline-block px-2 py-0.5 bg-idl-blue text-white text-xs font-bold rounded uppercase tracking-wider">
         {badge.label}
       </span>
     );

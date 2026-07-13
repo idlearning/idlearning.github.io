@@ -108,7 +108,7 @@ function HomePage() {
         </div>
         {/* Featured Project carousel */}
         <div className="lg:w-1/2">
-          <h2 className="text-xl font-bold text-idl-blue mb-4">{t.home.researchProjects}</h2>
+          <h2 className="text-2xl font-bold text-idl-blue mb-4">{t.home.researchProjects}</h2>
           <FeaturedCarousel />
           <div className="mt-3 flex justify-end">
             <Link
@@ -131,7 +131,7 @@ function HomePage() {
               key={item.slug}
               to="/news/$slug"
               params={{ slug: item.slug }}
-              className="group bg-card rounded-xl border border-border shadow-sm overflow-hidden flex flex-col hover:shadow-md hover:border-amber-400 transition-all"
+              className="group bg-card rounded-xl border border-border shadow-sm overflow-hidden flex flex-col hover:shadow-md hover:border-idl-blue/40 transition-all"
             >
               <div className={item.wrapClass ?? NEWS_WRAP_DEFAULT}>
                 <img
@@ -141,7 +141,7 @@ function HomePage() {
                 />
               </div>
               <div className="p-3 flex flex-col flex-grow">
-                <h3 className="text-sm font-medium text-text-main mb-2 line-clamp-2 text-center group-hover:text-amber-500 transition-colors">
+                <h3 className="text-sm font-medium text-text-main mb-2 line-clamp-2 text-center group-hover:text-idl-blue transition-colors">
                   {item.title}
                 </h3>
                 <div className="mt-auto pt-3 text-xs text-text-muted text-center">{item.date}</div>

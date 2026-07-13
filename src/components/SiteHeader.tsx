@@ -34,7 +34,7 @@ export function SiteHeader() {
         </Link>
 
         <div className="flex items-center gap-1 sm:gap-4">
-          <nav className="hidden md:flex space-x-6">
+          <nav className="hidden md:flex space-x-6 text-sm">
             {navItems.map((item) => (
               <Link
                 key={item.to}
