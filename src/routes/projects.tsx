@@ -33,53 +33,45 @@ function ProjectCard({ project }: { project: Project }) {
   const { lang } = usePreferences();
   const [open, setOpen] = useState(false);
 
-  const title = lang === "ko" ? project.titleKo : project.titleEn;
-  const subtitle = lang === "ko" ? project.titleEn : project.titleKo;
+  const primaryTitle =
+    lang === "ko" ? project.titleKo || project.titleEn : project.titleEn || project.titleKo;
+  const secondaryTitle = lang === "ko" ? project.titleEn : project.titleKo;
   const relatedPubs = (project.relatedPubIds ?? [])
     .map(getPublicationById)
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
-  const hasMore = Boolean(project.descriptionKo) || relatedPubs.length > 0;
+  const hasMore = Boolean(project.description) || relatedPubs.length > 0;
+
+  const fields = [
+    { label: t.projects.koreanName, value: project.titleKo || project.titleEn },
+    { label: t.projects.englishName, value: project.titleEn },
+    { label: t.projects.period, value: project.period },
+    { label: t.projects.funder, value: project.funder },
+    { label: t.projects.members, value: project.members },
+  ];
 
   return (
-    <article className="flex flex-col gap-6">
+    <article className="border-b border-border pb-10 last:border-b-0">
       <div className="flex flex-col md:flex-row gap-8">
-        <div className="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center p-4">
-          <img
-            alt={title}
-            className="w-full h-auto object-contain max-h-48 rounded shadow-sm border border-border"
-            src={project.img}
-          />
+        <div className="md:w-48 flex-shrink-0">
+          <h2 className="text-lg font-bold text-text-main leading-snug">{primaryTitle}</h2>
+          {secondaryTitle && (
+            <p className="mt-2 text-sm text-text-muted leading-relaxed">{secondaryTitle}</p>
+          )}
         </div>
-        <div className="w-full md:w-2/3 flex flex-col justify-center">
-          <h2 className="text-xl font-bold text-text-main mb-1">{title}</h2>
-          <p className="text-sm text-text-muted mb-6">{subtitle}</p>
-          <table className="text-sm text-text-muted w-full max-w-md">
-            <tbody>
-              <tr>
-                <th className="text-left font-medium w-24 py-1 align-top text-text-main">
-                  {t.projects.period}
-                </th>
-                <td className="py-1">{project.period}</td>
-              </tr>
-              <tr>
-                <th className="text-left font-medium w-24 py-1 align-top text-text-main">
-                  {t.projects.funder}
-                </th>
-                <td className="py-1">{project.funder}</td>
-              </tr>
-              <tr>
-                <th className="text-left font-medium w-24 py-1 align-top text-text-main">
-                  {t.projects.members}
-                </th>
-                <td className="py-1">{project.members}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="flex-grow">
+          <dl className="grid grid-cols-1 gap-x-8 gap-y-3 text-sm md:grid-cols-[8rem_1fr]">
+            {fields.map((field) => (
+              <div key={field.label} className="contents">
+                <dt className="font-bold text-text-main">{field.label}</dt>
+                <dd className="text-text-muted leading-relaxed">{field.value}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </div>
 
       {hasMore && (
-        <div>
+        <div className="mt-5 md:ml-56">
           <button
             type="button"
             onClick={() => setOpen((o) => !o)}
@@ -92,16 +84,21 @@ function ProjectCard({ project }: { project: Project }) {
 
           {open && (
             <div className="mt-4 flex flex-col gap-6">
-              {project.descriptionKo && (
-                <p
-                  className="text-sm text-text-muted text-justify leading-relaxed"
-                  style={{ wordBreak: "keep-all" }}
-                >
-                  {project.descriptionKo}
-                </p>
+              {project.description && (
+                <section>
+                  <h3 className="text-sm font-bold text-text-main mb-2">
+                    {t.projects.description}
+                  </h3>
+                  <p
+                    className="text-sm text-text-muted text-justify leading-relaxed"
+                    style={{ wordBreak: "keep-all" }}
+                  >
+                    {project.description}
+                  </p>
+                </section>
               )}
               {relatedPubs.length > 0 && (
-                <div>
+                <section>
                   <h3 className="text-sm font-bold text-text-main mb-2">
                     {t.projects.relatedPublications}
                   </h3>
@@ -113,7 +110,7 @@ function ProjectCard({ project }: { project: Project }) {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </section>
               )}
             </div>
           )}
@@ -128,7 +125,7 @@ function ProjectsPage() {
   return (
     <Page>
       <PageHeading>{t.projects.title}</PageHeading>
-      <div className="flex flex-col gap-16">
+      <div className="flex flex-col gap-10">
         {PROJECTS.map((project) => (
           <ProjectCard key={project.id} project={project} />
         ))}

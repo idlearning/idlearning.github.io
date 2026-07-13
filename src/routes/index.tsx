@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useT } from "../lib/i18n";
 import { usePreferences } from "../lib/preferences";
 import { getLatestNews, NEWS_IMG_DEFAULT, NEWS_WRAP_DEFAULT } from "../data/news";
-import { PROJECTS } from "../data/projects";
+import { PROJECTS, type Project } from "../data/projects";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,7 +36,9 @@ const INTRO_EN =
 
 function FeaturedCarousel() {
   const { lang } = usePreferences();
-  const slides = PROJECTS;
+  const slides = PROJECTS.filter((project): project is Project & { img: string } =>
+    Boolean(project.img),
+  );
   const [index, setIndex] = useState(0);
 
   useEffect(() => {

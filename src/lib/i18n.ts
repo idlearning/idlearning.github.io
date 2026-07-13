@@ -26,9 +26,12 @@ type Dict = {
   };
   projects: {
     title: string;
+    koreanName: string;
+    englishName: string;
     period: string;
     funder: string;
     members: string;
+    description: string;
     relatedPublications: string;
   };
   publications: {
@@ -72,9 +75,12 @@ const DICTS: Record<Lang, Dict> = {
     },
     projects: {
       title: "Projects",
+      koreanName: "한국어명",
+      englishName: "영문명",
       period: "연구 기간",
       funder: "지원기관",
       members: "참여연구원",
+      description: "프로젝트 설명",
       relatedPublications: "연관 논문",
     },
     publications: {
@@ -121,9 +127,12 @@ const DICTS: Record<Lang, Dict> = {
     },
     projects: {
       title: "Projects",
+      koreanName: "Korean Title",
+      englishName: "English Title",
       period: "Period",
       funder: "Funder",
       members: "Members",
+      description: "Project Description",
       relatedPublications: "Related Publications",
     },
     publications: {
