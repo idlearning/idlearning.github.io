@@ -4,9 +4,12 @@ export type PersonRole = "professor" | "doctoral" | "masters" | "alumni";
 
 export type Person = {
   id: string;
-  nameKo: string;
+  /** Korean name. Optional — international students may not have one. */
+  nameKo?: string;
   nameEn: string;
   role: PersonRole;
+  /** International student: display the English name only, no Korean form. */
+  international?: boolean;
   email?: string;
   img?: string;
   /** Shown for current students. */
@@ -15,10 +18,14 @@ export type Person = {
   education?: string[];
   /** Master's thesis — shown for doctoral students. */
   thesis?: string;
+  /** Master's thesis PDF URL — renders a link icon next to the title. */
+  thesisUrl?: string;
   /** Current affiliation — shown for alumni. */
   affiliation?: string;
   /** Degree dissertation — shown for alumni. */
   dissertation?: string;
+  /** Dissertation PDF URL — renders a link icon next to the title. */
+  dissertationUrl?: string;
   /** Google Scholar profile URL. */
   scholar?: string;
   /** Personal homepage URL. Also used to link this person's name in publications. */
@@ -69,9 +76,9 @@ export const PEOPLE: Person[] = [
   },
   {
     id: "lingxi-jin",
-    nameKo: "진링시",
     nameEn: "Lingxi Jin",
     role: "doctoral",
+    international: true,
   },
   {
     id: "eunyoung-kim",

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Globe } from "lucide-react";
+import { ChevronDown, FileText, Globe } from "lucide-react";
+import { useState } from "react";
 
 import { Page, PageHeading } from "../components/Page";
 import { GoogleScholarIcon } from "../components/icons";
@@ -29,14 +30,16 @@ export const Route = createFileRoute("/people")({
 
 function PersonName({ person, size }: { person: Person; size: "lg" | "md" }) {
   const { lang } = usePreferences();
-  const primary = lang === "ko" ? person.nameKo : person.nameEn;
-  const secondary = lang === "ko" ? person.nameEn : person.nameKo;
+  // International students (or anyone without a Korean name) show the English name only.
+  const showKorean = Boolean(person.nameKo) && !person.international;
+  const primary = lang === "ko" && showKorean ? person.nameKo : person.nameEn;
+  const secondary = showKorean ? (lang === "ko" ? person.nameEn : person.nameKo) : null;
   return (
     <div className="flex items-end gap-2 mb-1">
       <h3 className={`font-bold text-text-main ${size === "lg" ? "text-xl" : "text-lg"}`}>
         {primary}
       </h3>
-      <span className="text-text-muted text-sm mb-0.5">{secondary}</span>
+      {secondary && <span className="text-text-muted text-sm mb-0.5">{secondary}</span>}
     </div>
   );
 }
@@ -100,41 +103,91 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
   );
 }
 
+/** Title text followed by a small link icon that opens a PDF, when a URL is set. */
+function DocLine({ title, url, label }: { title: string; url?: string; label: string }) {
+  return (
+    <span className="inline-flex items-start gap-1.5">
+      <span>{title}</span>
+      {url && (
+        <a
+          href={url}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`${label} (PDF)`}
+          className="mt-0.5 shrink-0 text-text-muted hover:text-idl-blue transition-colors"
+        >
+          <FileText className="w-4 h-4" />
+        </a>
+      )}
+    </span>
+  );
+}
+
 function StudentCard({ person }: { person: Person }) {
   const t = useT();
+  const [open, setOpen] = useState(false);
+
+  const hasDetail =
+    Boolean(person.education?.length) ||
+    Boolean(person.thesis) ||
+    Boolean(person.affiliation) ||
+    Boolean(person.dissertation);
+
   return (
     <div className="flex flex-col sm:flex-row gap-6 items-start">
       <Avatar person={person} className="w-36 h-36 rounded-lg shrink-0" />
       <div className="text-sm min-w-0">
         <PersonName person={person} size="md" />
         {person.email && <p className="text-text-muted mb-3">{person.email}</p>}
+        {person.interests && <DetailRow label={t.people.interests}>{person.interests}</DetailRow>}
         <ProfileLinks person={person} />
-        <div className="mt-3">
-          {person.interests && <DetailRow label={t.people.interests}>{person.interests}</DetailRow>}
-          {person.education && person.education.length > 0 && (
-            <DetailRow label={t.people.education}>
-              {person.education.map((line, i) => (
-                <span key={i}>
-                  {line}
-                  {i < person.education!.length - 1 && <br />}
-                </span>
-              ))}
-            </DetailRow>
-          )}
-          {person.thesis && (
-            <DetailRow label={t.people.thesis}>
-              <span className="underline">{person.thesis}</span>
-            </DetailRow>
-          )}
-          {person.affiliation && (
-            <DetailRow label={t.people.affiliation}>{person.affiliation}</DetailRow>
-          )}
-          {person.dissertation && (
-            <DetailRow label={t.people.dissertation}>
-              <span className="underline">{person.dissertation}</span>
-            </DetailRow>
-          )}
-        </div>
+
+        {hasDetail && (
+          <>
+            {open && (
+              <div className="mt-3">
+                {person.education && person.education.length > 0 && (
+                  <DetailRow label={t.people.education}>
+                    {person.education.map((line, i) => (
+                      <span key={i}>
+                        {line}
+                        {i < person.education!.length - 1 && <br />}
+                      </span>
+                    ))}
+                  </DetailRow>
+                )}
+                {person.thesis && (
+                  <DetailRow label={t.people.thesis}>
+                    <DocLine title={person.thesis} url={person.thesisUrl} label={t.people.thesis} />
+                  </DetailRow>
+                )}
+                {person.affiliation && (
+                  <DetailRow label={t.people.affiliation}>{person.affiliation}</DetailRow>
+                )}
+                {person.dissertation && (
+                  <DetailRow label={t.people.dissertation}>
+                    <DocLine
+                      title={person.dissertation}
+                      url={person.dissertationUrl}
+                      label={t.people.dissertation}
+                    />
+                  </DetailRow>
+                )}
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={() => setOpen((o) => !o)}
+              aria-expanded={open}
+              className="mt-3 inline-flex items-center gap-1 text-idl-blue hover:text-idl-blue/70 text-sm font-medium transition-colors"
+            >
+              {open ? t.common.showLess : t.common.readMore}
+              <ChevronDown
+                className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`}
+              />
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
