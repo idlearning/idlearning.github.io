@@ -58,16 +58,17 @@ function Badge({ badge }: { badge: PubBadge }) {
   );
 }
 
-function DoiButton({ doi }: { doi: string }) {
+/** Small outlined link button (DOI, PDF, ACM, Web) with a link icon. */
+function LinkButton({ href, label }: { href: string; label: string }) {
   return (
     <a
-      href={`https://doi.org/${doi}`}
+      href={href}
       target="_blank"
       rel="noreferrer"
       className="inline-flex items-center gap-1 px-2 py-0.5 border border-border text-xs text-text-muted rounded uppercase tracking-wider hover:border-idl-blue hover:text-idl-blue transition-colors"
     >
       <Link2 className="w-3.5 h-3.5" />
-      DOI
+      {label}
     </a>
   );
 }
@@ -100,7 +101,8 @@ function AuthorList({ authors }: { authors: string[] }) {
 }
 
 function PublicationItem({ pub }: { pub: Publication }) {
-  const hasMeta = Boolean(pub.doi) || (pub.badges && pub.badges.length > 0);
+  const hasLinks = Boolean(pub.doi || pub.pdf || pub.acmdl || pub.website);
+  const hasMeta = hasLinks || (pub.badges && pub.badges.length > 0);
   return (
     <article>
       <h4 className="text-base font-bold text-text-main mb-2">{pub.title}</h4>
@@ -108,7 +110,10 @@ function PublicationItem({ pub }: { pub: Publication }) {
       <p className="text-sm text-text-muted mb-3">{pub.venue}</p>
       {hasMeta && (
         <div className="flex gap-2 flex-wrap items-center">
-          {pub.doi && <DoiButton doi={pub.doi} />}
+          {pub.doi && <LinkButton href={`https://doi.org/${pub.doi}`} label="DOI" />}
+          {pub.pdf && <LinkButton href={pub.pdf} label="PDF" />}
+          {pub.acmdl && <LinkButton href={pub.acmdl} label="ACM" />}
+          {pub.website && <LinkButton href={pub.website} label="Web" />}
           {pub.badges?.map((badge) => (
             <Badge key={badge.label} badge={badge} />
           ))}

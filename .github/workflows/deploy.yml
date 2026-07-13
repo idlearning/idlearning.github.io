@@ -7,8 +7,13 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-  # Allow manual runs from the Actions tab.
+  # Allow manual runs from the Actions tab, and remote triggers (e.g. a Google
+  # Form's Apps Script calling the workflow_dispatch API when new content is added).
   workflow_dispatch:
+  # Periodically re-pull the Google Sheet so content edits go live without a code
+  # change. Hourly; adjust the cron as needed (times are UTC).
+  schedule:
+    - cron: "0 * * * *"
 
 # Least-privilege permissions needed to publish to Pages.
 permissions:
@@ -35,6 +40,12 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+
+      # Pull the latest content from the Google Sheet into src/data/generated/*.json.
+      # No-op (keeps committed seeds) until a spreadsheetId is set in
+      # scripts/sheets.config.json; a failed tab keeps its existing JSON.
+      - name: Sync content from Google Sheet
+        run: bun run sync
 
       - name: Build static site
         run: bun run build

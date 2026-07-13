@@ -1,0 +1,569 @@
+[
+  {
+    "id": "hyojeong-so",
+    "nameKo": "소효정",
+    "nameEn": "Hyo-Jeong So",
+    "role": "professor",
+    "email": "hyojeongso@ewha.ac.kr",
+    "img": "https://cdn.imweb.me/thumbnail/20250305/1ecffa243b6be.png",
+    "scholar": "https://scholar.google.com/citations?user=dI0biU8AAAAJ&hl=kr&oi=ao",
+    "homepage": "https://www.ewha.ac.kr/ewha/professor/info.do?mode=view&pId=aUu8X%2F6dSe7uJ%2F5ElYusAA%3D%3D"
+  },
+  {
+    "id": "sungeun-kim",
+    "nameKo": "김성은",
+    "nameEn": "Sungeun Kim",
+    "role": "doctoral",
+    "email": "soul_81@naver.com",
+    "img": "https://cdn.imweb.me/thumbnail/20250121/06e4bc3f64575.jpg",
+    "interests": "GBL, CSCL",
+    "education": [
+      "이화여자대학교 교육대학원 교육공학과 석사",
+      "이화여자대학교 경영학과 학사"
+    ]
+  },
+  {
+    "id": "hyosung-park",
+    "nameKo": "박효성",
+    "nameEn": "Hyosung Park",
+    "role": "doctoral",
+    "email": "hyosungpark@ewhain.net",
+    "img": "https://cdn.imweb.me/thumbnail/20250311/4f8019b864911.jpeg",
+    "interests": "AIED, GBL",
+    "education": [
+      "이화여자대학교 교육대학원 교육공학과 석사",
+      "한국과학기술원(KAIST) 생명화학공학과 석사",
+      "연세대학교 화학공학과 학사"
+    ],
+    "thesis": "비대면 원격강의에서 대학생이 인식하는 학습실재감이 학습성과에 미치는 영향",
+    "thesisUrl": "https://drive.google.com/file/d/1gQ-_phCyl4HRn2z28i6Pn3xIGvNuDMI0/view?usp=sharing",
+    "scholar": "https://scholar.google.com/citations?hl=ko&view_op=list_works&user=ywDQDEcAAAAJ"
+  },
+  {
+    "id": "gayoung-lee",
+    "nameKo": "이가영",
+    "nameEn": "Ga Young Lee",
+    "role": "doctoral",
+    "email": "lgy1202@gmail.com",
+    "img": "https://cdn.imweb.me/thumbnail/20250121/e933fc9b06d68.jpg",
+    "interests": "Human-Computer Interaction (HCI), Affective Computing",
+    "education": [
+      "고려대학교 영재교육원 강사 (2023.3 – 현재)",
+      "서울 신수중학교 영어 강사 (2016.3 – 2017.1)",
+      "고려대학교 가정교육/영어교육 이중전공 학사"
+    ]
+  },
+  {
+    "id": "jieun-choi",
+    "nameKo": "최지은",
+    "nameEn": "Jieun Choi",
+    "role": "doctoral",
+    "email": "merry0916@naver.com",
+    "img": "https://cdn.imweb.me/thumbnail/20250331/dd7c0789a6bbe.jpg",
+    "interests": "ID/ISD, CSCL, K-12",
+    "education": [
+      "경희사이버대학교 교수설계 (2020.6 – 2022.6)",
+      "이화여자대학교 교육대학원 교육공학과 석사"
+    ],
+    "thesis": "스마트TV 기반의 증강현실(AR) 활용 학습이 유아의 학습몰입과 기본운동능력 및 신체적 자아개념에 미치는 영향",
+    "thesisUrl": "https://drive.google.com/file/d/1l_y_F-Q3TUmz2gxM5si9gOaPFyJBgGpt/view"
+  },
+  {
+    "id": "lingxi-jin",
+    "nameEn": "Lingxi Jin",
+    "role": "doctoral",
+    "international": true,
+    "email": "jinlingxi@ewha.ac.kr",
+    "img": "https://cdn.imweb.me/thumbnail/20250121/01f9c366cc917.jpg",
+    "interests": "AIED, Human-Computer Interaction (HCI), Learning Experience Design, Learning Analytics",
+    "education": [
+      "Research Engineer in Inha Engineering Education Innovation Center, Inha University (2022.6 – 2022.10)",
+      "M.A. in Educational Technology, Ewha Womans University",
+      "Bachelor of Management Sciences, Jilin International Studies University"
+    ],
+    "thesis": "학습양식 기반 추천시스템 설계: AI 언어학습 애플리케이션을 중심으로",
+    "thesisUrl": "https://drive.google.com/file/d/1alnIJsoi5l5Nti0zjEfYzjkB698YrAda/view",
+    "scholar": "https://scholar.google.com/citations?user=00XArpMAAAAJ&hl=eng",
+    "homepage": "https://lingxijin.github.io/"
+  },
+  {
+    "id": "yue-wang",
+    "nameEn": "Yue Wang",
+    "role": "doctoral",
+    "international": true,
+    "email": "iriswang@ewhain.net",
+    "img": "https://cdn.imweb.me/thumbnail/20250331/bc169f2566cac.png",
+    "interests": "Language learning with technology; Ethical education game design; Personalized learning",
+    "education": [
+      "Instructional Designer for Primary English, Joyy (2023.4 – 2023.11)",
+      "Instructional Designer for Primary English, Gotu Techedu (2020 – 2023.4)",
+      "M.A. in Educational Technology, Ewha Womans University",
+      "Bachelor of English, Northwest University"
+    ],
+    "thesis": "Measuring Student Engagement with Multimodal Literacy in English Learning",
+    "thesisUrl": "https://drive.google.com/file/d/1HQTNdz1da2guvEHEElo5eJPZgijySuQ9/view"
+  },
+  {
+    "id": "juyeong-song",
+    "nameKo": "송주영",
+    "nameEn": "Juyeong Song",
+    "role": "doctoral",
+    "email": "sjy93@ewha.ac.kr",
+    "img": "https://cdn.imweb.me/thumbnail/20250330/8898c29e408aa.jpg",
+    "interests": "테크놀로지 활용 교육, AI 융합 교육",
+    "education": [
+      "한국교육개발원 연구원 (2023.6 – 현재)",
+      "한국교육학술정보원 연구원 (2022.8 – 2023.5)",
+      "이화여자대학교 교육공학과 석사",
+      "고려대학교 영여영문학과 학사"
+    ],
+    "thesis": "AI 어학 애플리케이션의 개별화 추천 알고리즘: 다양성 기반과 유사성 기반 추천 비교",
+    "thesisUrl": "https://drive.google.com/file/d/1uZ_3pYDTfJ4yx--c15CUfsL6RRJz5xYz/view"
+  },
+  {
+    "id": "eunyoung-kim",
+    "nameKo": "김은영",
+    "nameEn": "Eunyoung Kim",
+    "role": "doctoral",
+    "email": "eykim@ewha.ac.kr",
+    "img": "https://cdn.imweb.me/thumbnail/20260323/768ea49fc8570.jpg",
+    "interests": "AIED, Learning Sciences, Human-AI Collaboration, Human-Computer Interaction (HCI)",
+    "education": [
+      "국립암센터 연구원 (2025.3 – 현재)",
+      "패스트캠퍼스 Product Manager (EdTech) (2023.4 – 2024.10)",
+      "이화여자대학교 교육공학과 석사",
+      "가천대학교 동양어문학과 / 중어중문학 교직이수 학사"
+    ],
+    "thesis": "비실시간 동영상 학습에서 부정정서 조절 영상 내 퀴즈(In-video quiz) 설계 및 효과성 검증",
+    "thesisUrl": "https://drive.google.com/file/d/1MwPyw-8vjwBFJ_2LLLkdfzU6XrmQXAPx/view?usp=sharing"
+  },
+  {
+    "id": "minseon-kim",
+    "nameKo": "김민선",
+    "nameEn": "Minseon Kim",
+    "role": "doctoral",
+    "email": "min5929@ewha.ac.kr",
+    "img": "https://cdn.imweb.me/thumbnail/20250904/904e69279ddd0.jpg",
+    "interests": "AIED, 학습과학, CSCL, K-12",
+    "education": [
+      "한국교육개발원 연구원 (2024.8 – 2025.8)",
+      "이화여자대학교 교육공학과 석사",
+      "상명대학교 영어교육과 학사"
+    ],
+    "thesis": "인공지능 융합교육에서 초등 교사의 행위자성 : 생태학적 관점에서의 질적 탐색",
+    "thesisUrl": "https://drive.google.com/open?id=189aXs8Xt-_fglZtgmtIBNClLOJfx7P3c"
+  },
+  {
+    "id": "suyeoun-kim",
+    "nameKo": "김수연",
+    "nameEn": "Su Yeoun Kim",
+    "role": "doctoral",
+    "email": "suyunguya@naver.com",
+    "img": "https://cdn.imweb.me/thumbnail/20260117/bff8e614c8a3b.jpg",
+    "interests": "PBL, CSCL, SEA, 테크놀로지 기반학습",
+    "education": [
+      "충청남도교육청 소속 미술 중등교사 (2020.3 – 현재)",
+      "이화여자대학교 교육대학원 미술교육과 석사",
+      "경희대학교 미술대학 회화과 학사"
+    ],
+    "thesis": "CPS모형을 적용한 디자인 수업이 창의적 표현력에 미치는 영향: 중학교 3학년을 중심으로",
+    "thesisUrl": "https://drive.google.com/file/d/1tV0DDTnXkxIYqmx6CRBsCcyC-gnwzLAM/view?usp=sharing"
+  },
+  {
+    "id": "minjeong-kim",
+    "nameKo": "김민정",
+    "nameEn": "Minjeong Kim",
+    "role": "masters",
+    "email": "bomkmj@ewhain.net",
+    "img": "https://cdn.imweb.me/thumbnail/20250121/a4ae059045b94.jpg",
+    "interests": "e-learning, CBL, 교사교육",
+    "education": [
+      "(주)챔프스터디 해커스 HRD 사업팀 e-learning 교수설계자 (2024.7 – 현재)",
+      "서울시교육청 한문 중등 교사 (2021.6 – 2024.2)",
+      "단국대학교 한문교육과 학사"
+    ]
+  },
+  {
+    "id": "yelim-song",
+    "nameKo": "송예림",
+    "nameEn": "Yelim Song",
+    "role": "masters",
+    "email": "yelmtic@ewha.ac.kr",
+    "img": "https://cdn.imweb.me/thumbnail/20250330/e2669f34da797.jpg",
+    "interests": "AIED, ITS, 적응형 학습 시스템",
+    "education": [
+      "강원대학교 교육학과 학사"
+    ]
+  },
+  {
+    "id": "kyuwon-kim",
+    "nameKo": "김규원",
+    "nameEn": "Kyuwon Kim",
+    "role": "masters",
+    "email": "kyuwonkim95@ewha.ac.kr",
+    "img": "https://cdn.imweb.me/thumbnail/20260319/88c8505789a2b.jpg",
+    "interests": "Human-Computer Interaction (HCI), AIED",
+    "education": [
+      "이화여자대학교 교육공학 / 소프트웨어 연계전공 학사"
+    ],
+    "scholar": "https://scholar.google.com/citations?user=oYoOlXgAAAAJ&hl=ko",
+    "homepage": "https://kyuw0nkim.github.io/#/"
+  },
+  {
+    "id": "jeanhee-lee",
+    "nameKo": "이진희",
+    "nameEn": "Jean Hee Lee",
+    "role": "masters",
+    "email": "jinnylee26@ewha.ac.kr",
+    "img": "https://cdn.imweb.me/thumbnail/20250331/ea677e12e29ef.png",
+    "interests": "TEL, AIED, Science Education",
+    "education": [
+      "이화여자대학교 과학교육과 화학교육전공 / 통합과학 연계전공 / 커뮤니케이션·미디어학부 학사"
+    ]
+  },
+  {
+    "id": "yoonkyeong-lee",
+    "nameKo": "이윤경",
+    "nameEn": "Yoon Kyeong Lee",
+    "role": "masters",
+    "email": "yklee26@ewha.ac.kr",
+    "img": "https://cdn.imweb.me/thumbnail/20250404/84c03eba44ac2.png",
+    "interests": "AIED, K-12, ID/ISD, 학습과학",
+    "education": [
+      "경기도성남교육지원청 소속 유치원교사 (2022.3 – 2025.2)",
+      "경기도용인교육지원청 소속 유치원교사 (2020.3 – 2020.12)",
+      "성결대학교 유아교육과 학사"
+    ]
+  },
+  {
+    "id": "sieun-park",
+    "nameKo": "박시은",
+    "nameEn": "Sieun Park",
+    "role": "masters",
+    "email": "sieunp25@ewha.ac.kr",
+    "img": "https://cdn.imweb.me/thumbnail/20250614/4f692616ce1a2.jpg",
+    "interests": "Student-centered Learning, TEL, PBL",
+    "education": [
+      "(주)자라나는씨앗 독서토론 교수설계 (2024.7 – 2025.1)",
+      "단국대학교 커뮤니케이션학 (영상콘텐츠전공) 학사 / 정치외교학 복수전공"
+    ]
+  },
+  {
+    "id": "xu-yi",
+    "nameEn": "Xu Yi",
+    "role": "masters",
+    "international": true,
+    "email": "elaineyiyi@ewha.ac.kr",
+    "img": "https://cdn.imweb.me/thumbnail/20250620/79a3b0af13787.jpg",
+    "interests": "AIED, Gamification, STEM Education",
+    "education": [
+      "Bachelor of Science Education, Jiangsu Second Normal University"
+    ]
+  },
+  {
+    "id": "pyunghwa-kim",
+    "nameKo": "김평화",
+    "nameEn": "Pyunghwa Kim",
+    "role": "masters",
+    "email": "ph.kim@ewha.ac.kr",
+    "img": "https://cdn.imweb.me/thumbnail/20260117/e6dde54b40c45.jpg",
+    "interests": "Place-Based Learning, Design Thinking, Informal Learning, LXD",
+    "education": [
+      "부강비케이 바이오연료팀 PM (2024.5 – 2025.5)",
+      "식스티헤르츠 Platform & Protocol PM (2021.8 – 2023.4)",
+      "엘에이치 UX/UI & 콘텐츠 디자인 (2019 – 2020)",
+      "한동대학교 산업디자인학부 (시각디자인, 제품디자인) 학사"
+    ],
+    "homepage": "https://www.notion.so/Pyunghwa-Kim-2e43f384738d805ab69ae6f074424ee4?source=copy_link"
+  },
+  {
+    "id": "jihyun-park",
+    "nameKo": "박지현",
+    "nameEn": "Jihyun Park",
+    "role": "masters",
+    "email": "gh4920@naver.com",
+    "img": "https://cdn.imweb.me/thumbnail/20260117/c6c04efba372a.jpeg",
+    "interests": "GBL, Gamification, AI Ethics Education",
+    "education": [
+      "동국대학교 서울캠퍼스 (2025.2 – 2026.2)",
+      "동국대학교 철학과 / 법학과 학사"
+    ]
+  },
+  {
+    "id": "yeji-ko-alumni",
+    "nameKo": "고예지",
+    "nameEn": "Yeji Ko",
+    "role": "alumni",
+    "email": "koyeji@naver.com",
+    "affiliation": "-",
+    "dissertation": "AI 윤리 교육 TRPG를 활용한 철학적 탐구공동체에서의 다차원적 사고 및 학습자의 인식",
+    "dissertationUrl": "https://drive.google.com/file/d/1x0m7R_HsM3S-V67LWdsghTqRcHDPCmGC/view?usp=sharing",
+    "alumniDegree": "ma",
+    "gradYear": 2026
+  },
+  {
+    "id": "seoyun-kim",
+    "nameKo": "김서윤",
+    "nameEn": "Seoyun Kim",
+    "role": "alumni",
+    "email": "tjdbs01@naver.com",
+    "affiliation": "-",
+    "dissertation": "대학생의 AI 학습 의도에 영향을 미치는 요인 간 구조적 관계 분석",
+    "dissertationUrl": "https://drive.google.com/file/d/12aAM9YqhcxwNDYXVx9IsmaiAy94LOWNr/view?usp=drive_link",
+    "alumniDegree": "ma",
+    "gradYear": 2026
+  },
+  {
+    "id": "hyeran-lee",
+    "nameKo": "이혜란",
+    "nameEn": "Hyeran Lee",
+    "role": "alumni",
+    "email": "prometauis@naver.com",
+    "affiliation": "테크빌교육 티처빌DT사업부 수석",
+    "dissertation": "맥락화된 한국어 학습을 위한 생성형 AI NPC 활용 메타버스 설계 및 개발 연구",
+    "dissertationUrl": "https://drive.google.com/open?id=1rXixYOXufz826psfjUeqO4iSS7bUFYYV",
+    "alumniDegree": "phd",
+    "gradYear": 2025
+  },
+  {
+    "id": "hyeji-jang",
+    "nameKo": "장혜지",
+    "nameEn": "Hyeji Jang",
+    "role": "alumni",
+    "email": "hyejijang@snu.ac.kr",
+    "affiliation": "서울대학교 학습과학연구소 선임연구원",
+    "dissertation": "비구조화된 문제 해결 과정에서 스캐폴딩 지원을 위한 생성형 AI 챗봇 개발 및 효과성 검증",
+    "dissertationUrl": "https://drive.google.com/file/d/1m2In31IYlUindLwf36Ro-xMZZ72V7zVK/view?usp=sharing",
+    "alumniDegree": "phd",
+    "gradYear": 2025,
+    "scholar": "https://scholar.google.com/citations?user=IL6ZyBoAAAAJ&hl=ko",
+    "homepage": "https://sites.google.com/view/hyejijang/home"
+  },
+  {
+    "id": "sujin-kim",
+    "nameKo": "김수진",
+    "nameEn": "Sujin Kim",
+    "role": "alumni",
+    "email": "merjin0219@gmail.com",
+    "affiliation": "-",
+    "dissertation": "생성형 인공지능 활용 작문에서 행위주체성 지원 도구 설계 및 효과성 검증",
+    "dissertationUrl": "https://drive.google.com/open?id=1KQ--wXxt_YKYNGyGjA_7fwDarWEzZnl7",
+    "alumniDegree": "ma",
+    "gradYear": 2025
+  },
+  {
+    "id": "chohui-lee",
+    "nameKo": "이초희",
+    "nameEn": "Chohui Lee",
+    "role": "alumni",
+    "email": "chohui.lc@gmail.com",
+    "affiliation": "-",
+    "dissertation": "생성형AI 활용 창의적 문제해결 양상 및 성과 탐색",
+    "dissertationUrl": "https://drive.google.com/open?id=1d9p-6BYvp6o0MI7v_BvUOvVH6fordFdG",
+    "alumniDegree": "ma",
+    "gradYear": 2025,
+    "homepage": "https://www.chohuilee.com/"
+  },
+  {
+    "id": "minseon-kim-alumni",
+    "nameKo": "김민선",
+    "nameEn": "Minseon Kim",
+    "role": "alumni",
+    "email": "min_5929@naver.com",
+    "affiliation": "이화여자대학교 교육공학과 박사과정",
+    "dissertation": "인공지능 융합교육에서 초등 교사의 행위자성 : 생태학적 관점에서의 질적 탐색",
+    "dissertationUrl": "https://drive.google.com/open?id=189aXs8Xt-_fglZtgmtIBNClLOJfx7P3c",
+    "alumniDegree": "ma",
+    "gradYear": 2024
+  },
+  {
+    "id": "yein-kim",
+    "nameKo": "김예인",
+    "nameEn": "Yein Kim",
+    "role": "alumni",
+    "email": "yeinkim416@gmail.com",
+    "affiliation": "서울신학대학 IR센터",
+    "dissertation": "멀티모달과 테크놀로지 교수내용지식(TPACK) 관점에서 설명 동영상 설계 전략 탐색",
+    "dissertationUrl": "https://drive.google.com/open?id=1gjZXWEa1paLnlwN6uk1hsz21FX-0TE7g",
+    "alumniDegree": "ma",
+    "gradYear": 2024
+  },
+  {
+    "id": "hyojin-kim",
+    "nameKo": "김효진",
+    "nameEn": "Hyojin Kim",
+    "role": "alumni",
+    "email": "hyojinkim@postech.ac.kr",
+    "affiliation": "포항공과대학교 인공지능연구원 팀장",
+    "dissertation": "취업준비생 대상 인공지능 교육 효과성 검증 : 플립러닝을 중심으로",
+    "dissertationUrl": "https://drive.google.com/open?id=1GZvznfVaj4nKqf7XPwMl19V6YQToURQp",
+    "alumniDegree": "ma",
+    "gradYear": 2023
+  },
+  {
+    "id": "dahyeon-ryoo",
+    "nameKo": "류다현",
+    "nameEn": "Da Hyeon Ryoo",
+    "role": "alumni",
+    "email": "waitemoon1@naver.com",
+    "affiliation": "-",
+    "dissertation": "행동기준 평정척도(BARS)를 활용한 교사의 STEAM 융합 교수역량 척도개발",
+    "dissertationUrl": "https://drive.google.com/open?id=1a-Jh3MqyfHai8G34BpPDS_fD9TCIXExo",
+    "alumniDegree": "phd",
+    "gradYear": 2022
+  },
+  {
+    "id": "jihyang-lee",
+    "nameKo": "이지향",
+    "nameEn": "Ji Hyang Lee",
+    "role": "alumni",
+    "email": "leejihyang@ewha.ac.kr",
+    "affiliation": "이화여자대학교 교육과학연구소 연구교수 / 이화여자대학교 교육공학과 강사",
+    "dissertation": "온라인 동영상 학습에서 정서와 오프태스크 행동 분석 기반 중재 피드백 설계 효과성 검증",
+    "dissertationUrl": "https://drive.google.com/open?id=1ypOdnIhVPfilPAKyH59kciJFEYZwQv1N",
+    "alumniDegree": "phd",
+    "gradYear": 2022
+  },
+  {
+    "id": "eunyoung-kim-alumni",
+    "nameKo": "김은영",
+    "nameEn": "Eunyoung Kim",
+    "role": "alumni",
+    "email": "eykim@ewha.ac.kr",
+    "affiliation": "국립암센터 연구원 / 이화여자대학교 교육공학과 박사과정",
+    "dissertation": "비실시간 동영상 학습에서 부정정서 조절 영상 내 퀴즈(In-video quiz) 설계 및 효과성 검증",
+    "dissertationUrl": "https://drive.google.com/open?id=1MwPyw-8vjwBFJ_2LLLkdfzU6XrmQXAPx",
+    "alumniDegree": "ma",
+    "gradYear": 2022
+  },
+  {
+    "id": "juyeong-song-alumni",
+    "nameKo": "송주영",
+    "nameEn": "Juyeong Song",
+    "role": "alumni",
+    "email": "sjy93@ewha.ac.kr",
+    "affiliation": "한국교육개발원 연구원 / 이화여자대학교 교육공학과 박사과정",
+    "dissertation": "AI 어학 애플리케이션의 개별화 추천 알고리즘: 다양성 기반과 유사성 기반 추천 비교",
+    "dissertationUrl": "https://drive.google.com/file/d/1uZ_3pYDTfJ4yx--c15CUfsL6RRJz5xYz/view?usp=sharing",
+    "alumniDegree": "ma",
+    "gradYear": 2022
+  },
+  {
+    "id": "jiseon-choi",
+    "nameKo": "최지선",
+    "nameEn": "Jiseon Choi",
+    "role": "alumni",
+    "email": "cjs3198@naver.com",
+    "affiliation": "시립노원청소년미래진로센터 팀원",
+    "dissertation": "뉴노멀시대 박물관 교육을 위한 에듀케이터의 역량 모델링",
+    "dissertationUrl": "https://drive.google.com/open?id=17yY9U2-wOjz-xT1zDNlaxjnzy1JNpCQ3",
+    "alumniDegree": "ma",
+    "gradYear": 2022
+  },
+  {
+    "id": "seunghye-ha",
+    "nameKo": "하승혜",
+    "nameEn": "Seunghye Ha",
+    "role": "alumni",
+    "email": "seunghye.ha23@gmail.com",
+    "affiliation": "서울시교육청 영어과 교사",
+    "dissertation": "온라인 동영상 기반 학습에서 유용가치 자극 피드백이 부정정서와 개념 이해에 미치는 영향",
+    "dissertationUrl": "https://drive.google.com/open?id=1Ox-u3wiGlZIJhUlIHlULYDNcouhYeqUn",
+    "alumniDegree": "ma",
+    "gradYear": 2022
+  },
+  {
+    "id": "woorin-hwang",
+    "nameKo": "황우린",
+    "nameEn": "Woorin Hwang",
+    "role": "alumni",
+    "email": "woorin.h@gmail.com",
+    "affiliation": "University of Florida, Educational Technology 박사과정",
+    "dissertation": "학습자 변인 중요도 기반 외국어 학습용 AI 앱 추천시스템 설계",
+    "dissertationUrl": "https://drive.google.com/open?id=1Jn6vtNvMjqxPHkFQEGQZxhF-C_80hC40",
+    "alumniDegree": "ma",
+    "gradYear": 2022
+  },
+  {
+    "id": "lingxi-jin-alumni",
+    "nameEn": "Lingxi Jin",
+    "role": "alumni",
+    "international": true,
+    "email": "jinlingxi@ewha.ac.kr",
+    "affiliation": "이화여자대학교 교육공학과 박사과정",
+    "dissertation": "학습양식 기반 추천시스템 설계: AI 언어학습 애플리케이션을 중심으로",
+    "dissertationUrl": "https://drive.google.com/file/d/1alnIJsoi5l5Nti0zjEfYzjkB698YrAda/view?usp=sharing",
+    "alumniDegree": "ma",
+    "gradYear": 2021
+  },
+  {
+    "id": "bolor-davaasuren",
+    "nameEn": "Bolor Davaasuren",
+    "role": "alumni",
+    "international": true,
+    "email": "bolor1@hanmail.net",
+    "affiliation": "-",
+    "dissertation": "몽골중등교사의 학교지원, 테크놀로지 교수내용지식과 테크놀로지 활용 간의 관계 규명",
+    "dissertationUrl": "https://drive.google.com/open?id=15k5pfsYoTOgFasZ-KIFVm3ak-p-Ec-_I",
+    "alumniDegree": "ma",
+    "gradYear": 2020
+  },
+  {
+    "id": "namhui-kim",
+    "nameKo": "김남희",
+    "nameEn": "Nam Hui Kim",
+    "role": "alumni",
+    "email": "knh117@krivet.re.kr",
+    "affiliation": "한국직업능력연구원(KRIVET) 연구위원",
+    "dissertation": "조직 구성원의 성장잠재력으로서 학습민첩성 영향요인 및 성과요인 규명",
+    "dissertationUrl": "https://drive.google.com/open?id=14osXnPCk0pJ5GHnsWDFo8PRYVV_YF1y9",
+    "alumniDegree": "phd",
+    "gradYear": 2019
+  },
+  {
+    "id": "yue-wang-alumni",
+    "nameEn": "Yue Wang",
+    "role": "alumni",
+    "international": true,
+    "email": "iriswang@ewhain.net",
+    "affiliation": "이화여자대학교 교육공학과 박사과정",
+    "dissertation": "멀티모달 리터러시 기반의 영어 학습 참여도 측정: 인도네시아 학생 대상 도구 개발 및 검증",
+    "dissertationUrl": "https://drive.google.com/open?id=1HQTNdz1da2guvEHEElo5eJPZgijySuQ9",
+    "alumniDegree": "ma",
+    "gradYear": 2019
+  },
+  {
+    "id": "hyunjin-park",
+    "nameKo": "박현진",
+    "nameEn": "Hyunjin Park",
+    "role": "alumni",
+    "email": "gyunjin@naver.com",
+    "affiliation": "(주)신세계 문화팀 파트너",
+    "dissertation": "과학관에서의 통합적 디지털 스토리텔링에 따른 초등학생의 지식통합 양상",
+    "dissertationUrl": "https://drive.google.com/open?id=1mF5lkxSpbWoGoPnWwtiz-yhyA8Qnp4gd",
+    "alumniDegree": "ma",
+    "gradYear": 2019
+  },
+  {
+    "id": "minhwi-seo",
+    "nameKo": "서민휘",
+    "nameEn": "Min-hwi Seo",
+    "role": "alumni",
+    "email": "minuitseo@gmail.com",
+    "affiliation": "Indiana University, Instructional Systems Technology 박사과정",
+    "dissertation": "제스처 기반 학습 전시물 관람에서 관람객의 사용성, 인지적 학습 효과와 제스처 사용양상 분석",
+    "dissertationUrl": "https://drive.google.com/open?id=1jQR-g06gZXMLpWjOnfmB72V6J90mbD7i",
+    "alumniDegree": "ma",
+    "gradYear": 2018
+  },
+  {
+    "id": "miran-choi",
+    "nameKo": "최미란",
+    "nameEn": "Miran Choi",
+    "role": "alumni",
+    "dissertation": "원격기반 학점은행제 학습자의 성과 영향 변인 분석",
+    "dissertationUrl": "https://drive.google.com/open?id=1KrcqSsxlMbwiNwIs4w622nPOtzJUb5Cp",
+    "alumniDegree": "ma",
+    "gradYear": 2017
+  }
+]
