@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 
 import { useT } from "../lib/i18n";
+import { usePreferences } from "../lib/preferences";
 import { getNewsBySlug } from "../data/news";
 
 export const Route = createFileRoute("/news/$slug")({
@@ -23,6 +24,9 @@ export const Route = createFileRoute("/news/$slug")({
 function NewsDetailPage() {
   const item = Route.useLoaderData();
   const t = useT();
+  const { lang } = usePreferences();
+  const content =
+    lang === "ko" ? item.contentKo || item.contentEn : item.contentEn || item.contentKo;
 
   return (
     <main className="flex-grow w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -43,12 +47,12 @@ function NewsDetailPage() {
           <div className="w-full flex items-center justify-center bg-gray-50 rounded-lg overflow-hidden mb-6">
             <img alt={item.title} className="max-h-[28rem] w-auto object-contain" src={item.img} />
           </div>
-          {item.content && (
+          {content && (
             <div
               className="text-sm text-text-main leading-relaxed whitespace-pre-line"
               style={{ wordBreak: "keep-all" }}
             >
-              {item.content}
+              {content}
             </div>
           )}
         </div>
