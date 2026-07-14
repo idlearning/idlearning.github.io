@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://idlearning.github.io/sitemap.xml

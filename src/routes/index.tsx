@@ -6,6 +6,23 @@ import { useT } from "../lib/i18n";
 import { usePreferences } from "../lib/preferences";
 import { getLatestNews, NEWS_IMG_DEFAULT, NEWS_WRAP_DEFAULT } from "../data/news";
 import { PROJECTS, type Project } from "../data/projects";
+import { SITE_URL, SITE_DESCRIPTION, absoluteUrl } from "../lib/site-meta";
+
+// Structured data so search engines recognise the lab as an organisation.
+const ORGANIZATION_JSONLD = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ResearchOrganization",
+  name: "Interaction Design for Learning Lab",
+  alternateName: "IDL Lab",
+  url: SITE_URL,
+  description: SITE_DESCRIPTION,
+  logo: `${SITE_URL}/favicon-idl.png`,
+  parentOrganization: {
+    "@type": "CollegeOrUniversity",
+    name: "Ewha Womans University",
+    url: "https://www.ewha.ac.kr",
+  },
+});
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,9 +39,9 @@ export const Route = createFileRoute("/")({
         content:
           "Designing innovative and interactive learning experiences through learning sciences, HCI, and emerging technologies.",
       },
-      { property: "og:url", content: "/" },
+      { property: "og:url", content: absoluteUrl("/") },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/") }],
   }),
   component: HomePage,
 });
@@ -93,6 +110,7 @@ function HomePage() {
 
   return (
     <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ORGANIZATION_JSONLD }} />
       {/* Hero */}
       <section className="pt-10 pb-8 flex flex-col lg:flex-row gap-10">
         <div className="lg:w-1/2">

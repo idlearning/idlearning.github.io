@@ -7,6 +7,7 @@ import { GoogleScholarIcon } from "../components/icons";
 import { useT } from "../lib/i18n";
 import { usePreferences } from "../lib/preferences";
 import { getPeopleByRole, type Person, type PersonRole } from "../data/people";
+import { absoluteUrl } from "../lib/site-meta";
 
 export const Route = createFileRoute("/people")({
   head: () => ({
@@ -21,9 +22,9 @@ export const Route = createFileRoute("/people")({
         property: "og:description",
         content: "Meet the professor and students of the Interaction Design for Learning Lab.",
       },
-      { property: "og:url", content: "/people" },
+      { property: "og:url", content: absoluteUrl("/people") },
     ],
-    links: [{ rel: "canonical", href: "/people" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/people") }],
   }),
   component: PeoplePage,
 });

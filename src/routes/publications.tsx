@@ -11,6 +11,7 @@ import {
   type PubBadge,
   type PubType,
 } from "../data/publications";
+import { absoluteUrl } from "../lib/site-meta";
 
 export const Route = createFileRoute("/publications")({
   head: () => ({
@@ -27,9 +28,9 @@ export const Route = createFileRoute("/publications")({
         content:
           "Journal and conference publications from the Interaction Design for Learning Lab.",
       },
-      { property: "og:url", content: "/publications" },
+      { property: "og:url", content: absoluteUrl("/publications") },
     ],
-    links: [{ rel: "canonical", href: "/publications" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/publications") }],
   }),
   component: PublicationsPage,
 });

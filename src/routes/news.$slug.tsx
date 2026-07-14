@@ -4,6 +4,15 @@ import { ArrowLeft } from "lucide-react";
 import { useT } from "../lib/i18n";
 import { usePreferences } from "../lib/preferences";
 import { getNewsBySlug } from "../data/news";
+import { absoluteUrl, SITE_NAME } from "../lib/site-meta";
+
+/** One-line summary for meta/og:description, from the body or the title. */
+function newsDescription(item: ReturnType<typeof getNewsBySlug>): string {
+  const body = item?.contentEn || item?.contentKo || "";
+  const text = body.replace(/\s+/g, " ").trim();
+  if (text) return text.length > 160 ? `${text.slice(0, 157)}…` : text;
+  return item?.title ?? "";
+}
 
 export const Route = createFileRoute("/news/$slug")({
   loader: ({ params }) => {
@@ -11,13 +20,30 @@ export const Route = createFileRoute("/news/$slug")({
     if (!item) throw notFound();
     return item;
   },
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: loaderData ? `${loaderData.title} — IDL Lab` : "News — IDL Lab" },
-      { property: "og:title", content: loaderData?.title ?? "News — IDL Lab" },
-      { property: "og:url", content: `/news/${loaderData?.slug ?? ""}` },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const title = loaderData ? `${loaderData.title} — ${SITE_NAME}` : `News — ${SITE_NAME}`;
+    const url = absoluteUrl(`/news/${loaderData?.slug ?? ""}`);
+    const description = newsDescription(loaderData);
+    const meta = [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: loaderData?.title ?? `News — ${SITE_NAME}` },
+      { property: "og:description", content: description },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: url },
+      { name: "twitter:title", content: loaderData?.title ?? `News — ${SITE_NAME}` },
+      { name: "twitter:description", content: description },
+    ];
+    if (loaderData?.img) {
+      // News images are already absolute (external CDN) URLs.
+      meta.push({ property: "og:image", content: loaderData.img });
+      meta.push({ name: "twitter:image", content: loaderData.img });
+    }
+    if (loaderData?.date) {
+      meta.push({ property: "article:published_time", content: loaderData.date });
+    }
+    return { meta, links: [{ rel: "canonical", href: url }] };
+  },
   component: NewsDetailPage,
 });
 

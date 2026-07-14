@@ -7,6 +7,7 @@ import { useT } from "../lib/i18n";
 import { usePreferences } from "../lib/preferences";
 import { PROJECTS, type Project } from "../data/projects";
 import { getPublicationById } from "../data/publications";
+import { absoluteUrl } from "../lib/site-meta";
 
 export const Route = createFileRoute("/projects")({
   head: () => ({
@@ -21,9 +22,9 @@ export const Route = createFileRoute("/projects")({
         property: "og:description",
         content: "Research projects of the Interaction Design for Learning Lab.",
       },
-      { property: "og:url", content: "/projects" },
+      { property: "og:url", content: absoluteUrl("/projects") },
     ],
-    links: [{ rel: "canonical", href: "/projects" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/projects") }],
   }),
   component: ProjectsPage,
 });

@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "../components/SiteHeader";
 import { SiteFooter } from "../components/SiteFooter";
 import { PreferencesProvider, preferencesHeadScript } from "../lib/preferences";
+import { SITE_TITLE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, OG_IMAGE } from "../lib/site-meta";
 
 function NotFoundComponent() {
   return (
@@ -80,27 +81,29 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "IDL Lab — Interaction Design for Learning" },
-      {
-        name: "description",
-        content:
-          "IDL Lab designs innovative and interactive learning experiences by integrating learning sciences, HCI, and emerging technologies.",
-      },
-      { name: "author", content: "IDL Lab" },
-      { property: "og:title", content: "IDL Lab — Interaction Design for Learning" },
-      {
-        property: "og:description",
-        content:
-          "Designing innovative and interactive learning experiences through learning sciences, HCI, and emerging technologies.",
-      },
+      { title: SITE_TITLE },
+      { name: "description", content: SITE_DESCRIPTION },
+      { name: "author", content: SITE_NAME },
+      { property: "og:title", content: SITE_TITLE },
+      { property: "og:description", content: SITE_DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "IDL Lab" },
+      { property: "og:site_name", content: SITE_NAME },
+      { property: "og:url", content: SITE_URL },
+      { property: "og:image", content: OG_IMAGE },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: SITE_TITLE },
+      { name: "twitter:description", content: SITE_DESCRIPTION },
+      { name: "twitter:image", content: OG_IMAGE },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
+      },
+      {
+        rel: "preconnect",
+        href: "https://cdn.jsdelivr.net",
+        crossOrigin: "anonymous",
       },
       {
         rel: "stylesheet",

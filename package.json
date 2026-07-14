@@ -7,7 +7,7 @@
     "dev": "vite dev",
     "sync": "node scripts/sync-sheets.mjs",
     "build": "vite build",
-    "postbuild": "node scripts/copy-spa-fallback.mjs",
+    "postbuild": "node scripts/copy-spa-fallback.mjs && node scripts/gen-sitemap.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",

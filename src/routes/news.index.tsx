@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Page, PageHeading } from "../components/Page";
 import { useT } from "../lib/i18n";
 import { getSortedNews, NEWS_IMG_DEFAULT, NEWS_WRAP_DEFAULT } from "../data/news";
+import { absoluteUrl } from "../lib/site-meta";
 
 export const Route = createFileRoute("/news/")({
   head: () => ({
@@ -19,9 +20,9 @@ export const Route = createFileRoute("/news/")({
         content:
           "Latest news, awards, and announcements from the Interaction Design for Learning Lab.",
       },
-      { property: "og:url", content: "/news" },
+      { property: "og:url", content: absoluteUrl("/news") },
     ],
-    links: [{ rel: "canonical", href: "/news" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/news") }],
   }),
   component: NewsPage,
 });
