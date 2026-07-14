@@ -377,6 +377,12 @@ function PeoplePage() {
               <div className="mt-2">
                 <ProfileLinks person={professor} />
               </div>
+              <div className="mt-4 w-fit rounded-lg border border-border bg-white px-4 py-3 text-sm text-text-main transition-shadow duration-300 hover:shadow-lg hover:shadow-amber-400/50">
+                <p className="font-medium">
+                  World's Top 2% Scientists, Stanford University (2024-2026)
+                </p>
+                <p className="mt-1 font-medium">Ewha Fellow (2026-2028)</p>
+              </div>
             </div>
           </div>
         )}

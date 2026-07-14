@@ -189,7 +189,7 @@ function HomePage() {
             target="_blank"
             rel="noopener noreferrer"
             style={{ backgroundImage: "url(/aideal_bg.png)" }}
-            className="group relative overflow-hidden lg:w-2/5 flex flex-col justify-center rounded-xl border border-border bg-cover bg-center p-6 shadow-sm transition-shadow hover:shadow-md"
+            className="group relative overflow-hidden lg:w-2/5 flex flex-col justify-center rounded-xl border border-border bg-cover bg-center p-6"
           >
             <img src="/aideal_logo.svg" alt="AIDEAL" className="h-11 w-auto self-start mb-4" />
             <p
@@ -198,7 +198,7 @@ function HomePage() {
             >
               {lang === "ko" ? AIDEAL_DESC_KO : AIDEAL_DESC_EN}
             </p>
-            <span className="inline-flex items-center gap-1.5 self-start rounded-full bg-white px-4 py-2 text-sm font-medium text-idl-blue shadow-sm">
+            <span className="inline-flex items-center gap-1.5 self-start rounded-full bg-white px-4 py-2 text-sm font-semibold text-idl-blue">
               Discover AIDEAL
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
             </span>
