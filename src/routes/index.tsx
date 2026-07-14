@@ -86,6 +86,9 @@ function FeaturedCarousel() {
           alt={title}
           className="w-full h-56 object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
           src={active.img}
+          onError={(e) => {
+            e.currentTarget.style.visibility = "hidden";
+          }}
         />
         <div className="absolute inset-0 bg-black/45 flex items-center justify-center text-center p-6">
           <h3 className="text-lg md:text-xl font-bold leading-snug text-white drop-shadow-md line-clamp-3">

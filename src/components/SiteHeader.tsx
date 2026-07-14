@@ -5,8 +5,9 @@ import { useState } from "react";
 import { useT } from "../lib/i18n";
 import { usePreferences } from "../lib/preferences";
 
-const LOGO_URL =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuDJTSnRxAJWf2nbKksMPCLamUEvUd98SPVymSG_zu92nnUAIlCtCtY3I6hWUperwjQgxzvgJcekBce5FmQnltCIasXXWyqTGpOh5W2RolCbVAfqasfBwcBz_hMk3rh5y7phWUV_ngbUg4Os-H5xYtlmlrrvNhVLxxrHtl5M0IviRl14XV9cmA6PyBTkycqkA6QJMq4wO4tmo3P2HF3dD9p7zSmRx7iO2Y7y5hkYW44_Po1NG6nbg_oYKyZUpfAe5DmVtg";
+// Local, self-hosted brand mark (see public/). Avoids depending on an
+// ephemeral external URL that would eventually 404 and break the header.
+const LOGO_URL = "/favicon-idl.png";
 
 export function SiteHeader() {
   const t = useT();
@@ -25,11 +26,19 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-gray-300 bg-[#F7F9FE]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex justify-between items-center">
         <Link
-          className="flex-shrink-0 flex items-center"
+          className="flex-shrink-0 flex items-center gap-2"
           to="/"
           onClick={() => setMobileOpen(false)}
         >
-          <img alt="IDL Lab Logo" className="h-8 w-auto object-contain" src={LOGO_URL} />
+          <img
+            alt=""
+            aria-hidden="true"
+            className="h-8 w-auto object-contain"
+            src={LOGO_URL}
+            width={32}
+            height={32}
+          />
+          <span className="text-lg font-bold tracking-tight text-idl-blue">IDL Lab</span>
         </Link>
 
         <div className="flex items-center gap-1 sm:gap-4">

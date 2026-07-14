@@ -33,6 +33,7 @@ function ProjectCard({ project }: { project: Project }) {
   const t = useT();
   const { lang } = usePreferences();
   const [open, setOpen] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   const primaryTitle =
     lang === "ko" ? project.titleKo || project.titleEn : project.titleEn || project.titleKo;
@@ -52,11 +53,13 @@ function ProjectCard({ project }: { project: Project }) {
     <article className="border-b border-border pb-10 last:border-b-0">
       <div className="flex flex-col md:flex-row gap-8 md:items-start">
         <div className="md:w-48 flex-shrink-0">
-          {project.img ? (
+          {project.img && !imgError ? (
             <img
               src={project.img}
               alt={primaryTitle}
+              loading="lazy"
               className="w-full aspect-[3/2] rounded-md object-cover"
+              onError={() => setImgError(true)}
             />
           ) : (
             <div className="aspect-[3/2] w-full rounded-md bg-gray-200" />

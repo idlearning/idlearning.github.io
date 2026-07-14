@@ -82,12 +82,15 @@ function ProfileLinks({ person }: { person: Person }) {
 }
 
 function Avatar({ person, className }: { person: Person; className: string }) {
-  if (person.img) {
+  const [imgError, setImgError] = useState(false);
+  if (person.img && !imgError) {
     return (
       <img
         alt={person.nameEn}
         className={`${className} object-cover bg-gray-200`}
         src={person.img}
+        loading="lazy"
+        onError={() => setImgError(true)}
       />
     );
   }

@@ -71,7 +71,14 @@ function NewsDetailPage() {
         </header>
         <div className="p-6">
           <div className="w-full flex items-center justify-center bg-gray-50 rounded-lg overflow-hidden mb-6">
-            <img alt={item.title} className="max-h-[28rem] w-auto object-contain" src={item.img} />
+            <img
+              alt={item.title}
+              className="max-h-[28rem] w-auto object-contain"
+              src={item.img}
+              onError={(e) => {
+                e.currentTarget.closest("div")?.style.setProperty("display", "none");
+              }}
+            />
           </div>
           {content && (
             <div
