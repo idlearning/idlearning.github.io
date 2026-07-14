@@ -132,7 +132,7 @@ function HomePage() {
         dangerouslySetInnerHTML={{ __html: ORGANIZATION_JSONLD }}
       />
       {/* Hero */}
-      <section className="pt-10 pb-8 flex flex-col lg:flex-row gap-10">
+      <section className="pt-10 pb-8 flex flex-col lg:flex-row gap-12">
         <div className="lg:w-1/2">
           <h1 className="text-3xl md:text-4xl font-bold text-idl-blue mb-6 leading-tight tracking-tight">
             Interaction Design for
@@ -170,16 +170,17 @@ function HomePage() {
             <NewsCard key={item.slug} item={item} />
           ))}
           {/* AIDEAL intro fills the remaining space; the whole panel is the link.
-              lg:ml-5 adds to the grid's gap-5 so the gap to the news block is
-              gap-10 — matching the hero's intro↔carousel spacing. */}
+              lg:ml-7 adds to the grid's gap-5 so the gap to the news block is
+              gap-12 — matching the hero's intro↔carousel spacing. */}
           <a
             href={AIDEAL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative overflow-hidden sm:col-span-2 lg:ml-5 flex flex-col justify-center rounded-xl border border-border bg-idl-blue/5 p-6 shadow-sm transition-shadow hover:shadow-md"
+            style={{ backgroundImage: "url(/aideal_bg.png)" }}
+            className="group relative overflow-hidden sm:col-span-2 lg:ml-7 flex flex-col justify-center rounded-xl border border-border bg-cover bg-center p-6 shadow-sm transition-shadow hover:shadow-md"
           >
-            {/* Yellow gradient rises from the bottom on hover as the affordance. */}
-            <span className="pointer-events-none absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-yellow-200/80 via-yellow-100/40 to-transparent transition-[height] duration-500 ease-out group-hover:h-full" />
+            {/* Amber (award-badge color) gradient rises from the bottom on hover. */}
+            <span className="pointer-events-none absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-amber-400/70 via-amber-400/25 to-transparent transition-[height] duration-500 ease-out group-hover:h-full" />
             <img
               src="/aideal_logo.svg"
               alt="AIDEAL"
