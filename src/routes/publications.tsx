@@ -59,13 +59,17 @@ function Badge({ badge }: { badge: PubBadge }) {
 }
 
 /** Small outlined link button (DOI, PDF, ACM, Web) with a link icon. */
-function LinkButton({ href, label }: { href: string; label: string }) {
+function LinkButton({ href, label, filled }: { href: string; label: string; filled?: boolean }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="inline-flex items-center gap-1 px-2 py-0.5 border border-border text-xs text-text-muted rounded uppercase tracking-wider hover:border-idl-blue hover:text-idl-blue transition-colors"
+      className={`inline-flex items-center gap-1 px-2 py-0.5 border text-xs rounded uppercase tracking-wider transition-colors hover:border-idl-blue hover:text-idl-blue ${
+        filled
+          ? "bg-gray-100 border-gray-200 text-text-muted hover:bg-idl-blue/10"
+          : "border-border text-text-muted"
+      }`}
     >
       <Link2 className="w-3.5 h-3.5" />
       {label}
@@ -110,7 +114,7 @@ function PublicationItem({ pub }: { pub: Publication }) {
       <p className="text-sm text-text-muted mb-3">{pub.venue}</p>
       {hasMeta && (
         <div className="flex gap-2 flex-wrap items-center">
-          {pub.doi && <LinkButton href={`https://doi.org/${pub.doi}`} label="DOI" />}
+          {pub.doi && <LinkButton href={`https://doi.org/${pub.doi}`} label="DOI" filled />}
           {pub.pdf && <LinkButton href={pub.pdf} label="PDF" />}
           {pub.acmdl && <LinkButton href={pub.acmdl} label="ACM" />}
           {pub.website && <LinkButton href={pub.website} label="Web" />}

@@ -33,7 +33,7 @@ function NewsPage() {
   return (
     <Page>
       <PageHeading>{t.news.title}</PageHeading>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {news.map((item) => (
           <Link
             key={item.slug}
@@ -45,7 +45,7 @@ function NewsPage() {
               <img alt={item.title} className={item.imgClass ?? NEWS_IMG_DEFAULT} src={item.img} />
             </div>
             <div className="p-4 flex flex-col flex-grow justify-between">
-              <h2 className="text-sm font-bold text-center mb-4 line-clamp-2 leading-tight text-text-main group-hover:text-idl-blue transition-colors">
+              <h2 className="text-sm font-medium text-center mb-4 line-clamp-2 leading-tight text-text-main group-hover:text-idl-blue transition-colors">
                 {item.title}
               </h2>
               <time className="text-xs text-text-muted block mt-auto text-center">{item.date}</time>

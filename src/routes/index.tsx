@@ -38,7 +38,7 @@ function FeaturedCarousel() {
   const { lang } = usePreferences();
   const slides = PROJECTS.filter((project): project is Project & { img: string } =>
     Boolean(project.img),
-  );
+  ).slice(0, 3);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -77,7 +77,7 @@ function FeaturedCarousel() {
             aria-current={i === index}
             onClick={() => setIndex(i)}
             className={`h-2 rounded-full transition-all ${
-              i === index ? "w-6 bg-idl-blue" : "w-2 bg-idl-blue/30 hover:bg-idl-blue/60"
+              i === index ? "w-6 bg-gray-400" : "w-2 bg-gray-300 hover:bg-gray-400"
             }`}
           />
         ))}

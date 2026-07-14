@@ -55,10 +55,10 @@ function ProjectCard({ project }: { project: Project }) {
             <img
               src={project.img}
               alt={primaryTitle}
-              className="w-full h-auto rounded-md object-contain"
+              className="w-full aspect-[3/2] rounded-md object-cover"
             />
           ) : (
-            <div className="aspect-square w-full rounded-md bg-gray-200 dark:bg-gray-700" />
+            <div className="aspect-[3/2] w-full rounded-md bg-gray-200" />
           )}
         </div>
         <div className="flex-grow">
