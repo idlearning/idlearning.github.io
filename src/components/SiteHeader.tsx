@@ -5,9 +5,8 @@ import { useState } from "react";
 import { useT } from "../lib/i18n";
 import { usePreferences } from "../lib/preferences";
 
-// Local, self-hosted brand mark (see public/). Avoids depending on an
-// ephemeral external URL that would eventually 404 and break the header.
-const LOGO_URL = "/favicon-idl.png";
+// Local, self-hosted horizontal brand logo (see public/).
+const LOGO_URL = "/idl-lab-logo-hor.png";
 
 // External sibling lab site linked from the nav.
 const AIDEAL_URL = "https://www.aideal.ewha.ac.kr";
@@ -29,19 +28,11 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-gray-300 bg-[#F7F9FE]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex justify-between items-center">
         <Link
-          className="flex-shrink-0 flex items-center gap-2"
+          className="flex-shrink-0 flex items-center"
           to="/"
           onClick={() => setMobileOpen(false)}
         >
-          <img
-            alt=""
-            aria-hidden="true"
-            className="h-8 w-auto object-contain"
-            src={LOGO_URL}
-            width={32}
-            height={32}
-          />
-          <span className="text-lg font-bold tracking-tight text-idl-blue">IDL Lab</span>
+          <img alt="IDL Lab" className="h-8 w-auto object-contain" src={LOGO_URL} />
         </Link>
 
         <div className="flex items-center gap-1 sm:gap-4">
