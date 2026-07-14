@@ -9,14 +9,22 @@ import { usePreferences } from "../lib/preferences";
 import { getPeopleByRole, type Person, type PersonRole } from "../data/people";
 import { absoluteUrl } from "../lib/site-meta";
 
-// Per-star direction (sx/sy), rotation (sr), and stagger delay (sd) for the
-// shooting-star burst on the professor's honors box (see .honor-star in CSS).
-const HONOR_STARS = [
-  { size: "h-5 w-5", sx: "18px", sy: "-14px", sr: "25deg", sd: "0s" },
-  { size: "h-4 w-4", sx: "4px", sy: "-24px", sr: "-15deg", sd: "0.05s" },
-  { size: "h-3.5 w-3.5", sx: "-14px", sy: "-12px", sr: "18deg", sd: "0.1s" },
-  { size: "h-3 w-3", sx: "26px", sy: "-2px", sr: "30deg", sd: "0.08s" },
-  { size: "h-3 w-3", sx: "12px", sy: "-28px", sr: "10deg", sd: "0.14s" },
+// A ring of stars that encircles the professor's honors box on hover (see
+// .ring-star in CSS). `pos` places each star around the perimeter; tx/ty center
+// it on that point; `sd` staggers them so the ring "draws" itself clockwise.
+const RING_STARS = [
+  { pos: "-top-3 -left-3", tx: "0", ty: "0", size: "h-3 w-3", sd: "0s" },
+  { pos: "-top-3 left-1/4", tx: "-50%", ty: "0", size: "h-3.5 w-3.5", sd: "0.05s" },
+  { pos: "-top-4 left-1/2", tx: "-50%", ty: "0", size: "h-4 w-4", sd: "0.1s" },
+  { pos: "-top-3 left-3/4", tx: "-50%", ty: "0", size: "h-3.5 w-3.5", sd: "0.15s" },
+  { pos: "-top-3 -right-3", tx: "0", ty: "0", size: "h-3 w-3", sd: "0.2s" },
+  { pos: "top-1/2 -right-3", tx: "0", ty: "-50%", size: "h-4 w-4", sd: "0.25s" },
+  { pos: "-bottom-3 -right-3", tx: "0", ty: "0", size: "h-3 w-3", sd: "0.3s" },
+  { pos: "-bottom-3 left-3/4", tx: "-50%", ty: "0", size: "h-3.5 w-3.5", sd: "0.35s" },
+  { pos: "-bottom-4 left-1/2", tx: "-50%", ty: "0", size: "h-4 w-4", sd: "0.4s" },
+  { pos: "-bottom-3 left-1/4", tx: "-50%", ty: "0", size: "h-3.5 w-3.5", sd: "0.45s" },
+  { pos: "-bottom-3 -left-3", tx: "0", ty: "0", size: "h-3 w-3", sd: "0.5s" },
+  { pos: "top-1/2 -left-3", tx: "0", ty: "-50%", size: "h-4 w-4", sd: "0.55s" },
 ];
 
 export const Route = createFileRoute("/people")({
@@ -387,26 +395,19 @@ function PeoplePage() {
               <div className="mt-2">
                 <ProfileLinks person={professor} />
               </div>
-              <div className="group relative mt-4 w-fit rounded-lg border border-border bg-white px-4 py-3 text-sm text-text-main transition-shadow duration-500 hover:shadow-[0_0_35px_rgba(251,191,36,0.35)]">
-                {/* Stars burst out (shooting-star style) then twinkle on hover. */}
-                {HONOR_STARS.map((s, i) => (
+              <div className="group relative mt-4 w-fit px-1 py-1 text-sm text-text-main">
+                {/* Easter egg: a ring of stars encircles the box on hover. */}
+                {RING_STARS.map((s, i) => (
                   <Star
                     key={i}
-                    className={`honor-star pointer-events-none absolute -right-2 -top-2 fill-amber-400 text-amber-400 ${s.size}`}
-                    style={
-                      {
-                        "--sx": s.sx,
-                        "--sy": s.sy,
-                        "--sr": s.sr,
-                        "--sd": s.sd,
-                      } as React.CSSProperties
-                    }
+                    className={`ring-star pointer-events-none absolute fill-amber-400 text-amber-400 ${s.pos} ${s.size}`}
+                    style={{ "--tx": s.tx, "--ty": s.ty, "--sd": s.sd } as React.CSSProperties}
                   />
                 ))}
-                <p className="font-medium">
-                  World's Top 2% Scientists, Stanford University (2024-2026)
-                </p>
-                <p className="mt-1 font-medium">Ewha Fellow (2026-2028)</p>
+                <ul className="list-disc space-y-1 pl-5 font-medium marker:text-amber-400">
+                  <li>World's Top 2% Scientists, Stanford University (2024-2026)</li>
+                  <li>Ewha Fellow (2026-2028)</li>
+                </ul>
               </div>
             </div>
           </div>
