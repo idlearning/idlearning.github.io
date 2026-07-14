@@ -169,25 +169,25 @@ function HomePage() {
           {latestNews.map((item) => (
             <NewsCard key={item.slug} item={item} />
           ))}
-          {/* AIDEAL intro fills the remaining space to the right of the 3 cards. */}
-          <div className="sm:col-span-2 flex flex-col justify-center rounded-xl border border-border bg-idl-blue/5 p-6">
-            <img src="/aideal_logo.svg" alt="AIDEAL" className="h-9 w-auto self-start mb-4" />
+          {/* AIDEAL intro fills the remaining space; the whole panel is the link. */}
+          <a
+            href={AIDEAL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group sm:col-span-2 flex flex-col justify-center rounded-xl border border-border bg-idl-blue/5 p-6 shadow-sm transition-all hover:border-idl-blue/40 hover:shadow-md"
+          >
+            <img src="/aideal_logo.svg" alt="AIDEAL" className="h-11 w-auto self-start mb-4" />
             <p
               className="text-sm text-text-main leading-relaxed mb-5"
               style={{ wordBreak: "keep-all" }}
             >
               {lang === "ko" ? AIDEAL_DESC_KO : AIDEAL_DESC_EN}
             </p>
-            <a
-              href={AIDEAL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 self-start rounded-full bg-idl-blue px-4 py-2 text-sm font-medium text-white hover:bg-idl-blue/90 transition-colors"
-            >
+            <span className="inline-flex items-center gap-1.5 self-start text-sm font-medium text-idl-blue">
               Discover AIDEAL
-              <ArrowRight className="w-4 h-4" />
-            </a>
-          </div>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+            </span>
+          </a>
         </div>
         {/* More News below the grid, aligned right — same style as More Projects */}
         <div className="mt-6 flex justify-end">
