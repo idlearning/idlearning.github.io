@@ -123,3 +123,45 @@
     border-radius: 2px;
   }
 }
+
+/* Honors box: stars shoot out (like little shooting stars) then keep twinkling
+   while hovered. Per-star direction/size/delay come from inline CSS variables. */
+@keyframes honor-star-shoot {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  70% {
+    transform: translate(var(--sx, 0), var(--sy, 0)) scale(1.3) rotate(var(--sr, 0deg));
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--sx, 0), var(--sy, 0)) scale(1) rotate(0deg);
+    opacity: 0.95;
+  }
+}
+@keyframes honor-star-twinkle {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+.honor-star {
+  opacity: 0;
+  transform: scale(0);
+}
+.group:hover .honor-star {
+  animation:
+    honor-star-shoot 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) var(--sd, 0s) forwards,
+    honor-star-twinkle 1.5s ease-in-out calc(var(--sd, 0s) + 0.5s) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .group:hover .honor-star {
+    animation: none;
+    opacity: 0.95;
+    transform: translate(var(--sx, 0), var(--sy, 0)) scale(1);
+  }
+}
