@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Globe, Link2, X } from "lucide-react";
+import { Globe, Link2, Star, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Page, PageHeading } from "../components/Page";
@@ -377,7 +377,11 @@ function PeoplePage() {
               <div className="mt-2">
                 <ProfileLinks person={professor} />
               </div>
-              <div className="mt-4 w-fit rounded-lg border border-border bg-white px-4 py-3 text-sm text-text-main transition-shadow duration-300 hover:shadow-lg hover:shadow-amber-400/50">
+              <div className="group relative mt-4 w-fit rounded-lg border border-border bg-white px-4 py-3 text-sm text-text-main transition-shadow duration-500 hover:shadow-[0_0_35px_rgba(251,191,36,0.35)]">
+                {/* Stars pop out with a slight overshoot + stagger on hover. */}
+                <Star className="pointer-events-none absolute -right-2 -top-2 h-5 w-5 scale-0 fill-amber-400 text-amber-400 opacity-0 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-12 group-hover:scale-100 group-hover:opacity-100" />
+                <Star className="pointer-events-none absolute -top-3 right-6 h-3.5 w-3.5 scale-0 fill-amber-300 text-amber-300 opacity-0 transition-all delay-75 duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-100 group-hover:opacity-100" />
+                <Star className="pointer-events-none absolute -top-1 right-12 h-3 w-3 scale-0 fill-amber-400 text-amber-400 opacity-0 transition-all delay-150 duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-100 group-hover:opacity-100" />
                 <p className="font-medium">
                   World's Top 2% Scientists, Stanford University (2024-2026)
                 </p>
