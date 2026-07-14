@@ -23,7 +23,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-300 bg-[#F7F9FE]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex justify-between items-center">
         <Link
           className="flex-shrink-0 flex items-center"
           to="/"

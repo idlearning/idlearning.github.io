@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
  */
 export function Page({ children }: { children: ReactNode }) {
   return (
-    <main className="flex-grow w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {children}
     </main>
   );
