@@ -8,10 +8,7 @@ export function SiteFooter() {
         <span>© 2026 Kyuwon Kim. {t.footer.rights}</span>
         <span>
           Contact:{" "}
-          <a
-            href="mailto:hyojeongso@ewha.ac.kr"
-            className="hover:text-idl-blue transition-colors"
-          >
+          <a href="mailto:hyojeongso@ewha.ac.kr" className="hover:text-idl-blue transition-colors">
             hyojeongso@ewha.ac.kr
           </a>
         </span>

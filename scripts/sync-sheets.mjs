@@ -31,23 +31,36 @@ function parseCSV(text) {
     const c = text[i];
     if (inQuotes) {
       if (c === '"') {
-        if (text[i + 1] === '"') { field += '"'; i++; }
-        else inQuotes = false;
+        if (text[i + 1] === '"') {
+          field += '"';
+          i++;
+        } else inQuotes = false;
       } else field += c;
     } else {
       if (c === '"') inQuotes = true;
-      else if (c === ",") { row.push(field); field = ""; }
-      else if (c === "\n") { row.push(field); rows.push(row); row = []; field = ""; }
-      else field += c;
+      else if (c === ",") {
+        row.push(field);
+        field = "";
+      } else if (c === "\n") {
+        row.push(field);
+        rows.push(row);
+        row = [];
+        field = "";
+      } else field += c;
     }
   }
   // flush last field/row (unless the file ended on a clean newline with no trailing data)
-  if (field !== "" || row.length > 0) { row.push(field); rows.push(row); }
+  if (field !== "" || row.length > 0) {
+    row.push(field);
+    rows.push(row);
+  }
   if (rows.length === 0) return [];
   const headers = rows[0].map((h) => h.trim());
   return rows.slice(1).map((r) => {
     const obj = {};
-    headers.forEach((h, idx) => { obj[h] = (r[idx] ?? "").trim(); });
+    headers.forEach((h, idx) => {
+      obj[h] = (r[idx] ?? "").trim();
+    });
     return obj;
   });
 }
@@ -92,7 +105,7 @@ const put = (obj, key, val) => {
 
 // --- per-dataset transforms ---
 const STATUS_ROLE = {
-  "지도교수": { role: "professor" },
+  지도교수: { role: "professor" },
   "박사 또는 통합 재학": { role: "doctoral" },
   "석사 재학": { role: "masters" },
   "박사 졸업": { role: "alumni", alumniDegree: "phd" },
@@ -103,7 +116,10 @@ function transformPeople(rows) {
   const usedIds = new Set();
   const makeId = (nameEn, role) => {
     let base = slug(nameEn);
-    if (!usedIds.has(base)) { usedIds.add(base); return base; }
+    if (!usedIds.has(base)) {
+      usedIds.add(base);
+      return base;
+    }
     let candidate = role === "alumni" ? `${base}-alumni` : `${base}-2`;
     let n = 2;
     while (usedIds.has(candidate)) candidate = `${base}-${++n}`;
@@ -116,7 +132,11 @@ function transformPeople(rows) {
       const status = clean(r["상태"]);
       const mapped = STATUS_ROLE[status] || { role: "alumni", alumniDegree: "ma" };
       const nameKo = clean(r["한국어명"]);
-      const p = { id: makeId(r["영문명"], mapped.role), nameEn: clean(r["영문명"]), role: mapped.role };
+      const p = {
+        id: makeId(r["영문명"], mapped.role),
+        nameEn: clean(r["영문명"]),
+        role: mapped.role,
+      };
       if (nameKo) p.nameKo = nameKo;
       else if (mapped.role !== "professor") p.international = true;
       put(p, "email", r["이메일"]);
@@ -164,18 +184,22 @@ function transformPublications(rows) {
   return rows
     .filter((r) => clean(r["title"]))
     .map((r) => {
-      const type = (clean(r["type"]).toLowerCase() || "journal");
+      const type = clean(r["type"]).toLowerCase() || "journal";
       const journal = clean(r["journal"]);
       const vol = clean(r["volume_issue"]);
       let venue = clean(r["venue"]);
-      if (!venue) venue = type === "journal" && journal ? journal + (vol ? `, ${vol}` : "") : journal;
+      if (!venue)
+        venue = type === "journal" && journal ? journal + (vol ? `, ${vol}` : "") : journal;
 
       const badges = [];
       const award = clean(r["award"]).replace(/🏆/g, "").trim();
       if (award) badges.push({ label: award, kind: "award" });
       const indexCol = clean(r["index"]);
       if (indexCol) {
-        indexCol.split(/[;,]/).map((x) => x.trim()).filter(Boolean)
+        indexCol
+          .split(/[;,]/)
+          .map((x) => x.trim())
+          .filter(Boolean)
           .forEach((label) => badges.push({ label, kind: "index" }));
       } else {
         if (isTrue(r["ssci"])) badges.push({ label: "SSCI", kind: "index" });
@@ -259,14 +283,18 @@ async function fetchCsv(spreadsheetId, tabName, gidByName) {
 async function main() {
   const spreadsheetId = clean(config.spreadsheetId);
   if (!spreadsheetId) {
-    console.log("[sync] No spreadsheetId configured in scripts/sheets.config.json — keeping existing seeds.");
+    console.log(
+      "[sync] No spreadsheetId configured in scripts/sheets.config.json — keeping existing seeds.",
+    );
     return;
   }
   let gidByName = {};
   try {
     gidByName = await fetchTabGids(spreadsheetId);
   } catch (err) {
-    console.warn(`[sync] could not discover tab gids (${err.message}) — falling back to gviz by name.`);
+    console.warn(
+      `[sync] could not discover tab gids (${err.message}) — falling back to gviz by name.`,
+    );
   }
 
   let anyChange = false;
@@ -279,8 +307,13 @@ async function main() {
       if (!data.length) throw new Error(`tab "${tabName}" produced 0 rows`);
       const next = JSON.stringify(data, null, 2) + "\n";
       const prev = existsSync(outPath) ? readFileSync(outPath, "utf8") : "";
-      if (next !== prev) { writeFileSync(outPath, next, "utf8"); anyChange = true; }
-      console.log(`[sync] ${key}: ${data.length} rows${next !== prev ? " (updated)" : " (unchanged)"}`);
+      if (next !== prev) {
+        writeFileSync(outPath, next, "utf8");
+        anyChange = true;
+      }
+      console.log(
+        `[sync] ${key}: ${data.length} rows${next !== prev ? " (updated)" : " (unchanged)"}`,
+      );
     } catch (err) {
       console.warn(`[sync] ${key}: FAILED (${err.message}) — keeping existing ${key}.json`);
     }
@@ -290,7 +323,10 @@ async function main() {
 
 // Only run the CLI when executed directly (not when imported for testing).
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main().catch((err) => { console.error(err); process.exit(1); });
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
 }
 
 export { parseCSV, transformPeople, transformProjects, transformPublications, transformNews };

@@ -10,6 +10,7 @@
     "postbuild": "node scripts/copy-spa-fallback.mjs && node scripts/gen-sitemap.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
+    "type-check": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

@@ -45,19 +45,19 @@ try {
   }
   for (const item of news) {
     let slug = item.slug ?? newsSlugBase(item);
-    if (!item.slug && (baseCounts.get(slug) ?? 0) > 1) slug = `${slug}-${shortHash(item.title ?? "")}`;
+    if (!item.slug && (baseCounts.get(slug) ?? 0) > 1)
+      slug = `${slug}-${shortHash(item.title ?? "")}`;
     newsPaths.push(`/news/${slug}`);
   }
 } catch (err) {
-  console.warn(`[sitemap] could not read news.json (${err.message}) — sitemap will omit news pages.`);
+  console.warn(
+    `[sitemap] could not read news.json (${err.message}) — sitemap will omit news pages.`,
+  );
 }
 
 const today = new Date().toISOString().slice(0, 10);
 const urls = [...staticPaths, ...newsPaths]
-  .map(
-    (p) =>
-      `  <url>\n    <loc>${SITE_URL}${p}</loc>\n    <lastmod>${today}</lastmod>\n  </url>`,
-  )
+  .map((p) => `  <url>\n    <loc>${SITE_URL}${p}</loc>\n    <lastmod>${today}</lastmod>\n  </url>`)
   .join("\n");
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
@@ -66,5 +66,7 @@ if (!existsSync(dirname(outPath))) {
   console.warn(`[sitemap] ${dirname(outPath)} does not exist — run after build. Skipping.`);
 } else {
   writeFileSync(outPath, xml, "utf8");
-  console.log(`[sitemap] wrote ${staticPaths.length + newsPaths.length} URLs to dist/client/sitemap.xml`);
+  console.log(
+    `[sitemap] wrote ${staticPaths.length + newsPaths.length} URLs to dist/client/sitemap.xml`,
+  );
 }

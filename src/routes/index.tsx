@@ -121,7 +121,10 @@ function HomePage() {
 
   return (
     <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ORGANIZATION_JSONLD }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: ORGANIZATION_JSONLD }}
+      />
       {/* Hero */}
       <section className="pt-10 pb-8 flex flex-col lg:flex-row gap-10">
         <div className="lg:w-1/2">

@@ -41,6 +41,13 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      # Fail fast on type errors or lint violations before building/deploying.
+      - name: Type-check
+        run: bun run type-check
+
+      - name: Lint
+        run: bun run lint
+
       # Pull the latest content from the Google Sheet into src/data/generated/*.json.
       # No-op (keeps committed seeds) until a spreadsheetId is set in
       # scripts/sheets.config.json; a failed tab keeps its existing JSON.

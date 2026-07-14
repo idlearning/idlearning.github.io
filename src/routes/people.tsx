@@ -37,9 +37,7 @@ function PersonName({ person, size }: { person: Person; size: "lg" | "md" }) {
   const secondary = showKorean ? (lang === "ko" ? person.nameEn : person.nameKo) : null;
   return (
     <div className="flex items-end gap-2 mb-1">
-      <h3
-        className={`font-bold text-text-main ${size === "lg" ? "text-xl" : "text-lg"}`}
-      >
+      <h3 className={`font-bold text-text-main ${size === "lg" ? "text-xl" : "text-lg"}`}>
         {primary}
       </h3>
       {secondary && <span className="text-text-muted text-sm mb-0.5">{secondary}</span>}
