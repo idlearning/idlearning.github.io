@@ -132,7 +132,7 @@ function HomePage() {
         dangerouslySetInnerHTML={{ __html: ORGANIZATION_JSONLD }}
       />
       {/* Hero */}
-      <section className="pt-10 pb-8 flex flex-col lg:flex-row gap-12">
+      <section className="pt-10 pb-4 flex flex-col lg:flex-row gap-12">
         <div className="lg:w-1/2">
           <h1 className="text-3xl md:text-4xl font-bold text-idl-blue mb-6 leading-tight tracking-tight">
             Interaction Design for
@@ -163,21 +163,33 @@ function HomePage() {
       </section>
 
       {/* Latest News (3, at the original 5-up card width) + AIDEAL intro */}
-      <section className="py-10">
+      <section className="pt-4 pb-10">
         <h2 className="text-2xl font-bold text-idl-blue mb-6">{t.home.latestNews}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-          {latestNews.map((item) => (
-            <NewsCard key={item.slug} item={item} />
-          ))}
-          {/* AIDEAL intro fills the remaining space; the whole panel is the link.
-              lg:ml-7 adds to the grid's gap-5 so the gap to the news block is
-              gap-12 — matching the hero's intro↔carousel spacing. */}
+        <div className="flex flex-col lg:flex-row gap-12">
+          {/* News column: the 3 cards with "More News" directly beneath them. */}
+          <div className="lg:w-3/5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {latestNews.map((item) => (
+                <NewsCard key={item.slug} item={item} />
+              ))}
+            </div>
+            <div className="mt-6 flex justify-end">
+              <Link
+                to="/news"
+                className="text-text-muted hover:text-idl-blue flex items-center gap-1 text-sm transition-colors"
+              >
+                {t.home.moreNews}
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+          {/* AIDEAL intro fills the remaining space; the whole panel is the link. */}
           <a
             href={AIDEAL_URL}
             target="_blank"
             rel="noopener noreferrer"
             style={{ backgroundImage: "url(/aideal_bg.png)" }}
-            className="group relative overflow-hidden sm:col-span-2 lg:ml-7 flex flex-col justify-center rounded-xl border border-border bg-cover bg-center p-6 shadow-sm transition-shadow hover:shadow-md"
+            className="group relative overflow-hidden lg:w-2/5 flex flex-col justify-center rounded-xl border border-border bg-cover bg-center p-6 shadow-sm transition-shadow hover:shadow-md"
           >
             {/* Amber (award-badge color) gradient rises from the bottom on hover. */}
             <span className="pointer-events-none absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-amber-400/70 via-amber-400/25 to-transparent transition-[height] duration-500 ease-out group-hover:h-full" />
@@ -197,16 +209,6 @@ function HomePage() {
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
             </span>
           </a>
-        </div>
-        {/* More News below the grid, aligned right — same style as More Projects */}
-        <div className="mt-6 flex justify-end">
-          <Link
-            to="/news"
-            className="text-text-muted hover:text-idl-blue flex items-center gap-1 text-sm transition-colors"
-          >
-            {t.home.moreNews}
-            <ArrowRight className="w-4 h-4" />
-          </Link>
         </div>
       </section>
     </main>

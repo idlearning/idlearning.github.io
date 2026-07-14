@@ -181,8 +181,10 @@ function PersonCard({
       {showPhoto && (
         <Avatar
           person={person}
-          className={`w-40 h-40 rounded-lg shrink-0 transition-shadow duration-300 ${
-            clickable ? "group-hover:shadow-lg group-hover:shadow-idl-blue/50" : ""
+          className={`w-40 h-40 rounded-lg shrink-0 transition duration-300 ${
+            clickable
+              ? "group-hover:-translate-y-1.5 group-hover:shadow-2xl group-hover:shadow-idl-blue/60"
+              : ""
           }`}
         />
       )}
