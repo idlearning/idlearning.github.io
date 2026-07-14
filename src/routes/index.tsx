@@ -6,7 +6,7 @@ import { useT } from "../lib/i18n";
 import { usePreferences } from "../lib/preferences";
 import { getLatestNews } from "../data/news";
 import { PROJECTS, type Project } from "../data/projects";
-import { NewsCard, NEWS_GRID } from "../components/NewsCard";
+import { NewsCard } from "../components/NewsCard";
 import { SITE_URL, SITE_DESCRIPTION, absoluteUrl } from "../lib/site-meta";
 
 // Structured data so search engines recognise the lab as an organisation.
@@ -51,6 +51,12 @@ const INTRO_KO =
   "학습과학, 인간-컴퓨터 상호작용, 그리고 신기술을 융합하여 새롭고 상호작용적인 학습경험을 디자인하는 것을 목표로 합니다. 학제간 연구 공간으로서 IDL Lab은 형식학습과 비형식학습을 아우르는 다양한 교육환경에서 적용 가능한 학습경험 디자인을 탐구하고 발전시키고자 합니다.";
 const INTRO_EN =
   "We aim to design innovative and interactive learning experiences by integrating learning sciences, human-computer interaction, and emerging technologies. As an interdisciplinary research space, the IDL Lab explores and advances learning experience design that can be applied across various educational environments, encompassing both formal and informal learning settings.";
+
+const AIDEAL_URL = "https://www.aideal.ewha.ac.kr";
+const AIDEAL_DESC_KO =
+  "AI-Inspired Dialogue for Ethics and Learning (AIDEAL)은 학습자가 복합적인 인공지능 윤리 쟁점을 주도적으로 탐구하고 도덕적 추론 역량을 기를 수 있는 대화형 학습 환경을 제안합니다.";
+const AIDEAL_DESC_EN =
+  "AI-Inspired Dialogue for Ethics and Learning (AIDEAL) proposes a conversational learning environment where learners can proactively explore complex AI-ethics issues and build their moral-reasoning skills.";
 
 function FeaturedCarousel() {
   const { lang } = usePreferences();
@@ -117,7 +123,7 @@ function FeaturedCarousel() {
 function HomePage() {
   const t = useT();
   const { lang } = usePreferences();
-  const latestNews = getLatestNews(4);
+  const latestNews = getLatestNews(3);
 
   return (
     <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -156,13 +162,32 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Latest News */}
+      {/* Latest News (3, at the original 5-up card width) + AIDEAL intro */}
       <section className="py-10">
         <h2 className="text-2xl font-bold text-idl-blue mb-6">{t.home.latestNews}</h2>
-        <div className={NEWS_GRID}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
           {latestNews.map((item) => (
             <NewsCard key={item.slug} item={item} />
           ))}
+          {/* AIDEAL intro fills the remaining space to the right of the 3 cards. */}
+          <div className="sm:col-span-2 flex flex-col justify-center rounded-xl border border-border bg-idl-blue/5 p-6">
+            <img src="/aideal_logo.svg" alt="AIDEAL" className="h-9 w-auto self-start mb-4" />
+            <p
+              className="text-sm text-text-main leading-relaxed mb-5"
+              style={{ wordBreak: "keep-all" }}
+            >
+              {lang === "ko" ? AIDEAL_DESC_KO : AIDEAL_DESC_EN}
+            </p>
+            <a
+              href={AIDEAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 self-start rounded-full bg-idl-blue px-4 py-2 text-sm font-medium text-white hover:bg-idl-blue/90 transition-colors"
+            >
+              Discover AIDEAL
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
         </div>
         {/* More News below the grid, aligned right — same style as More Projects */}
         <div className="mt-6 flex justify-end">
