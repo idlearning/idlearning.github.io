@@ -9,6 +9,9 @@ import { usePreferences } from "../lib/preferences";
 // ephemeral external URL that would eventually 404 and break the header.
 const LOGO_URL = "/favicon-idl.png";
 
+// External sibling lab site linked from the nav.
+const AIDEAL_URL = "https://www.aideal.ewha.ac.kr";
+
 export function SiteHeader() {
   const t = useT();
   const { lang, toggleLang } = usePreferences();
@@ -42,7 +45,7 @@ export function SiteHeader() {
         </Link>
 
         <div className="flex items-center gap-1 sm:gap-4">
-          <nav className="hidden md:flex space-x-6 text-sm">
+          <nav className="hidden md:flex items-center space-x-6 text-sm">
             {navItems.map((item) => (
               <Link
                 key={item.to}
@@ -58,22 +61,31 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            <a
+              href={AIDEAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-text-main hover:text-idl-blue transition-colors"
+            >
+              AIDEAL
+            </a>
           </nav>
 
           <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={toggleLang}
-              aria-label="Toggle language"
+              aria-label={lang === "ko" ? "Switch to English" : "한국어로 전환"}
               className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium text-text-main hover:text-idl-blue hover:bg-idl-blue/10 transition-colors"
             >
+              {/* Shows the language you'll switch TO, not the current one. */}
               <img
-                src={lang === "ko" ? "/flags/kr.svg" : "/flags/gb.svg"}
+                src={lang === "ko" ? "/flags/gb.svg" : "/flags/kr.svg"}
                 alt=""
                 aria-hidden="true"
                 className="w-5 h-auto rounded-[2px] shadow-sm"
               />
-              <span className="tabular-nums">{lang === "ko" ? "KO" : "EN"}</span>
+              <span className="tabular-nums">{lang === "ko" ? "EN" : "KO"}</span>
             </button>
             <button
               type="button"
@@ -104,6 +116,15 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
+          <a
+            href={AIDEAL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setMobileOpen(false)}
+            className="text-text-main hover:text-idl-blue transition-colors py-1.5"
+          >
+            AIDEAL
+          </a>
         </nav>
       )}
     </header>
