@@ -191,20 +191,14 @@ function HomePage() {
             style={{ backgroundImage: "url(/aideal_bg.png)" }}
             className="group relative overflow-hidden lg:w-2/5 flex flex-col justify-center rounded-xl border border-border bg-cover bg-center p-6 shadow-sm transition-shadow hover:shadow-md"
           >
-            {/* Amber (award-badge color) gradient rises from the bottom on hover. */}
-            <span className="pointer-events-none absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-amber-400/70 via-amber-400/25 to-transparent transition-[height] duration-500 ease-out group-hover:h-full" />
-            <img
-              src="/aideal_logo.svg"
-              alt="AIDEAL"
-              className="relative h-11 w-auto self-start mb-4"
-            />
+            <img src="/aideal_logo.svg" alt="AIDEAL" className="h-11 w-auto self-start mb-4" />
             <p
-              className="relative text-sm text-text-main leading-relaxed mb-5"
+              className="text-sm text-text-main leading-relaxed mb-5"
               style={{ wordBreak: "keep-all" }}
             >
               {lang === "ko" ? AIDEAL_DESC_KO : AIDEAL_DESC_EN}
             </p>
-            <span className="relative inline-flex items-center gap-1.5 self-start text-sm font-medium text-idl-blue">
+            <span className="inline-flex items-center gap-1.5 self-start rounded-full bg-white px-4 py-2 text-sm font-medium text-idl-blue shadow-sm">
               Discover AIDEAL
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
             </span>
