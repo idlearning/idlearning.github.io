@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 
 import { useT } from "../lib/i18n";
 import { usePreferences } from "../lib/preferences";
-import { getLatestNews, NEWS_IMG_DEFAULT, NEWS_WRAP_DEFAULT } from "../data/news";
+import { getLatestNews } from "../data/news";
 import { PROJECTS, type Project } from "../data/projects";
+import { NewsCard, NEWS_GRID } from "../components/NewsCard";
 import { SITE_URL, SITE_DESCRIPTION, absoluteUrl } from "../lib/site-meta";
 
 // Structured data so search engines recognise the lab as an organisation.
@@ -57,19 +58,26 @@ function FeaturedCarousel() {
     Boolean(project.img),
   ).slice(0, 3);
   const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (slides.length <= 1) return;
+    if (slides.length <= 1 || paused) return;
     const id = setInterval(() => setIndex((i) => (i + 1) % slides.length), 5000);
     return () => clearInterval(id);
-  }, [slides.length]);
+  }, [slides.length, paused]);
 
   if (slides.length === 0) return null;
   const active = slides[index];
   const title = lang === "ko" ? active.titleKo : active.titleEn;
 
   return (
-    <div>
+    // Pause auto-advance while hovered or keyboard-focused (WCAG 2.2.2).
+    <div
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+    >
       <Link
         to="/projects"
         className="relative block rounded-2xl overflow-hidden shadow-lg group bg-gray-100"
@@ -106,7 +114,7 @@ function FeaturedCarousel() {
 function HomePage() {
   const t = useT();
   const { lang } = usePreferences();
-  const latestNews = getLatestNews(5);
+  const latestNews = getLatestNews(4);
 
   return (
     <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -145,28 +153,9 @@ function HomePage() {
       {/* Latest News */}
       <section className="py-10">
         <h2 className="text-2xl font-bold text-idl-blue mb-6">{t.home.latestNews}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+        <div className={NEWS_GRID}>
           {latestNews.map((item) => (
-            <Link
-              key={item.slug}
-              to="/news/$slug"
-              params={{ slug: item.slug }}
-              className="group bg-card rounded-xl border border-border shadow-sm overflow-hidden flex flex-col hover:shadow-md hover:border-idl-blue/40 transition-all"
-            >
-              <div className={item.wrapClass ?? NEWS_WRAP_DEFAULT}>
-                <img
-                  alt={item.title}
-                  className={item.imgClass ?? NEWS_IMG_DEFAULT}
-                  src={item.img}
-                />
-              </div>
-              <div className="p-3 flex flex-col flex-grow">
-                <h3 className="text-sm font-medium text-text-main mb-2 line-clamp-2 text-center group-hover:text-idl-blue transition-colors">
-                  {item.title}
-                </h3>
-                <div className="mt-auto pt-3 text-xs text-text-muted text-center">{item.date}</div>
-              </div>
-            </Link>
+            <NewsCard key={item.slug} item={item} />
           ))}
         </div>
         {/* More News below the grid, aligned right — same style as More Projects */}

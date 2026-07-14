@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Globe, Link2, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Page, PageHeading } from "../components/Page";
 import { GoogleScholarIcon } from "../components/icons";
@@ -198,7 +198,7 @@ function PersonCard({
             <ProfileLinks person={person} />
           </div>
         )}
-        {variant === "alumni" && person.affiliation && (
+        {variant === "alumni" && person.affiliation && person.affiliation !== "-" && (
           <p className="text-text-muted mt-3 mb-2">{person.affiliation}</p>
         )}
         {variant === "alumni" && person.dissertation && (
@@ -224,6 +224,7 @@ function PersonCard({
 
 function StudentModal({ person, onClose }: { person: Person; onClose: () => void }) {
   const t = useT();
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -232,9 +233,13 @@ function StudentModal({ person, onClose }: { person: Person; onClose: () => void
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    // Move focus into the dialog on open; restore it to the trigger on close.
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    dialogRef.current?.focus();
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
+      previouslyFocused?.focus?.();
     };
   }, [onClose]);
 
@@ -244,11 +249,13 @@ function StudentModal({ person, onClose }: { person: Person; onClose: () => void
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label={person.nameEn}
+        tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-2xl bg-card p-6 sm:p-8 shadow-xl"
+        className="relative w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-2xl bg-card p-6 sm:p-8 shadow-xl focus:outline-none"
       >
         <button
           type="button"
@@ -287,7 +294,7 @@ function StudentModal({ person, onClose }: { person: Person; onClose: () => void
               <DocLine title={person.thesis} url={person.thesisUrl} />
             </DetailRow>
           )}
-          {person.affiliation && (
+          {person.affiliation && person.affiliation !== "-" && (
             <DetailRow label={t.people.affiliation}>{person.affiliation}</DetailRow>
           )}
           {person.dissertation && (
@@ -353,9 +360,11 @@ function PeoplePage() {
 
   return (
     <Page>
+      <PageHeading>{t.nav.people}</PageHeading>
+
       {/* Professor */}
       <section className="mb-16">
-        <PageHeading>{t.people.professor}</PageHeading>
+        <h2 className="text-2xl font-bold text-idl-blue mb-8">{t.people.professor}</h2>
         {professor && (
           <div className="flex flex-col sm:flex-row gap-8 items-start">
             <Avatar person={professor} className="w-44 h-44 rounded-lg shrink-0" />

@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 import { Page, PageHeading } from "../components/Page";
+import { NewsCard, NEWS_GRID } from "../components/NewsCard";
 import { useT } from "../lib/i18n";
-import { getSortedNews, NEWS_IMG_DEFAULT, NEWS_WRAP_DEFAULT } from "../data/news";
+import { getSortedNews } from "../data/news";
 import { absoluteUrl } from "../lib/site-meta";
 
 export const Route = createFileRoute("/news/")({
@@ -34,24 +35,9 @@ function NewsPage() {
   return (
     <Page>
       <PageHeading>{t.news.title}</PageHeading>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className={NEWS_GRID}>
         {news.map((item) => (
-          <Link
-            key={item.slug}
-            to="/news/$slug"
-            params={{ slug: item.slug }}
-            className="group bg-card rounded-lg overflow-hidden border border-border shadow-sm flex flex-col h-full hover:shadow-md hover:border-idl-blue/40 transition-all"
-          >
-            <div className={item.wrapClass ?? NEWS_WRAP_DEFAULT}>
-              <img alt={item.title} className={item.imgClass ?? NEWS_IMG_DEFAULT} src={item.img} />
-            </div>
-            <div className="p-4 flex flex-col flex-grow justify-between">
-              <h2 className="text-sm font-medium text-center mb-4 line-clamp-2 leading-tight text-text-main group-hover:text-idl-blue transition-colors">
-                {item.title}
-              </h2>
-              <time className="text-xs text-text-muted block mt-auto text-center">{item.date}</time>
-            </div>
-          </Link>
+          <NewsCard key={item.slug} item={item} />
         ))}
       </div>
     </Page>
