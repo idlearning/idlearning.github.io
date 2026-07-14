@@ -169,21 +169,29 @@ function HomePage() {
           {latestNews.map((item) => (
             <NewsCard key={item.slug} item={item} />
           ))}
-          {/* AIDEAL intro fills the remaining space; the whole panel is the link. */}
+          {/* AIDEAL intro fills the remaining space; the whole panel is the link.
+              lg:ml-5 adds to the grid's gap-5 so the gap to the news block is
+              gap-10 — matching the hero's intro↔carousel spacing. */}
           <a
             href={AIDEAL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="group sm:col-span-2 flex flex-col justify-center rounded-xl border border-border bg-idl-blue/5 p-6 shadow-sm transition-all hover:border-idl-blue/40 hover:shadow-md"
+            className="group relative overflow-hidden sm:col-span-2 lg:ml-5 flex flex-col justify-center rounded-xl border border-border bg-idl-blue/5 p-6 shadow-sm transition-shadow hover:shadow-md"
           >
-            <img src="/aideal_logo.svg" alt="AIDEAL" className="h-11 w-auto self-start mb-4" />
+            {/* Yellow gradient rises from the bottom on hover as the affordance. */}
+            <span className="pointer-events-none absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-yellow-200/80 via-yellow-100/40 to-transparent transition-[height] duration-500 ease-out group-hover:h-full" />
+            <img
+              src="/aideal_logo.svg"
+              alt="AIDEAL"
+              className="relative h-11 w-auto self-start mb-4"
+            />
             <p
-              className="text-sm text-text-main leading-relaxed mb-5"
+              className="relative text-sm text-text-main leading-relaxed mb-5"
               style={{ wordBreak: "keep-all" }}
             >
               {lang === "ko" ? AIDEAL_DESC_KO : AIDEAL_DESC_EN}
             </p>
-            <span className="inline-flex items-center gap-1.5 self-start text-sm font-medium text-idl-blue">
+            <span className="relative inline-flex items-center gap-1.5 self-start text-sm font-medium text-idl-blue">
               Discover AIDEAL
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
             </span>
