@@ -37,9 +37,7 @@ function PersonName({ person, size }: { person: Person; size: "lg" | "md" }) {
   return (
     <div className="flex items-end gap-2 mb-1">
       <h3
-        className={`font-bold text-text-main transition-colors group-hover:text-idl-blue ${
-          size === "lg" ? "text-xl" : "text-lg"
-        }`}
+        className={`font-bold text-text-main ${size === "lg" ? "text-xl" : "text-lg"}`}
       >
         {primary}
       </h3>
@@ -178,7 +176,14 @@ function PersonCard({
         clickable ? "group cursor-pointer" : ""
       }`}
     >
-      {showPhoto && <Avatar person={person} className="w-40 h-40 rounded-lg shrink-0" />}
+      {showPhoto && (
+        <Avatar
+          person={person}
+          className={`w-40 h-40 rounded-lg shrink-0 transition-shadow duration-300 ${
+            clickable ? "group-hover:shadow-lg group-hover:shadow-idl-blue/50" : ""
+          }`}
+        />
+      )}
       <div className="text-sm min-w-0">
         {degreeLabel && (
           <div className="text-xs font-semibold uppercase tracking-wider text-idl-blue mb-1">
