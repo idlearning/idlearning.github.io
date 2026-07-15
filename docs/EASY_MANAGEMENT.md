@@ -211,6 +211,49 @@
 - **뉴스 본문:** 위 "마크다운 치트시트"를 폼 안내문에 넣어 두면 제출자가
   서식을 넣어 보낼 수 있습니다.
 
+### 실전 예시: Publications 등록 폼 (8문항)
+
+실제 데이터에서 `pdf`/`acmdl`은 한 번도 안 쓰였고 `website`는 4/163편,
+`id`는 사이트에 노출되지 않으므로 — **폼은 아래 8문항이면 충분**합니다.
+(그 4개 필드가 필요한 드문 경우만 관리자가 시트에서 직접 채웁니다.)
+
+**폼 설명에 넣을 안내:** "제출 즉시 홈페이지 Publications에 반영됩니다.
+설정에서 Ewha 로그인 필수 + 응답 1회 제한을 켜 두세요."
+
+| # | 질문 | 유형 | 필수 | 매핑 헤더 |
+| - | ---- | ---- | ---- | --------- |
+| 1 | 논문 유형 (Type) | 객관식: `Journal`/`Conference`/`Book` | ✅ | `type` |
+| 2 | 제목 (Title) | 단답형 | ✅ | `title` |
+| 3 | 저자 (Authors) | 단답형 — 게재순, **쉼표(,) 구분**. 영문명은 People 표기와 동일하게 | ✅ | `authors` |
+| 4 | 출판 연도 (Year) | 단답형(숫자) | ✅ | `year` |
+| 5 | 게재처 (Venue) | 단답형 — 저널명/학회명/출판사 | ✅ | `venue` |
+| 6 | 색인 (Index) | 체크박스: `SSCI`/`SCOPUS`/`KCI` (저널만, 복수) | ⬜ | `index` |
+| 7 | DOI | 단답형 (전체 URL도 OK) | ⬜ | `doi` |
+| 8 | 수상 (Award) | 단답형 — 수상명 | ⬜ | `award` |
+
+**예시 제출**
+
+- 저널(SSCI+SCOPUS): `Journal` / "Examining University Students' Engagement…" /
+  `Hyeji Jang, Lingxi Jin, Hyo-Jeong So` / `2026` /
+  `The Asia-Pacific Education Researcher` / ☑SSCI ☑SCOPUS / `10.1007/s40299-025-01076-9`
+- 학회(수상): `Conference` / "Integrating Computational Thinking…" /
+  `Jeanhee Lee, Yoon-Kyeong Lee, Hyo-Jeong So` / `2025` / `ICoME 2025` /
+  (색인 없음) / (DOI 없음) / `Young Scholar Award`
+- 국문 학회: `Conference` / "논쟁문제 의사결정 상황에서…" / `김규원, 소효정` /
+  `2026` / `2025 한국교육정보미디어학회 춘계학술대회`
+
+**브릿지 탭 연결.** 응답 컬럼은 `A=타임스탬프, B=유형, C=제목, D=저자,
+E=연도, F=게재처, G=색인, H=DOI, I=수상`. 브릿지 탭 1행 헤더를
+`title  authors  year  type  venue  index  doi  award` 로 두고 A2 셀에:
+
+```text
+=QUERY('설문지 응답 시트1'!A2:I, "select C, D, E, B, F, G, H, I where C is not null", 0)
+```
+
+> `id`는 헤더에서 빼면 sync가 자동 생성합니다(헤더 이름 기준이라 없어도 정상).
+> 유형은 `Journal`로 넣어도 sync가 소문자 `journal`로 처리합니다. 색인
+> 체크박스는 `SSCI, SCOPUS`처럼 들어와 `index` 컬럼과 그대로 맞습니다.
+
 ## 5. (선택) 폼 제출 시 자동 배포
 
 폼 제출 즉시 사이트를 갱신하려면, 시트에 연결된 **Apps Script**로 GitHub 배포를
