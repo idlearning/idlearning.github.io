@@ -136,7 +136,7 @@ const DICTS: Record<Lang, Dict> = {
       koreanName: "Korean Title",
       englishName: "English Title",
       period: "Research Period",
-      funder: "Funding Organization",
+      funder: "Funder",
       members: "Researchers",
       description: "Project Description",
       relatedPublications: "Related Publications",
