@@ -264,7 +264,6 @@ venue · type · ssci · scopus · kci · pdf · doi · acmdl · website · awar
 
    ```text
    ={
-     FILTER('Pub Manual'!A2:Q, LEN('Pub Manual'!B2:B)) ;
      FILTER(
        ARRAYFORMULA({
          IF(LEN('Pub-Form'!D2:D),"",""),
@@ -286,9 +285,13 @@ venue · type · ssci · scopus · kci · pdf · doi · acmdl · website · awar
          'Pub-Form'!J2:J
        }),
        LEN('Pub-Form'!D2:D)
-     )
+     ) ;
+     FILTER('Pub Manual'!A2:Q, LEN('Pub Manual'!B2:B))
    }
    ```
+
+   (폼 응답이 위, 기존 데이터가 아래. 사이트 표시 순서는 연도 기준이라 시트
+   순서와 무관합니다.)
 
    17개 열 순서: id(빈칸→자동), title(D), authors(E), year(F),
    publication date(빈칸), journal(빈칸), volume_issue(빈칸), venue(G),
