@@ -197,12 +197,14 @@ function PersonCard({
       }`}
     >
       {showPhoto && (
-        <Avatar
-          person={person}
-          className={`w-40 h-40 rounded-lg shrink-0 transition-shadow duration-300 ${
-            clickable ? "group-hover:shadow-2xl group-hover:shadow-idl-blue/60" : ""
-          }`}
-        />
+        <div className="relative w-40 h-40 shrink-0 overflow-hidden rounded-lg">
+          <Avatar person={person} className="w-full h-full rounded-lg" />
+          {clickable && (
+            // On hover, a warm yellow gradient floods up from the bottom to about
+            // half the photo's height.
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-yellow-300/80 via-yellow-300/40 to-transparent transition-all duration-500 ease-out group-hover:h-1/2" />
+          )}
+        </div>
       )}
       <div className="text-sm min-w-0">
         {degreeLabel && (
