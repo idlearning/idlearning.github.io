@@ -367,7 +367,7 @@ function PeoplePage() {
 
       {/* Professor */}
       <section className="mb-16">
-        <h2 className="text-2xl font-bold text-[#BFBFBF] mb-8">{t.people.professor}</h2>
+        <h2 className="text-2xl font-bold text-idl-blue mb-8">{t.people.professor}</h2>
         {professor && (
           <div className="flex flex-col sm:flex-row gap-8 items-start">
             <Avatar person={professor} className="w-44 h-44 rounded-lg shrink-0" />
@@ -384,7 +384,7 @@ function PeoplePage() {
 
       {/* Students, split into subsections by role */}
       <section className="mb-16">
-        <h2 className="text-2xl font-bold text-[#BFBFBF] mb-8">{t.people.students}</h2>
+        <h2 className="text-2xl font-bold text-idl-blue mb-8">{t.people.students}</h2>
         <div className="flex flex-col gap-14">
           {STUDENT_SECTIONS.map((sec) => {
             const people = getPeopleByRole(sec.role);
@@ -408,7 +408,7 @@ function PeoplePage() {
           <div className="flex flex-col gap-14">
             {alumniGroups.map((g) => (
               <div key={g.key}>
-                <h3 className="text-lg font-bold text-[#BFBFBF] mb-6 pb-2 border-b border-border">
+                <h3 className="text-lg font-bold text-text-main mb-6 pb-2 border-b border-border">
                   {g.label}
                 </h3>
                 <PeopleGrid people={g.people} onOpen={setSelected} variant="alumni" />

@@ -148,7 +148,7 @@ function HomePage() {
         </div>
         {/* Featured Project carousel */}
         <div className="lg:w-1/2">
-          <h2 className="text-2xl font-bold text-idl-blue mb-4">{t.home.researchProjects}</h2>
+          <h2 className="text-2xl font-bold text-text-main mb-4">{t.home.researchProjects}</h2>
           <FeaturedCarousel />
           <div className="mt-3 flex justify-end">
             <Link
@@ -164,7 +164,7 @@ function HomePage() {
 
       {/* Latest News (3, at the original 5-up card width) + AIDEAL intro */}
       <section className="pt-4 pb-10">
-        <h2 className="text-2xl font-bold text-idl-blue mb-6">{t.home.latestNews}</h2>
+        <h2 className="text-2xl font-bold text-text-main mb-6">{t.home.latestNews}</h2>
         <div className="flex flex-col lg:flex-row gap-12">
           {/* News column: the 3 cards with "More News" directly beneath them. */}
           <div className="lg:w-3/5">

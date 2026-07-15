@@ -14,5 +14,5 @@ export function Page({ children }: { children: ReactNode }) {
 
 /** Consistent page title used at the top of every content page. */
 export function PageHeading({ children }: { children: ReactNode }) {
-  return <h1 className="text-3xl font-bold text-idl-blue mb-8">{children}</h1>;
+  return <h1 className="text-3xl font-bold text-text-main mb-8">{children}</h1>;
 }
