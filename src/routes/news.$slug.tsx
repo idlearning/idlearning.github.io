@@ -5,11 +5,13 @@ import { useT } from "../lib/i18n";
 import { usePreferences } from "../lib/preferences";
 import { getNewsBySlug } from "../data/news";
 import { absoluteUrl, SITE_NAME } from "../lib/site-meta";
+import { Markdown } from "../components/Markdown";
+import { stripMarkdown } from "../lib/markdown";
 
 /** One-line summary for meta/og:description, from the body or the title. */
 function newsDescription(item: ReturnType<typeof getNewsBySlug>): string {
   const body = item?.contentEn || item?.contentKo || "";
-  const text = body.replace(/\s+/g, " ").trim();
+  const text = stripMarkdown(body);
   if (text) return text.length > 160 ? `${text.slice(0, 157)}…` : text;
   return item?.title ?? "";
 }
@@ -80,14 +82,7 @@ function NewsDetailPage() {
               }}
             />
           </div>
-          {content && (
-            <div
-              className="text-sm text-text-main leading-relaxed whitespace-pre-line"
-              style={{ wordBreak: "keep-all" }}
-            >
-              {content}
-            </div>
-          )}
+          {content && <Markdown content={content} />}
         </div>
       </article>
     </main>
