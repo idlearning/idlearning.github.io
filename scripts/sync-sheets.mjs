@@ -181,7 +181,7 @@ function transformProjects(rows) {
 }
 
 function transformPublications(rows) {
-  return rows
+  const pubs = rows
     .filter((r) => clean(r["title"]))
     .map((r) => {
       const type = clean(r["type"]).toLowerCase() || "journal";
@@ -208,7 +208,7 @@ function transformPublications(rows) {
       }
 
       const pub = {
-        id: clean(r["id"]) || `${type.slice(0, 4)}-${slug(r["title"])}`,
+        id: clean(r["id"]),
         title: clean(r["title"]),
         authors: splitAuthors(r["authors"]),
         venue,
@@ -223,6 +223,27 @@ function transformPublications(rows) {
       put(pub, "website", r["website"]);
       return pub;
     });
+
+  // Auto-assign scheme ids (YYYY-<t>-NNN) to rows with a blank id, continuing
+  // the sequence after the highest explicit number for that year+type so newer
+  // entries (e.g. form submissions) get higher numbers. The id isn't shown on
+  // the site but drives ordering (newest-first) and related-publication links.
+  const maxSeq = {};
+  for (const p of pubs) {
+    const m = p.id.match(/^(\d{4})-([a-z])-0*(\d+)$/i);
+    if (m) {
+      const key = `${m[1]}-${m[2].toLowerCase()}`;
+      maxSeq[key] = Math.max(maxSeq[key] || 0, Number(m[3]));
+    }
+  }
+  for (const p of pubs) {
+    if (p.id) continue;
+    const letter = (p.type[0] || "x").toLowerCase();
+    const key = `${p.year}-${letter}`;
+    const next = (maxSeq[key] = (maxSeq[key] || 0) + 1);
+    p.id = `${p.year}-${letter}-${String(next).padStart(3, "0")}`;
+  }
+  return pubs;
 }
 
 function transformNews(rows) {

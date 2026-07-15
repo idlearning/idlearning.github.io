@@ -1,5 +1,45 @@
 [
   {
+    "id": "2026-j-003",
+    "title": "2028학년도 학생부교과전형 요소에 대한 교사와 입학사정관의 인식 탐색: 중요도-신뢰도 분석을 중심으로",
+    "authors": [
+      "소효정",
+      "장혜지",
+      "박효성",
+      "김민선",
+      "이윤경"
+    ],
+    "venue": "교육문화연구",
+    "year": 2026,
+    "type": "journal",
+    "badges": [
+      {
+        "label": "KCI",
+        "kind": "index"
+      }
+    ],
+    "doi": "10.24159/joec.2026.32.3.49"
+  },
+  {
+    "id": "2026-j-004",
+    "title": "대화형 에이전트의 교육적 활용에 대한 체계적 문헌 고찰: 에이전트 역할 설계와 효과",
+    "authors": [
+      "박효성",
+      "장혜지",
+      "소효정"
+    ],
+    "venue": "교육정보미디어연구",
+    "year": 2026,
+    "type": "journal",
+    "badges": [
+      {
+        "label": "KCI",
+        "kind": "index"
+      }
+    ],
+    "doi": "10.15833/kaeim.2026.32.3.014"
+  },
+  {
     "id": "2026-j-001",
     "title": "Trustworthiness of AI in academic writing: Perspectives from Indonesian EFL students",
     "authors": [
@@ -164,7 +204,13 @@
     ],
     "venue": "2025 한국교육정보미디어학회 춘계학술대회",
     "year": 2026,
-    "type": "conference"
+    "type": "conference",
+    "badges": [
+      {
+        "label": "최우수논문상",
+        "kind": "award"
+      }
+    ]
   },
   {
     "id": "2026-c-011",

@@ -35,7 +35,12 @@ export const PUB_TYPE_ORDER: PubType[] = ["journal", "conference", "book"];
 export const getPublicationById = (id: string): Publication | undefined =>
   PUBLICATIONS.find((p) => p.id === id);
 
-/** Publications grouped by year (desc), then by type in `PUB_TYPE_ORDER`. */
+/**
+ * Publications grouped by year (desc), then by type in `PUB_TYPE_ORDER`.
+ * Within a year+type, items are sorted by id descending so the newest entry
+ * (highest `YYYY-<t>-NNN` sequence, e.g. a fresh form submission) is on top —
+ * independent of the sheet's row order.
+ */
 export function getPublicationsByYear(filter: PubType | "all") {
   const filtered = filter === "all" ? PUBLICATIONS : PUBLICATIONS.filter((p) => p.type === filter);
   const years = [...new Set(filtered.map((p) => p.year))].sort((a, b) => b - a);
@@ -43,7 +48,9 @@ export function getPublicationsByYear(filter: PubType | "all") {
     year,
     types: PUB_TYPE_ORDER.map((type) => ({
       type,
-      items: filtered.filter((p) => p.year === year && p.type === type),
+      items: filtered
+        .filter((p) => p.year === year && p.type === type)
+        .sort((a, b) => b.id.localeCompare(a.id)),
     })).filter((group) => group.items.length > 0),
   }));
 }
