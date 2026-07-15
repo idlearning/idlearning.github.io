@@ -259,52 +259,65 @@ venue · type · ssci · scopus · kci · pdf · doi · acmdl · website · awar
 1. 기존 `Publications` 탭 이름을 → **`Pub Manual`** 로 변경 (내용은 그대로).
 2. 새 탭 **`Publications`** 를 만들고, **1행에 위 17개 헤더**를 그대로 입력.
 3. 폼 응답 탭 이름을 **`Pub-Form`** 으로 변경(구분 쉽게). 새 탭 **A2 셀**에
-   아래 수식을 한 번 붙여넣습니다(이후 손댈 일 없음). `FILTER`가 양쪽의 빈
-   행을 걷어내 폼 응답이 기존 데이터 **바로 아래**에 붙습니다:
+   아래 수식을 한 번 붙여넣습니다(이후 손댈 일 없음). 폼 행의 **id를
+   `연도-유형-순번`으로 계산해 채우고**, 전체를 **id 내림차순(번호 큰=나중
+   출판이 위)** 으로 정렬합니다:
 
    ```text
-   ={
-     FILTER(
-       ARRAYFORMULA({
-         IF(LEN('Pub-Form'!D2:D),"",""),
-         'Pub-Form'!D2:D,
-         'Pub-Form'!E2:E,
-         'Pub-Form'!F2:F,
-         IF(LEN('Pub-Form'!D2:D),"",""),
-         IF(LEN('Pub-Form'!D2:D),"",""),
-         IF(LEN('Pub-Form'!D2:D),"",""),
-         'Pub-Form'!G2:G,
-         'Pub-Form'!C2:C,
-         IF(REGEXMATCH('Pub-Form'!H2:H,"SSCI"),"1",""),
-         IF(REGEXMATCH('Pub-Form'!H2:H,"SCOPUS"),"1",""),
-         IF(REGEXMATCH('Pub-Form'!H2:H,"KCI"),"1",""),
-         IF(LEN('Pub-Form'!D2:D),"",""),
-         'Pub-Form'!I2:I,
-         IF(LEN('Pub-Form'!D2:D),"",""),
-         IF(LEN('Pub-Form'!D2:D),"",""),
-         'Pub-Form'!J2:J
-       }),
-       LEN('Pub-Form'!D2:D)
-     ) ;
-     FILTER('Pub Manual'!A2:Q, LEN('Pub Manual'!B2:B))
-   }
+   =SORT(
+     {
+       FILTER('Pub Manual'!A2:Q, LEN('Pub Manual'!B2:B));
+       FILTER(
+         ARRAYFORMULA({
+           'Pub-Form'!F2:F2000&"-"&LOWER(LEFT('Pub-Form'!C2:C2000,1))&"-"&TEXT(
+             COUNTIF('Pub Manual'!$A$2:$A,'Pub-Form'!F2:F2000&"-"&LOWER(LEFT('Pub-Form'!C2:C2000,1))&"-*")
+             +COUNTIFS('Pub-Form'!$F$2:$F$2000,'Pub-Form'!F2:F2000,'Pub-Form'!$C$2:$C$2000,'Pub-Form'!C2:C2000,ROW('Pub-Form'!$F$2:$F$2000),"<="&ROW('Pub-Form'!F2:F2000)),
+           "000"),
+           'Pub-Form'!D2:D2000,
+           'Pub-Form'!E2:E2000,
+           'Pub-Form'!F2:F2000,
+           IF('Pub-Form'!D2:D2000="","",""),
+           IF('Pub-Form'!D2:D2000="","",""),
+           IF('Pub-Form'!D2:D2000="","",""),
+           'Pub-Form'!G2:G2000,
+           'Pub-Form'!C2:C2000,
+           IF(REGEXMATCH('Pub-Form'!H2:H2000,"SSCI"),"1",""),
+           IF(REGEXMATCH('Pub-Form'!H2:H2000,"SCOPUS"),"1",""),
+           IF(REGEXMATCH('Pub-Form'!H2:H2000,"KCI"),"1",""),
+           IF('Pub-Form'!D2:D2000="","",""),
+           'Pub-Form'!I2:I2000,
+           IF('Pub-Form'!D2:D2000="","",""),
+           IF('Pub-Form'!D2:D2000="","",""),
+           'Pub-Form'!J2:J2000
+         }),
+         LEN('Pub-Form'!D2:D2000)
+       )
+     },
+     1, FALSE
+   )
    ```
 
-   (폼 응답이 위, 기존 데이터가 아래. 사이트 표시 순서는 연도 기준이라 시트
-   순서와 무관합니다.)
-
-   17개 열 순서: id(빈칸→자동), title(D), authors(E), year(F),
-   publication date(빈칸), journal(빈칸), volume_issue(빈칸), venue(G),
-   type(C), ssci/scopus/kci(색인 H를 `REGEXMATCH`로 분해), pdf(빈칸),
-   doi(I), acmdl(빈칸), website(빈칸), award(J).
+   - **id**: `연도-유형첫글자(j/c/b)-순번`. 순번 = `Pub Manual`의 같은
+     연도·유형 개수 + `Pub-Form`에서 같은 연도·유형 중 이 행까지 순서 →
+     예: 기존 `2026-j-001·002` 다음 폼 저널은 `2026-j-003·004`.
+   - **정렬**: `SORT(…,1,FALSE)` = id 내림차순 → 번호 큰(나중 출판)게 위,
+     유형은 j>c>b 순이라 사이트 그룹 순서(저널·학회·책)와도 일치.
+   - 시트가 id를 채우므로 sync는 그 id를 **그대로 사용**(시트=사이트 일치).
+   - 17열 순서: id, title(D), authors(E), year(F), publication date(빈),
+     journal(빈), volume_issue(빈), venue(G), type(C),
+     ssci/scopus/kci(색인 H를 `REGEXMATCH`로 분해), pdf(빈), doi(I),
+     acmdl(빈), website(빈), award(J).
 
 4. `scripts/sheets.config.json`의 `tabs.publications`는 `"Publications"`
    그대로 — 이제 이 합본 뷰를 가리킵니다.
 
-> - 폼 응답 탭 이름이 `Pub-Form`이 아니면 수식 안 이름을 실제 탭 이름으로
->   교체하세요(하이픈·공백 있으면 작은따옴표 필수).
-> - 배열 수식이 `#ERROR!`면 시트 로케일 문제 — 배열 안 쉼표 `,`를 백슬래시
->   `\`로 바꿔 보세요(한국 로케일은 보통 `,`로 정상).
+> - 탭 이름 `Pub-Form`/`Pub Manual`이 실제와 다르면 수식 안 이름을 교체하세요
+>   (하이픈·공백 있으면 작은따옴표 필수).
+> - 배열 수식이 `#ERROR!`면 로케일 문제 — 배열 안 쉼표 `,`를 백슬래시 `\`로
+>   바꿔 보세요(한국 로케일은 보통 `,`로 정상).
+> - 순번 계산은 `Pub Manual`의 같은 연도·유형 id가 **1번부터 연속**이라고
+>   가정합니다(현재 데이터 그러함). 중간 결번이 있으면 관리자가 id를 직접
+>   지정하세요(그 값이 우선).
 > - **폼 응답 행을 지우면** 합본 뷰에서도 사라지고 다음 배포에 사이트에서
 >   내려갑니다.
 
