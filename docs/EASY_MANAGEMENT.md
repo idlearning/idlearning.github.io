@@ -242,17 +242,70 @@
 - 국문 학회: `Conference` / "논쟁문제 의사결정 상황에서…" / `김규원, 소효정` /
   `2026` / `2025 한국교육정보미디어학회 춘계학술대회`
 
-**브릿지 탭 연결.** 응답 컬럼은 `A=타임스탬프, B=유형, C=제목, D=저자,
-E=연도, F=게재처, G=색인, H=DOI, I=수상`. 브릿지 탭 1행 헤더를
-`title  authors  year  type  venue  index  doi  award` 로 두고 A2 셀에:
+**폼 응답 탭 컬럼.** 로그인/이메일 수집을 켜면 B열에 `이메일 주소`가 생겨
+한 칸씩 밀립니다. 실제 순서:
+`A=타임스탬프 · B=이메일 · C=유형 · D=제목 · E=저자 · F=연도 · G=게재처 ·
+H=색인 · I=DOI · J=수상`.
 
-```text
-=QUERY('설문지 응답 시트1'!A2:I, "select C, D, E, B, F, G, H, I where C is not null", 0)
-```
+### 기존 데이터와 한 탭에서 합치기 (실전 적용)
 
-> `id`는 헤더에서 빼면 sync가 자동 생성합니다(헤더 이름 기준이라 없어도 정상).
-> 유형은 `Journal`로 넣어도 sync가 소문자 `journal`로 처리합니다. 색인
-> 체크박스는 `SSCI, SCOPUS`처럼 들어와 `index` 컬럼과 그대로 맞습니다.
+이 사이트의 기존 `Publications` 탭은 17열입니다:
+`id · title · authors · year · publication date · journal · volume_issue ·
+venue · type · ssci · scopus · kci · pdf · doi · acmdl · website · award`.
+폼은 색인을 **한 칸**(SSCI/SCOPUS/KCI 묶음)으로 받으므로, 폼 응답을 이 17열
+모양으로 재배치하고 색인을 `ssci/scopus/kci` 세 칸으로 분해해 기존 데이터
+아래에 이어붙입니다.
+
+1. 기존 `Publications` 탭 이름을 → **`Pub Manual`** 로 변경 (내용은 그대로).
+2. 새 탭 **`Publications`** 를 만들고, **1행에 위 17개 헤더**를 그대로 입력.
+3. 새 탭 **A2 셀**에 아래 수식을 한 번 붙여넣습니다(이후 손댈 일 없음):
+
+   ```text
+   ={
+     'Pub Manual'!A2:Q ;
+     ARRAYFORMULA({
+       IF('설문지 응답 시트1'!D2:D="","",""),
+       '설문지 응답 시트1'!D2:D,
+       '설문지 응답 시트1'!E2:E,
+       '설문지 응답 시트1'!F2:F,
+       IF('설문지 응답 시트1'!D2:D="","",""),
+       IF('설문지 응답 시트1'!D2:D="","",""),
+       IF('설문지 응답 시트1'!D2:D="","",""),
+       '설문지 응답 시트1'!G2:G,
+       '설문지 응답 시트1'!C2:C,
+       IF(REGEXMATCH('설문지 응답 시트1'!H2:H,"SSCI"),"1",""),
+       IF(REGEXMATCH('설문지 응답 시트1'!H2:H,"SCOPUS"),"1",""),
+       IF(REGEXMATCH('설문지 응답 시트1'!H2:H,"KCI"),"1",""),
+       IF('설문지 응답 시트1'!D2:D="","",""),
+       '설문지 응답 시트1'!I2:I,
+       IF('설문지 응답 시트1'!D2:D="","",""),
+       IF('설문지 응답 시트1'!D2:D="","",""),
+       '설문지 응답 시트1'!J2:J
+     })
+   }
+   ```
+
+   17개 열 순서: id(빈칸→자동), title(D), authors(E), year(F),
+   publication date(빈칸), journal(빈칸), volume_issue(빈칸), venue(G),
+   type(C), ssci/scopus/kci(색인 H를 `REGEXMATCH`로 분해), pdf(빈칸),
+   doi(I), acmdl(빈칸), website(빈칸), award(J).
+
+4. `scripts/sheets.config.json`의 `tabs.publications`는 `"Publications"`
+   그대로 — 이제 이 합본 뷰를 가리킵니다.
+
+> - 폼 응답 탭 이름이 `설문지 응답 시트1`이 아니면 수식 안 이름을 실제 탭
+>   이름으로 교체하세요.
+> - 배열 수식이 `#ERROR!`면 시트 로케일 문제 — 배열 안 쉼표 `,`를 백슬래시
+>   `\`로 바꿔 보세요(한국 로케일은 보통 `,`로 정상).
+> - **폼 응답 행을 지우면** 합본 뷰에서도 사라지고 다음 배포에 사이트에서
+>   내려갑니다.
+
+### (대안) 방법 B — 탭을 분리하고 코드가 여러 탭을 읽기
+
+위 합본 수식이 부담스러우면, 폼은 신규 전용 탭으로 두고
+`scripts/sheets.config.json` + `scripts/sync-sheets.mjs`를 소폭 고쳐 한
+데이터셋이 **여러 탭**을 읽어 이어붙이게 할 수도 있습니다(코드 변경 필요,
+시트 수식은 단순해짐). 필요하면 요청하세요.
 
 ## 5. (선택) 폼 제출 시 자동 배포
 
