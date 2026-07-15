@@ -87,7 +87,7 @@ function ProjectCard({ project }: { project: Project }) {
                 aria-expanded={open}
                 className="inline-flex items-center gap-1 text-sm font-medium text-idl-blue hover:underline"
               >
-                {open ? t.common.showLess : t.common.readMore}
+                {t.projects.description}
                 <ChevronDown
                   className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`}
                 />
@@ -96,17 +96,12 @@ function ProjectCard({ project }: { project: Project }) {
               {open && (
                 <div className="mt-4 flex flex-col gap-6">
                   {project.description && (
-                    <section>
-                      <h3 className="text-sm font-bold text-text-main mb-2">
-                        {t.projects.description}
-                      </h3>
-                      <p
-                        className="text-sm text-text-muted text-justify leading-relaxed"
-                        style={{ wordBreak: "keep-all" }}
-                      >
-                        {project.description}
-                      </p>
-                    </section>
+                    <p
+                      className="text-sm text-text-muted text-justify leading-relaxed"
+                      style={{ wordBreak: "keep-all" }}
+                    >
+                      {project.description}
+                    </p>
                   )}
                   {relatedPubs.length > 0 && (
                     <section>

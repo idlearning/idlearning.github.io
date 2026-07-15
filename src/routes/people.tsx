@@ -202,7 +202,7 @@ function PersonCard({
           {clickable && (
             // On hover, a warm yellow gradient floods up from the bottom to about
             // half the photo's height.
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-yellow-300/80 via-yellow-300/40 to-transparent transition-all duration-500 ease-out group-hover:h-1/2" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-idl-blue/80 via-idl-blue/40 to-transparent transition-all duration-500 ease-out group-hover:h-1/2" />
           )}
         </div>
       )}
