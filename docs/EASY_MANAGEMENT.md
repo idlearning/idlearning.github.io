@@ -258,30 +258,35 @@ venue · type · ssci · scopus · kci · pdf · doi · acmdl · website · awar
 
 1. 기존 `Publications` 탭 이름을 → **`Pub Manual`** 로 변경 (내용은 그대로).
 2. 새 탭 **`Publications`** 를 만들고, **1행에 위 17개 헤더**를 그대로 입력.
-3. 새 탭 **A2 셀**에 아래 수식을 한 번 붙여넣습니다(이후 손댈 일 없음):
+3. 폼 응답 탭 이름을 **`Pub-Form`** 으로 변경(구분 쉽게). 새 탭 **A2 셀**에
+   아래 수식을 한 번 붙여넣습니다(이후 손댈 일 없음). `FILTER`가 양쪽의 빈
+   행을 걷어내 폼 응답이 기존 데이터 **바로 아래**에 붙습니다:
 
    ```text
    ={
-     'Pub Manual'!A2:Q ;
-     ARRAYFORMULA({
-       IF('설문지 응답 시트1'!D2:D="","",""),
-       '설문지 응답 시트1'!D2:D,
-       '설문지 응답 시트1'!E2:E,
-       '설문지 응답 시트1'!F2:F,
-       IF('설문지 응답 시트1'!D2:D="","",""),
-       IF('설문지 응답 시트1'!D2:D="","",""),
-       IF('설문지 응답 시트1'!D2:D="","",""),
-       '설문지 응답 시트1'!G2:G,
-       '설문지 응답 시트1'!C2:C,
-       IF(REGEXMATCH('설문지 응답 시트1'!H2:H,"SSCI"),"1",""),
-       IF(REGEXMATCH('설문지 응답 시트1'!H2:H,"SCOPUS"),"1",""),
-       IF(REGEXMATCH('설문지 응답 시트1'!H2:H,"KCI"),"1",""),
-       IF('설문지 응답 시트1'!D2:D="","",""),
-       '설문지 응답 시트1'!I2:I,
-       IF('설문지 응답 시트1'!D2:D="","",""),
-       IF('설문지 응답 시트1'!D2:D="","",""),
-       '설문지 응답 시트1'!J2:J
-     })
+     FILTER('Pub Manual'!A2:Q, LEN('Pub Manual'!B2:B)) ;
+     FILTER(
+       ARRAYFORMULA({
+         IF(LEN('Pub-Form'!D2:D),"",""),
+         'Pub-Form'!D2:D,
+         'Pub-Form'!E2:E,
+         'Pub-Form'!F2:F,
+         IF(LEN('Pub-Form'!D2:D),"",""),
+         IF(LEN('Pub-Form'!D2:D),"",""),
+         IF(LEN('Pub-Form'!D2:D),"",""),
+         'Pub-Form'!G2:G,
+         'Pub-Form'!C2:C,
+         IF(REGEXMATCH('Pub-Form'!H2:H,"SSCI"),"1",""),
+         IF(REGEXMATCH('Pub-Form'!H2:H,"SCOPUS"),"1",""),
+         IF(REGEXMATCH('Pub-Form'!H2:H,"KCI"),"1",""),
+         IF(LEN('Pub-Form'!D2:D),"",""),
+         'Pub-Form'!I2:I,
+         IF(LEN('Pub-Form'!D2:D),"",""),
+         IF(LEN('Pub-Form'!D2:D),"",""),
+         'Pub-Form'!J2:J
+       }),
+       LEN('Pub-Form'!D2:D)
+     )
    }
    ```
 
@@ -293,8 +298,8 @@ venue · type · ssci · scopus · kci · pdf · doi · acmdl · website · awar
 4. `scripts/sheets.config.json`의 `tabs.publications`는 `"Publications"`
    그대로 — 이제 이 합본 뷰를 가리킵니다.
 
-> - 폼 응답 탭 이름이 `설문지 응답 시트1`이 아니면 수식 안 이름을 실제 탭
->   이름으로 교체하세요.
+> - 폼 응답 탭 이름이 `Pub-Form`이 아니면 수식 안 이름을 실제 탭 이름으로
+>   교체하세요(하이픈·공백 있으면 작은따옴표 필수).
 > - 배열 수식이 `#ERROR!`면 시트 로케일 문제 — 배열 안 쉼표 `,`를 백슬래시
 >   `\`로 바꿔 보세요(한국 로케일은 보통 `,`로 정상).
 > - **폼 응답 행을 지우면** 합본 뷰에서도 사라지고 다음 배포에 사이트에서
