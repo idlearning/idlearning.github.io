@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Globe, Link2, Star, X } from "lucide-react";
+import { Globe, Link2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Page, PageHeading } from "../components/Page";
@@ -8,24 +8,6 @@ import { useT } from "../lib/i18n";
 import { usePreferences } from "../lib/preferences";
 import { getPeopleByRole, type Person, type PersonRole } from "../data/people";
 import { absoluteUrl } from "../lib/site-meta";
-
-// A ring of stars that encircles the professor's honors box on hover (see
-// .ring-star in CSS). `pos` places each star around the perimeter; tx/ty center
-// it on that point; `sd` staggers them so the ring "draws" itself clockwise.
-const RING_STARS = [
-  { pos: "-top-3 -left-3", tx: "0", ty: "0", size: "h-3 w-3", sd: "0s" },
-  { pos: "-top-3 left-1/4", tx: "-50%", ty: "0", size: "h-3.5 w-3.5", sd: "0.05s" },
-  { pos: "-top-4 left-1/2", tx: "-50%", ty: "0", size: "h-4 w-4", sd: "0.1s" },
-  { pos: "-top-3 left-3/4", tx: "-50%", ty: "0", size: "h-3.5 w-3.5", sd: "0.15s" },
-  { pos: "-top-3 -right-3", tx: "0", ty: "0", size: "h-3 w-3", sd: "0.2s" },
-  { pos: "top-1/2 -right-3", tx: "0", ty: "-50%", size: "h-4 w-4", sd: "0.25s" },
-  { pos: "-bottom-3 -right-3", tx: "0", ty: "0", size: "h-3 w-3", sd: "0.3s" },
-  { pos: "-bottom-3 left-3/4", tx: "-50%", ty: "0", size: "h-3.5 w-3.5", sd: "0.35s" },
-  { pos: "-bottom-4 left-1/2", tx: "-50%", ty: "0", size: "h-4 w-4", sd: "0.4s" },
-  { pos: "-bottom-3 left-1/4", tx: "-50%", ty: "0", size: "h-3.5 w-3.5", sd: "0.45s" },
-  { pos: "-bottom-3 -left-3", tx: "0", ty: "0", size: "h-3 w-3", sd: "0.5s" },
-  { pos: "top-1/2 -left-3", tx: "0", ty: "-50%", size: "h-4 w-4", sd: "0.55s" },
-];
 
 export const Route = createFileRoute("/people")({
   head: () => ({
@@ -394,20 +376,6 @@ function PeoplePage() {
               {professor.email && <p className="text-text-muted text-sm mb-1">{professor.email}</p>}
               <div className="mt-2">
                 <ProfileLinks person={professor} />
-              </div>
-              <div className="group relative mt-4 w-fit px-1 py-1 text-sm text-text-main">
-                {/* Easter egg: a ring of stars encircles the box on hover. */}
-                {RING_STARS.map((s, i) => (
-                  <Star
-                    key={i}
-                    className={`ring-star pointer-events-none absolute fill-amber-400 text-amber-400 ${s.pos} ${s.size}`}
-                    style={{ "--tx": s.tx, "--ty": s.ty, "--sd": s.sd } as React.CSSProperties}
-                  />
-                ))}
-                <ul className="list-disc space-y-1 pl-5 font-medium marker:text-amber-400">
-                  <li>World's Top 2% Scientists, Stanford University (2024-2026)</li>
-                  <li>Ewha Fellow (2026-2028)</li>
-                </ul>
               </div>
             </div>
           </div>
