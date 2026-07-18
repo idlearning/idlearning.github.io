@@ -67,10 +67,13 @@ const ORGANIZATION_JSONLD = JSON.stringify({
   ],
 });
 
+// Both open by naming the university and department: the affiliation used to
+// live only in the meta description, which meant the page body itself never
+// said where the lab is — the one fact a Korean search for it turns on.
 const INTRO_KO =
-  "학습과학, 인간-컴퓨터 상호작용, 그리고 신기술을 융합하여 새롭고 상호작용적인 학습경험을 디자인하는 것을 목표로 합니다. 학제간 연구 공간으로서 IDL Lab은 형식학습과 비형식학습을 아우르는 다양한 교육환경에서 적용 가능한 학습경험 디자인을 탐구하고 발전시키고자 합니다.";
+  "이화여자대학교 교육공학과 Interaction Design for Learning Lab (IDL Lab)은 학습과학, 인간-컴퓨터 상호작용(HCI), 그리고 신기술을 융합하여 새롭고 상호작용적인 학습경험을 디자인하는 것을 목표로 합니다. 학제간 연구 공간으로서 IDL Lab은 형식학습과 비형식학습을 아우르는 다양한 교육환경에서 적용 가능한 학습경험 디자인을 탐구하고 발전시키고자 합니다.";
 const INTRO_EN =
-  "We aim to design innovative and interactive learning experiences by integrating learning sciences, human-computer interaction, and emerging technologies. As an interdisciplinary research space, the IDL Lab explores and advances learning experience design that can be applied across various educational environments, encompassing both formal and informal learning settings.";
+  "Interaction Design for Learning Lab (IDL Lab) is a research group in the Department of Educational Technology at Ewha Womans University. We aim to design innovative and interactive learning experiences by integrating learning sciences, human-computer interaction, and emerging technologies. As an interdisciplinary research space, the IDL Lab explores and advances learning experience design that can be applied across various educational environments, encompassing both formal and informal learning settings.";
 
 const AIDEAL_URL = "https://www.aideal.ewha.ac.kr";
 const AIDEAL_DESC_KO =
