@@ -36,6 +36,12 @@ export type Person = {
   scholar?: string;
   /** Personal homepage URL. Also used to link this person's name in publications. */
   homepage?: string;
+  /**
+   * Alternate spellings used in publication author lists — other romanizations
+   * ("Pyeong Hwa Kim" for 김평화), maiden names, reversed name order, etc.
+   * Case/spacing/hyphen variants are handled automatically and need no alias.
+   */
+  aliases?: string[];
 };
 
 export const PEOPLE: Person[] = peopleData as Person[];
@@ -43,6 +49,44 @@ export const PEOPLE: Person[] = peopleData as Person[];
 export const getPeopleByRole = (role: PersonRole): Person[] =>
   PEOPLE.filter((p) => p.role === role);
 
-/** Finds a person by English display name (used to link publication authors). */
-export const getPersonByEnName = (nameEn: string): Person | undefined =>
-  PEOPLE.find((p) => p.nameEn === nameEn);
+/**
+ * Collapses a display name to a comparison key so author lists match People
+ * regardless of surface form: "Sung-Eun Kim" / "Sungeun Kim" / "SUNG EUN KIM"
+ * all key to "sungeunkim", and "Hyo‐Jeong So" written with a U+2010 hyphen
+ * matches the ASCII one. Parentheticals ("Wang Yue (Iris Wang)") are dropped.
+ * Korean names are unaffected apart from NFC normalization.
+ */
+const nameKey = (name: string): string =>
+  name
+    .normalize("NFC")
+    .replace(/\(.*?\)/g, "")
+    .toLowerCase()
+    .replace(/[^\p{Letter}\p{Number}]/gu, "");
+
+/**
+ * Every spelling that should resolve to a person: English name, Korean name,
+ * and any explicit aliases. When two entries share a name (a student who also
+ * has an alumni record, e.g. 김은영), the one with a homepage wins so the
+ * publication link still works; otherwise the first entry — current members
+ * precede alumni in the sheet — is kept.
+ */
+const NAME_INDEX: Map<string, Person> = (() => {
+  const index = new Map<string, Person>();
+  for (const person of PEOPLE) {
+    const names = [person.nameEn, person.nameKo, ...(person.aliases ?? [])];
+    for (const name of names) {
+      if (!name) continue;
+      const key = nameKey(name);
+      if (!key) continue;
+      const existing = index.get(key);
+      if (!existing || (!existing.homepage && person.homepage)) index.set(key, person);
+    }
+  }
+  return index;
+})();
+
+/**
+ * Finds a person by any of their names — English, Korean, or an alias.
+ * Used to link and cross-reference publication authors.
+ */
+export const getPersonByName = (name: string): Person | undefined => NAME_INDEX.get(nameKey(name));

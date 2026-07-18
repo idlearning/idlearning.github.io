@@ -36,66 +36,85 @@
 
 **People 탭**
 
-| 헤더          | 설명                                                   |
-| ----------- | ---------------------------------------------------- |
-| `상태`        | `지도교수` / `박사 또는 통합 재학` / `석사 재학` / `석사 졸업` / `박사 졸업` |
-| `한국어명`      | 비우면 국제학생으로 처리(영문명만 표시)                               |
-| `영문명`       | 필수                                                   |
-| `이메일`       |                                                      |
-| `관심분야`      | 재학생 화면에 표시                                           |
-| `교육 및 경력`   | **세미콜론 `;` 으로 구분** → 화면에서 줄바꿈으로 표시                   |
-| `구글 스칼라`    | URL                                                  |
-| `개인 홈페이지`   | URL                                                  |
-| `석사학위논문`    | 박사과정 재학생용(선택)                                        |
-| `석사학위논문 링크` | URL                                                  |
-| `졸업연도`      | 졸업생용 (숫자)                                            |
-| `소속`        | 졸업생 화면에 표시                                           |
-| `학위논문`      | 졸업생 화면에 표시                                           |
-| `학위논문 링크`   | URL                                                  |
-| `사진`        | 프로필 사진 URL(선택) — 없으면 이니셜 표시                          |
+| 헤더                | 설명                                                                         |
+| ------------------- | ---------------------------------------------------------------------------- |
+| `상태`              | `지도교수` / `박사 또는 통합 재학` / `석사 재학` / `석사 졸업` / `박사 졸업` |
+| `한국어명`          | 비우면 국제학생으로 처리(영문명만 표시)                                      |
+| `영문명`            | 필수                                                                         |
+| `이메일`            |                                                                              |
+| `관심분야`          | 재학생 화면에 표시                                                           |
+| `교육 및 경력`      | **세미콜론 `;` 으로 구분** → 화면에서 줄바꿈으로 표시                        |
+| `구글 스칼라`       | URL                                                                          |
+| `개인 홈페이지`     | URL — Publications의 저자 이름(영문·한글 모두)이 이 주소로 연결됩니다        |
+| `논문 표기 이름`    | 논문에 다르게 표기된 이름을 **세미콜론 `;` 으로 구분** (아래 설명 참고)      |
+| `석사학위논문`      | 박사과정 재학생용(선택)                                                      |
+| `석사학위논문 링크` | URL                                                                          |
+| `졸업연도`          | 졸업생용 (숫자)                                                              |
+| `소속`              | 졸업생 화면에 표시                                                           |
+| `학위논문`          | 졸업생 화면에 표시                                                           |
+| `학위논문 링크`     | URL                                                                          |
+| `사진`              | 프로필 사진 URL(선택) — 없으면 이니셜 표시                                   |
 
 > `상태`를 `석사 졸업`/`박사 졸업`으로 바꾸면 자동으로 **Alumni** 섹션으로 이동합니다.
 > 같은 사람이 석사 졸업 후 박사 재학이면 **두 행**(재학 1행 + 졸업 1행)으로 넣으면 됩니다.
 
+#### 저자 이름 매칭 (`논문 표기 이름`)
+
+Publications 탭의 저자 이름은 People 탭의 `영문명`·`한국어명`과 자동으로 대조되어,
+일치하는 구성원의 `개인 홈페이지`로 연결됩니다. **국문 논문의 한글 저자명도 동일하게 연결됩니다.**
+
+띄어쓰기·하이픈·대소문자 차이(`Sung-Eun Kim` = `Sungeun Kim`)는 자동 처리되므로 따로 적을 필요가 없습니다.
+**로마자 표기 자체가 다른 경우에만** `논문 표기 이름`에 적어주세요.
+
+예: 김평화(`Pyunghwa Kim`) 행의 `논문 표기 이름` 칸에 `Pyeong Hwa Kim` 입력
+
+현재 연결되지 않고 있는 표기 예시 — 해당 구성원 행에 추가하면 바로 연결됩니다.
+
+| 구성원                 | 논문에 쓰인 다른 표기 |
+| ---------------------- | --------------------- |
+| 김평화 `Pyunghwa Kim`  | `Pyeong Hwa Kim`      |
+| 류다현 `Da Hyeon Ryoo` | `Dahyeon Ryu`         |
+| 김남희 `Nam Hui Kim`   | `Nam Hee Kim`         |
+
 **Projects 탭**
 
-| 헤더         | 설명                                    |
-| ---------- | ------------------------------------- |
-| `한국어명`     | 비우면 영문명이 대표 제목이 됨                     |
-| `영문명`      |                                       |
-| `연구 기간`    |                                       |
-| `지원기관`     |                                       |
-| `참여연구원`    |                                       |
-| `프로젝트 설명`  | 더보기에 표시                               |
-| `이미지 URL`  | 프로젝트 썸네일(선택)                          |
-| `연관 논문 ID` | 세미콜론 구분, Publications 탭의 `id`와 일치(선택) |
+| 헤더            | 설명                                               |
+| --------------- | -------------------------------------------------- |
+| `한국어명`      | 비우면 영문명이 대표 제목이 됨                     |
+| `영문명`        |                                                    |
+| `연구 기간`     |                                                    |
+| `지원기관`      |                                                    |
+| `참여연구원`    |                                                    |
+| `프로젝트 설명` | 더보기에 표시                                      |
+| `이미지 URL`    | 프로젝트 썸네일(선택)                              |
+| `연관 논문 ID`  | 세미콜론 구분, Publications 탭의 `id`와 일치(선택) |
 
 **Publications 탭**
 
-| 헤더 | 설명 |
-|---|---|
-| `id` | 고유 식별자(연관 논문 연결에 사용) |
-| `title` | 필수 |
-| `authors` | `,` 또는 `&`로 저자 구분 (People의 영문명과 같으면 이름에 링크가 걸림) |
-| `year` | 숫자 |
-| `publication date` | 화면 미표시(선택) |
-| `venue` | 게재처. 비우면 `journal` + `volume_issue`로 자동 구성 |
-| `journal`, `volume_issue` | 저널 논문의 게재지/권호(선택) |
-| `type` | `journal` / `conference` / `book` |
-| `ssci`, `scopus`, `kci` | `1`=표시, `0`/공백=미표시 (또는 `index` 컬럼에 `SSCI; SCOPUS`처럼) |
-| `pdf`, `acmdl`, `website` | 각 링크 버튼 URL(선택) |
-| `doi` | DOI (전체 URL 넣어도 자동으로 다듬음) |
-| `award` | 수상명(선택) — 있으면 award 뱃지 표시 |
+| 헤더                      | 설명                                                                   |
+| ------------------------- | ---------------------------------------------------------------------- |
+| `id`                      | 고유 식별자(연관 논문 연결에 사용)                                     |
+| `title`                   | 필수                                                                   |
+| `authors`                 | `,` 또는 `&`로 저자 구분 (People의 영문명과 같으면 이름에 링크가 걸림) |
+| `year`                    | 숫자                                                                   |
+| `publication date`        | 화면 미표시(선택)                                                      |
+| `venue`                   | 게재처. 비우면 `journal` + `volume_issue`로 자동 구성                  |
+| `journal`, `volume_issue` | 저널 논문의 게재지/권호(선택)                                          |
+| `type`                    | `journal` / `conference` / `book`                                      |
+| `ssci`, `scopus`, `kci`   | `1`=표시, `0`/공백=미표시 (또는 `index` 컬럼에 `SSCI; SCOPUS`처럼)     |
+| `pdf`, `acmdl`, `website` | 각 링크 버튼 URL(선택)                                                 |
+| `doi`                     | DOI (전체 URL 넣어도 자동으로 다듬음)                                  |
+| `award`                   | 수상명(선택) — 있으면 award 뱃지 표시                                  |
 
 **News 탭**
 
-| 헤더      | 설명                            |
-| ------- | ----------------------------- |
-| `날짜`    | `YYYY-MM-DD`                  |
-| `제목`    |                               |
+| 헤더        | 설명                                             |
+| ----------- | ------------------------------------------------ |
+| `날짜`      | `YYYY-MM-DD`                                     |
+| `제목`      |                                                  |
 | `국문 본문` | 상세 페이지 국문 — **마크다운 지원** (아래 참고) |
 | `영문 본문` | 상세 페이지 영문 — **마크다운 지원** (아래 참고) |
-| `썸네일`   | 이미지 URL                       |
+| `썸네일`    | 이미지 URL                                       |
 
 > 📝 **뉴스 본문 마크다운 치트시트** — 본문 칸에 아래 문법을 쓰면 서식이 적용됩니다.
 > (안전상 원시 HTML은 무시되며, 아래 문법만 렌더링됩니다.)
@@ -138,7 +157,12 @@
 ```json
 {
   "spreadsheetId": "여기에_시트ID",
-  "tabs": { "people": "People", "projects": "Projects", "publications": "Publications", "news": "News" }
+  "tabs": {
+    "people": "People",
+    "projects": "Projects",
+    "publications": "Publications",
+    "news": "News"
+  }
 }
 ```
 
@@ -220,16 +244,16 @@
 **폼 설명에 넣을 안내:** "제출 즉시 홈페이지 Publications에 반영됩니다.
 설정에서 Ewha 로그인 필수 + 응답 1회 제한을 켜 두세요."
 
-| # | 질문 | 유형 | 필수 | 매핑 헤더 |
-| - | ---- | ---- | ---- | --------- |
-| 1 | 논문 유형 (Type) | 객관식: `Journal`/`Conference`/`Book` | ✅ | `type` |
-| 2 | 제목 (Title) | 단답형 | ✅ | `title` |
-| 3 | 저자 (Authors) | 단답형 — 게재순, **쉼표(,) 구분**. 영문명은 People 표기와 동일하게 | ✅ | `authors` |
-| 4 | 출판 연도 (Year) | 단답형(숫자) | ✅ | `year` |
-| 5 | 게재처 (Venue) | 단답형 — 저널명/학회명/출판사 | ✅ | `venue` |
-| 6 | 색인 (Index) | 체크박스: `SSCI`/`SCOPUS`/`KCI` (저널만, 복수) | ⬜ | `index` |
-| 7 | DOI | 단답형 (전체 URL도 OK) | ⬜ | `doi` |
-| 8 | 수상 (Award) | 단답형 — 수상명 | ⬜ | `award` |
+| #   | 질문             | 유형                                                               | 필수 | 매핑 헤더 |
+| --- | ---------------- | ------------------------------------------------------------------ | ---- | --------- |
+| 1   | 논문 유형 (Type) | 객관식: `Journal`/`Conference`/`Book`                              | ✅   | `type`    |
+| 2   | 제목 (Title)     | 단답형                                                             | ✅   | `title`   |
+| 3   | 저자 (Authors)   | 단답형 — 게재순, **쉼표(,) 구분**. 영문명은 People 표기와 동일하게 | ✅   | `authors` |
+| 4   | 출판 연도 (Year) | 단답형(숫자)                                                       | ✅   | `year`    |
+| 5   | 게재처 (Venue)   | 단답형 — 저널명/학회명/출판사                                      | ✅   | `venue`   |
+| 6   | 색인 (Index)     | 체크박스: `SSCI`/`SCOPUS`/`KCI` (저널만, 복수)                     | ⬜   | `index`   |
+| 7   | DOI              | 단답형 (전체 URL도 OK)                                             | ⬜   | `doi`     |
+| 8   | 수상 (Award)     | 단답형 — 수상명                                                    | ⬜   | `award`   |
 
 **예시 제출**
 
@@ -343,14 +367,15 @@ venue · type · ssci · scopus · kci · pdf · doi · acmdl · website · awar
 ```javascript
 // 폼 제출 시 GitHub Actions 배포 워크플로우를 트리거합니다.
 function onFormSubmit() {
-  var token = PropertiesService.getScriptProperties().getProperty('GH_TOKEN');
-  var url = 'https://api.github.com/repos/idlearning/idlearning.github.io'
-          + '/actions/workflows/deploy.yml/dispatches';
+  var token = PropertiesService.getScriptProperties().getProperty("GH_TOKEN");
+  var url =
+    "https://api.github.com/repos/idlearning/idlearning.github.io" +
+    "/actions/workflows/deploy.yml/dispatches";
   UrlFetchApp.fetch(url, {
-    method: 'post',
-    contentType: 'application/json',
-    headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' },
-    payload: JSON.stringify({ ref: 'main' }),
+    method: "post",
+    contentType: "application/json",
+    headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" },
+    payload: JSON.stringify({ ref: "main" }),
     muteHttpExceptions: true,
   });
 }

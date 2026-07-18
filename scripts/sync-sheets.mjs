@@ -154,6 +154,10 @@ function transformPeople(rows) {
       if (gy && !Number.isNaN(Number(gy))) p.gradYear = Number(gy);
       put(p, "scholar", r["구글 스칼라"]);
       put(p, "homepage", r["개인 홈페이지"]);
+      const aliases = splitLines(r["논문 표기 이름"]).filter(
+        (a) => a !== p.nameEn && a !== p.nameKo,
+      );
+      if (aliases.length) p.aliases = aliases;
       return p;
     });
 }

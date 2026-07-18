@@ -4,7 +4,7 @@ import { Fragment, useState } from "react";
 
 import { Page, PageHeading } from "../components/Page";
 import { useT } from "../lib/i18n";
-import { getPersonByEnName } from "../data/people";
+import { getPersonByName } from "../data/people";
 import {
   getPublicationsByYear,
   type Publication,
@@ -82,7 +82,7 @@ function AuthorList({ authors }: { authors: string[] }) {
   return (
     <p className="text-sm text-text-main mb-1">
       {authors.map((name, i) => {
-        const person = getPersonByEnName(name);
+        const person = getPersonByName(name);
         return (
           <Fragment key={`${name}-${i}`}>
             {person?.homepage ? (
