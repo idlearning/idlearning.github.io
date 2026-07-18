@@ -1,7 +1,8 @@
 // UI chrome translations (navigation, section titles, field labels, buttons).
 // Body content that only exists in one language (e.g. Korean news titles,
 // Korean project descriptions) is handled per-item in the data files.
-import { useLang, type Lang } from "./preferences";
+import { useLang } from "./preferences";
+import type { Lang } from "./lang";
 
 type Dict = {
   nav: { home: string; people: string; projects: string; publications: string; news: string };
@@ -45,6 +46,8 @@ type Dict = {
   };
   news: { title: string; latest: string };
   footer: { rights: string };
+  notFound: { title: string; body: string; home: string };
+  error: { title: string; body: string; retry: string; home: string };
 };
 
 const DICTS: Record<Lang, Dict> = {
@@ -96,6 +99,17 @@ const DICTS: Record<Lang, Dict> = {
     },
     news: { title: "News", latest: "Latest News" },
     footer: { rights: "All rights reserved." },
+    notFound: {
+      title: "페이지를 찾을 수 없습니다",
+      body: "요청하신 페이지가 없거나 주소가 변경되었습니다.",
+      home: "홈으로",
+    },
+    error: {
+      title: "페이지를 불러오지 못했습니다",
+      body: "일시적인 문제가 발생했습니다. 새로고침하거나 홈으로 이동해 주세요.",
+      retry: "다시 시도",
+      home: "홈으로",
+    },
   },
   en: {
     nav: {
@@ -150,6 +164,17 @@ const DICTS: Record<Lang, Dict> = {
     },
     news: { title: "News", latest: "Latest News" },
     footer: { rights: "All rights reserved." },
+    notFound: {
+      title: "Page not found",
+      body: "The page you're looking for doesn't exist or has been moved.",
+      home: "Go home",
+    },
+    error: {
+      title: "This page didn't load",
+      body: "Something went wrong on our end. You can try refreshing or head back home.",
+      retry: "Try again",
+      home: "Go home",
+    },
   },
 };
 

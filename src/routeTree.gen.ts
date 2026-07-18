@@ -14,7 +14,13 @@ import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as PeopleRouteImport } from './routes/people'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as NewsIndexRouteImport } from './routes/news.index'
+import { Route as KoIndexRouteImport } from './routes/ko.index'
 import { Route as NewsSlugRouteImport } from './routes/news.$slug'
+import { Route as KoPublicationsRouteImport } from './routes/ko.publications'
+import { Route as KoProjectsRouteImport } from './routes/ko.projects'
+import { Route as KoPeopleRouteImport } from './routes/ko.people'
+import { Route as KoNewsIndexRouteImport } from './routes/ko.news.index'
+import { Route as KoNewsSlugRouteImport } from './routes/ko.news.$slug'
 
 const PublicationsRoute = PublicationsRouteImport.update({
   id: '/publications',
@@ -41,9 +47,39 @@ const NewsIndexRoute = NewsIndexRouteImport.update({
   path: '/news/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KoIndexRoute = KoIndexRouteImport.update({
+  id: '/ko/',
+  path: '/ko/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NewsSlugRoute = NewsSlugRouteImport.update({
   id: '/news/$slug',
   path: '/news/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KoPublicationsRoute = KoPublicationsRouteImport.update({
+  id: '/ko/publications',
+  path: '/ko/publications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KoProjectsRoute = KoProjectsRouteImport.update({
+  id: '/ko/projects',
+  path: '/ko/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KoPeopleRoute = KoPeopleRouteImport.update({
+  id: '/ko/people',
+  path: '/ko/people',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KoNewsIndexRoute = KoNewsIndexRouteImport.update({
+  id: '/ko/news/',
+  path: '/ko/news/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KoNewsSlugRoute = KoNewsSlugRouteImport.update({
+  id: '/ko/news/$slug',
+  path: '/ko/news/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -52,16 +88,28 @@ export interface FileRoutesByFullPath {
   '/people': typeof PeopleRoute
   '/projects': typeof ProjectsRoute
   '/publications': typeof PublicationsRoute
+  '/ko/people': typeof KoPeopleRoute
+  '/ko/projects': typeof KoProjectsRoute
+  '/ko/publications': typeof KoPublicationsRoute
   '/news/$slug': typeof NewsSlugRoute
+  '/ko/': typeof KoIndexRoute
   '/news/': typeof NewsIndexRoute
+  '/ko/news/$slug': typeof KoNewsSlugRoute
+  '/ko/news/': typeof KoNewsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/people': typeof PeopleRoute
   '/projects': typeof ProjectsRoute
   '/publications': typeof PublicationsRoute
+  '/ko/people': typeof KoPeopleRoute
+  '/ko/projects': typeof KoProjectsRoute
+  '/ko/publications': typeof KoPublicationsRoute
   '/news/$slug': typeof NewsSlugRoute
+  '/ko': typeof KoIndexRoute
   '/news': typeof NewsIndexRoute
+  '/ko/news/$slug': typeof KoNewsSlugRoute
+  '/ko/news': typeof KoNewsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,23 +117,58 @@ export interface FileRoutesById {
   '/people': typeof PeopleRoute
   '/projects': typeof ProjectsRoute
   '/publications': typeof PublicationsRoute
+  '/ko/people': typeof KoPeopleRoute
+  '/ko/projects': typeof KoProjectsRoute
+  '/ko/publications': typeof KoPublicationsRoute
   '/news/$slug': typeof NewsSlugRoute
+  '/ko/': typeof KoIndexRoute
   '/news/': typeof NewsIndexRoute
+  '/ko/news/$slug': typeof KoNewsSlugRoute
+  '/ko/news/': typeof KoNewsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/people' | '/projects' | '/publications' | '/news/$slug' | '/news/'
+    | '/'
+    | '/people'
+    | '/projects'
+    | '/publications'
+    | '/ko/people'
+    | '/ko/projects'
+    | '/ko/publications'
+    | '/news/$slug'
+    | '/ko/'
+    | '/news/'
+    | '/ko/news/$slug'
+    | '/ko/news/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/people' | '/projects' | '/publications' | '/news/$slug' | '/news'
+  to:
+    | '/'
+    | '/people'
+    | '/projects'
+    | '/publications'
+    | '/ko/people'
+    | '/ko/projects'
+    | '/ko/publications'
+    | '/news/$slug'
+    | '/ko'
+    | '/news'
+    | '/ko/news/$slug'
+    | '/ko/news'
   id:
     | '__root__'
     | '/'
     | '/people'
     | '/projects'
     | '/publications'
+    | '/ko/people'
+    | '/ko/projects'
+    | '/ko/publications'
     | '/news/$slug'
+    | '/ko/'
     | '/news/'
+    | '/ko/news/$slug'
+    | '/ko/news/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -93,8 +176,14 @@ export interface RootRouteChildren {
   PeopleRoute: typeof PeopleRoute
   ProjectsRoute: typeof ProjectsRoute
   PublicationsRoute: typeof PublicationsRoute
+  KoPeopleRoute: typeof KoPeopleRoute
+  KoProjectsRoute: typeof KoProjectsRoute
+  KoPublicationsRoute: typeof KoPublicationsRoute
   NewsSlugRoute: typeof NewsSlugRoute
+  KoIndexRoute: typeof KoIndexRoute
   NewsIndexRoute: typeof NewsIndexRoute
+  KoNewsSlugRoute: typeof KoNewsSlugRoute
+  KoNewsIndexRoute: typeof KoNewsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -134,11 +223,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ko/': {
+      id: '/ko/'
+      path: '/ko'
+      fullPath: '/ko/'
+      preLoaderRoute: typeof KoIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/news/$slug': {
       id: '/news/$slug'
       path: '/news/$slug'
       fullPath: '/news/$slug'
       preLoaderRoute: typeof NewsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ko/publications': {
+      id: '/ko/publications'
+      path: '/ko/publications'
+      fullPath: '/ko/publications'
+      preLoaderRoute: typeof KoPublicationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ko/projects': {
+      id: '/ko/projects'
+      path: '/ko/projects'
+      fullPath: '/ko/projects'
+      preLoaderRoute: typeof KoProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ko/people': {
+      id: '/ko/people'
+      path: '/ko/people'
+      fullPath: '/ko/people'
+      preLoaderRoute: typeof KoPeopleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ko/news/': {
+      id: '/ko/news/'
+      path: '/ko/news'
+      fullPath: '/ko/news/'
+      preLoaderRoute: typeof KoNewsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ko/news/$slug': {
+      id: '/ko/news/$slug'
+      path: '/ko/news/$slug'
+      fullPath: '/ko/news/$slug'
+      preLoaderRoute: typeof KoNewsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -149,8 +280,14 @@ const rootRouteChildren: RootRouteChildren = {
   PeopleRoute: PeopleRoute,
   ProjectsRoute: ProjectsRoute,
   PublicationsRoute: PublicationsRoute,
+  KoPeopleRoute: KoPeopleRoute,
+  KoProjectsRoute: KoProjectsRoute,
+  KoPublicationsRoute: KoPublicationsRoute,
   NewsSlugRoute: NewsSlugRoute,
+  KoIndexRoute: KoIndexRoute,
   NewsIndexRoute: NewsIndexRoute,
+  KoNewsSlugRoute: KoNewsSlugRoute,
+  KoNewsIndexRoute: KoNewsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

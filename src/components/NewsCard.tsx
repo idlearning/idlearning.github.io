@@ -1,5 +1,4 @@
-import { Link } from "@tanstack/react-router";
-
+import { LocalLink } from "./LocalLink";
 import { type NewsItem, NEWS_IMG_DEFAULT, NEWS_WRAP_DEFAULT } from "../data/news";
 
 /**
@@ -9,7 +8,7 @@ import { type NewsItem, NEWS_IMG_DEFAULT, NEWS_WRAP_DEFAULT } from "../data/news
  */
 export function NewsCard({ item }: { item: NewsItem }) {
   return (
-    <Link
+    <LocalLink
       to="/news/$slug"
       params={{ slug: item.slug }}
       className="group bg-card rounded-xl border border-border shadow-sm overflow-hidden flex flex-col h-full hover:shadow-md hover:border-idl-blue/40 transition-all"
@@ -32,7 +31,7 @@ export function NewsCard({ item }: { item: NewsItem }) {
         </h3>
         <time className="mt-auto pt-3 text-xs text-text-muted text-center block">{item.date}</time>
       </div>
-    </Link>
+    </LocalLink>
   );
 }
 

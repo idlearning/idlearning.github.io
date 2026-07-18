@@ -55,18 +55,40 @@ try {
   );
 }
 
+// Keep in sync with `localizedPath` in src/lib/lang.ts.
+const KO_PREFIX = "/ko";
+const localizedPath = (path, lang) =>
+  lang === "en" ? path : path === "/" ? KO_PREFIX : `${KO_PREFIX}${path}`;
+
 const today = new Date().toISOString().slice(0, 10);
+
+// Every page exists in both languages. Each <url> lists the whole language set
+// as xhtml:link alternates, which is what tells a search engine the English and
+// Korean pages are translations rather than duplicate content.
 const urls = [...staticPaths, ...newsPaths]
-  .map((p) => `  <url>\n    <loc>${SITE_URL}${p}</loc>\n    <lastmod>${today}</lastmod>\n  </url>`)
+  .flatMap((path) =>
+    ["en", "ko"].map((lang) => {
+      const alternates = ["en", "ko"]
+        .map(
+          (other) =>
+            `    <xhtml:link rel="alternate" hreflang="${other}" href="${SITE_URL}${localizedPath(path, other)}"/>`,
+        )
+        .concat(
+          `    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE_URL}${localizedPath(path, "en")}"/>`,
+        )
+        .join("\n");
+      return `  <url>\n    <loc>${SITE_URL}${localizedPath(path, lang)}</loc>\n${alternates}\n    <lastmod>${today}</lastmod>\n  </url>`;
+    }),
+  )
   .join("\n");
 
-const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`;
 
 if (!existsSync(dirname(outPath))) {
   console.warn(`[sitemap] ${dirname(outPath)} does not exist — run after build. Skipping.`);
 } else {
   writeFileSync(outPath, xml, "utf8");
   console.log(
-    `[sitemap] wrote ${staticPaths.length + newsPaths.length} URLs to dist/client/sitemap.xml`,
+    `[sitemap] wrote ${(staticPaths.length + newsPaths.length) * 2} URLs (en + ko) to dist/client/sitemap.xml`,
   );
 }

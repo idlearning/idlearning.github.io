@@ -1,77 +1,44 @@
 // App-wide user preferences: language (English/Korean).
 //
-// The site is prerendered to static HTML, so the server render always uses the
-// default language below. On the client we read the persisted choice from
-// localStorage and update. A tiny script (see `preferencesHeadScript`) runs in
-// <head> before paint to reflect the saved language on <html lang>.
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+// The URL is the single source of truth — `/people` is English, `/ko/people` is
+// Korean (see src/lib/lang.ts). That replaces the previous localStorage toggle,
+// which had two problems: the Korean site was invisible to search engines
+// because only the English HTML was ever prerendered, and a Korean page could
+// not be linked to or shared.
+//
+// Deriving language from the router also means SSR and the client always agree,
+// so there is no hydration mismatch and no pre-paint flash to patch over.
+import { useRouterState } from "@tanstack/react-router";
 
-export type Lang = "ko" | "en";
+import { langFromPathname, localizedPath, stripLangPrefix, type Lang } from "./lang";
 
-const LANG_KEY = "idl-lang";
+export type { Lang };
 
-const DEFAULT_LANG: Lang = "en";
+/** The current pathname, tracked through client-side navigations. */
+function usePathname(): string {
+  return useRouterState({ select: (s) => s.location.pathname });
+}
+
+/** The language the current URL is served in. */
+export function useLang(): Lang {
+  return langFromPathname(usePathname());
+}
 
 type PreferencesValue = {
   lang: Lang;
-  toggleLang: () => void;
-  setLang: (lang: Lang) => void;
+  /** The current page's logical path, i.e. with any language prefix removed. */
+  logicalPath: string;
+  /** URL of the current page in the other language, for the header switcher. */
+  counterpartPath: string;
 };
 
-const PreferencesContext = createContext<PreferencesValue | null>(null);
-
-function readStoredLang(): Lang {
-  if (typeof window === "undefined") return DEFAULT_LANG;
-  const stored = window.localStorage.getItem(LANG_KEY);
-  return stored === "ko" || stored === "en" ? stored : DEFAULT_LANG;
-}
-
-export function PreferencesProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>(DEFAULT_LANG);
-
-  // Hydrate from storage once on the client.
-  useEffect(() => {
-    setLangState(readStoredLang());
-  }, []);
-
-  // Reflect language onto <html lang> and persist.
-  useEffect(() => {
-    document.documentElement.lang = lang;
-    window.localStorage.setItem(LANG_KEY, lang);
-  }, [lang]);
-
-  const setLang = useCallback((next: Lang) => setLangState(next), []);
-  const toggleLang = useCallback(() => setLangState((l) => (l === "ko" ? "en" : "ko")), []);
-
-  const value = useMemo<PreferencesValue>(
-    () => ({ lang, toggleLang, setLang }),
-    [lang, toggleLang, setLang],
-  );
-
-  return <PreferencesContext.Provider value={value}>{children}</PreferencesContext.Provider>;
-}
-
 export function usePreferences(): PreferencesValue {
-  const ctx = useContext(PreferencesContext);
-  if (!ctx) throw new Error("usePreferences must be used within a PreferencesProvider");
-  return ctx;
+  const pathname = usePathname();
+  const lang = langFromPathname(pathname);
+  const logicalPath = stripLangPrefix(pathname);
+  return {
+    lang,
+    logicalPath,
+    counterpartPath: localizedPath(logicalPath, lang === "ko" ? "en" : "ko"),
+  };
 }
-
-/** Convenience hook returning just the current language. */
-export function useLang(): Lang {
-  return usePreferences().lang;
-}
-
-/**
- * Inline script (stringified) that reflects the saved language on <html lang>
- * before first paint. Injected in the document <head>.
- */
-export const preferencesHeadScript = `(function(){try{var l=localStorage.getItem('${LANG_KEY}');if(l==='ko'||l==='en'){document.documentElement.lang=l;}}catch(e){}})();`;

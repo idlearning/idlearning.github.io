@@ -1,9 +1,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
-  Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -13,46 +13,52 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "../components/SiteHeader";
 import { SiteFooter } from "../components/SiteFooter";
-import { PreferencesProvider, preferencesHeadScript } from "../lib/preferences";
+import { LocalLink } from "../components/LocalLink";
+import { useT } from "../lib/i18n";
+import { HTML_LANG, langFromPathname } from "../lib/lang";
 import { SITE_TITLE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, OG_IMAGE } from "../lib/site-meta";
 
+/** Shared button styling for the 404 / error screens. */
+const PRIMARY_BUTTON =
+  "inline-flex items-center justify-center rounded-md bg-idl-blue px-4 py-2 text-sm font-medium text-white transition-colors hover:brightness-95";
+const SECONDARY_BUTTON =
+  "inline-flex items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-text-main transition-colors hover:bg-idl-blue/10";
+
 function NotFoundComponent() {
+  const t = useT();
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <main className="flex flex-grow items-center justify-center px-4 py-24">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+        <h1 className="text-7xl font-bold text-idl-blue">404</h1>
+        <h2 className="mt-4 text-xl font-semibold text-text-main">{t.notFound.title}</h2>
+        <p className="mt-2 text-sm text-text-muted" style={{ wordBreak: "keep-all" }}>
+          {t.notFound.body}
         </p>
         <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
+          {/* LocalLink so a 404 under /ko keeps the visitor in Korean. */}
+          <LocalLink to="/" className={PRIMARY_BUTTON}>
+            {t.notFound.home}
+          </LocalLink>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
+  const t = useT();
   const router = useRouter();
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <main className="flex flex-grow items-center justify-center px-4 py-24">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+        <h1 className="text-xl font-semibold tracking-tight text-text-main">{t.error.title}</h1>
+        <p className="mt-2 text-sm text-text-muted" style={{ wordBreak: "keep-all" }}>
+          {t.error.body}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -60,19 +66,16 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className={PRIMARY_BUTTON}
           >
-            Try again
+            {t.error.retry}
           </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-          >
-            Go home
-          </a>
+          <LocalLink to="/" className={SECONDARY_BUTTON}>
+            {t.error.home}
+          </LocalLink>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -96,19 +99,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:image", content: OG_IMAGE },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      {
-        rel: "preconnect",
-        href: "https://cdn.jsdelivr.net",
-        crossOrigin: "anonymous",
-      },
-      {
-        rel: "stylesheet",
-        href: "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css",
-      },
+      // Pretendard is bundled into this stylesheet (see src/fonts.css), so there
+      // is no third-party font request blocking first paint.
+      { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon-idl.png", type: "image/png" },
       { rel: "apple-touch-icon", href: "/favicon-idl.png" },
     ],
@@ -120,11 +113,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  // The URL carries the language (see src/lib/lang.ts), so <html lang> can be
+  // resolved during prerender — no pre-paint script needed to patch it up.
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
   return (
-    <html lang="en">
+    <html lang={HTML_LANG[langFromPathname(pathname)]}>
       <head>
-        {/* Reflect the saved language on <html lang> before first paint. */}
-        <script dangerouslySetInnerHTML={{ __html: preferencesHeadScript }} />
         <HeadContent />
       </head>
       <body>
@@ -140,14 +135,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <PreferencesProvider>
-        <div className="min-h-screen flex flex-col bg-background text-text-main antialiased">
-          <SiteHeader />
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          <Outlet />
-          <SiteFooter />
-        </div>
-      </PreferencesProvider>
+      <div className="min-h-screen flex flex-col bg-background text-text-main antialiased">
+        <SiteHeader />
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+        <SiteFooter />
+      </div>
     </QueryClientProvider>
   );
 }

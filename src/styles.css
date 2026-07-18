@@ -1,6 +1,10 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+/* Self-hosted Pretendard (generated — see scripts/fetch-fonts.mjs). Inlined into
+ * this stylesheet at build time, so there is no extra request and no
+ * render-blocking third-party stylesheet. */
+@import "./fonts.css";
 
 /*
  * Design system definition. This site is light-mode only.
@@ -59,9 +63,12 @@
   --color-idl-blue: var(--idl-blue);
   --color-text-main: var(--text-main);
   --color-text-muted: var(--text-muted);
+  /* "Pretendard Variable" is the family name the self-hosted subset registers
+   * (see src/fonts.css); plain "Pretendard" catches locally-installed copies. */
   --font-sans:
-    "Pretendard", "Inter", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue",
-    "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+    "Pretendard Variable", "Pretendard", "Inter", -apple-system, BlinkMacSystemFont, system-ui,
+    Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+    sans-serif;
 }
 
 :root {
