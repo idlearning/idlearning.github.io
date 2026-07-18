@@ -9,20 +9,62 @@ import { NewsCard } from "../components/NewsCard";
 import { LocalLink } from "../components/LocalLink";
 import { SITE_URL, SITE_DESCRIPTION } from "../lib/site-meta";
 
-// Structured data so search engines recognise the lab as an organisation.
+// Structured data so search engines recognise the lab as an organisation, and
+// the site itself as a named entity. Emitted as an @graph: the two nodes
+// cross-reference each other by @id, which is what lets a search engine treat
+// "IDL Lab" the site and "IDL Lab" the research group as one thing.
+//
+// The lab has no Korean name — it is "Interaction Design for Learning Lab" in
+// every language — so `alternateName` carries only the English short form.
+const ORG_ID = `${SITE_URL}/#organization`;
 const ORGANIZATION_JSONLD = JSON.stringify({
   "@context": "https://schema.org",
-  "@type": "ResearchOrganization",
-  name: "Interaction Design for Learning Lab",
-  alternateName: "IDL Lab",
-  url: SITE_URL,
-  description: SITE_DESCRIPTION,
-  logo: `${SITE_URL}/favicon-idl.png`,
-  parentOrganization: {
-    "@type": "CollegeOrUniversity",
-    name: "Ewha Womans University",
-    url: "https://www.ewha.ac.kr",
-  },
+  "@graph": [
+    {
+      "@type": "ResearchOrganization",
+      "@id": ORG_ID,
+      name: "Interaction Design for Learning Lab",
+      alternateName: "IDL Lab",
+      url: SITE_URL,
+      description: SITE_DESCRIPTION,
+      logo: `${SITE_URL}/favicon-idl.png`,
+      image: `${SITE_URL}/og-image.png`,
+      email: "hyojeongso@ewha.ac.kr",
+      parentOrganization: {
+        "@type": "CollegeOrUniversity",
+        name: "Ewha Womans University",
+        alternateName: "이화여자대학교",
+        url: "https://www.ewha.ac.kr",
+        department: {
+          "@type": "Organization",
+          name: "Department of Educational Technology",
+          alternateName: "교육공학과",
+        },
+      },
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Seoul",
+        addressCountry: "KR",
+      },
+      knowsAbout: [
+        "Learning Sciences",
+        "Human-Computer Interaction",
+        "Learning Experience Design",
+        "AI in Education",
+        "AI Ethics Education",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: "Interaction Design for Learning Lab",
+      alternateName: "IDL Lab",
+      description: SITE_DESCRIPTION,
+      inLanguage: ["en", "ko"],
+      publisher: { "@id": ORG_ID },
+    },
+  ],
 });
 
 const INTRO_KO =

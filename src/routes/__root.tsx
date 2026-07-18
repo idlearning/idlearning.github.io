@@ -93,6 +93,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: SITE_NAME },
       { property: "og:url", content: SITE_URL },
       { property: "og:image", content: OG_IMAGE },
+      // Explicit dimensions let a scraper lay the card out before it has
+      // fetched the image; without them some clients fall back to a thumbnail.
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: SITE_TITLE },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: SITE_TITLE },
       { name: "twitter:description", content: SITE_DESCRIPTION },

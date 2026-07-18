@@ -3,9 +3,12 @@ import { useEffect, useRef, useState } from "react";
 
 import { Page, PageHeading } from "../components/Page";
 import { GoogleScholarIcon } from "../components/icons";
+import { LocalLink } from "../components/LocalLink";
 import { useT } from "../lib/i18n";
 import { usePreferences } from "../lib/preferences";
 import { getPeopleByRole, type Person, type PersonRole } from "../data/people";
+import { getProfile } from "../data/profiles";
+import { SITE_NAME } from "../lib/site-meta";
 
 function PersonName({ person, size }: { person: Person; size: "lg" | "md" }) {
   const { lang } = usePreferences();
@@ -62,7 +65,13 @@ function Avatar({ person, className }: { person: Person; className: string }) {
   if (person.img && !imgError) {
     return (
       <img
-        alt={person.nameEn}
+        // Both name forms, so the photo is findable in Korean and English image
+        // search regardless of which language the page is served in.
+        alt={
+          person.nameKo && !person.international
+            ? `${person.nameKo} ${person.nameEn} — ${SITE_NAME}`
+            : `${person.nameEn} — ${SITE_NAME}`
+        }
         className={`${className} object-cover bg-gray-200`}
         src={person.img}
         loading="lazy"
@@ -332,6 +341,46 @@ function groupAlumniByYear(people: Person[]): { key: string; label: string; peop
   return groups;
 }
 
+/**
+ * The professor entry, linking through to their own page when one exists.
+ * That link is also how the prerender crawler discovers /people/<id> — without
+ * it the detail page would never be built into the static output.
+ */
+function ProfessorBlock({ person }: { person: Person }) {
+  const { lang } = usePreferences();
+  const profile = getProfile(person.id);
+
+  return (
+    <div className="flex flex-col sm:flex-row gap-8 items-start">
+      <Avatar person={person} className="w-44 h-44 rounded-lg shrink-0" />
+      <div>
+        {profile ? (
+          <LocalLink
+            to="/people/$personId"
+            params={{ personId: person.id }}
+            className="inline-block hover:text-idl-blue transition-colors"
+          >
+            <PersonName person={person} size="lg" />
+          </LocalLink>
+        ) : (
+          <PersonName person={person} size="lg" />
+        )}
+        {profile && (
+          <p className="text-text-muted text-sm mb-1" style={{ wordBreak: "keep-all" }}>
+            {lang === "ko"
+              ? `${profile.institution.ko} ${profile.department.ko} ${profile.jobTitle.ko}`
+              : `${profile.jobTitle.en}, ${profile.department.en}, ${profile.institution.en}`}
+          </p>
+        )}
+        {person.email && <p className="text-text-muted text-sm mb-1">{person.email}</p>}
+        <div className="mt-2">
+          <ProfileLinks person={person} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function PeoplePage() {
   const t = useT();
   const [selected, setSelected] = useState<Person | null>(null);
@@ -346,18 +395,7 @@ export function PeoplePage() {
       {/* Professor */}
       <section className="mb-16">
         <h2 className="text-2xl font-bold text-idl-blue mb-8">{t.people.professor}</h2>
-        {professor && (
-          <div className="flex flex-col sm:flex-row gap-8 items-start">
-            <Avatar person={professor} className="w-44 h-44 rounded-lg shrink-0" />
-            <div>
-              <PersonName person={professor} size="lg" />
-              {professor.email && <p className="text-text-muted text-sm mb-1">{professor.email}</p>}
-              <div className="mt-2">
-                <ProfileLinks person={professor} />
-              </div>
-            </div>
-          </div>
-        )}
+        {professor && <ProfessorBlock person={professor} />}
       </section>
 
       {/* Students, split into subsections by role */}

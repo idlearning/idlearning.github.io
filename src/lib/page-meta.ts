@@ -19,9 +19,9 @@ export const PAGE_META: Record<string, Record<Lang, Copy>> = {
         "IDL Lab designs innovative and interactive learning experiences by integrating learning sciences, HCI, and emerging technologies.",
     },
     ko: {
-      title: "IDL Lab — 이화여자대학교 학습경험디자인 연구실",
+      title: "Interaction Design for Learning Lab — 이화여자대학교 교육공학과",
       description:
-        "IDL Lab은 학습과학, 인간-컴퓨터 상호작용, 신기술을 융합하여 새롭고 상호작용적인 학습경험을 디자인하는 이화여자대학교 연구실입니다.",
+        "Interaction Design for Learning Lab(IDL Lab)은 학습과학, 인간-컴퓨터 상호작용(HCI), 신기술을 융합하여 새롭고 상호작용적인 학습경험을 디자인하는 이화여자대학교 교육공학과 소효정 교수 연구실입니다.",
     },
   },
   "/people": {
@@ -41,7 +41,7 @@ export const PAGE_META: Record<string, Record<Lang, Copy>> = {
     },
     ko: {
       title: "연구 프로젝트 — IDL Lab",
-      description: "IDL Lab이 수행 중이거나 완료한 학습경험디자인 연구 프로젝트 목록입니다.",
+      description: "IDL Lab이 수행 중이거나 완료한 연구 프로젝트 목록입니다.",
     },
   },
   "/publications": {

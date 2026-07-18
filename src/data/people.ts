@@ -49,6 +49,8 @@ export const PEOPLE: Person[] = peopleData as Person[];
 export const getPeopleByRole = (role: PersonRole): Person[] =>
   PEOPLE.filter((p) => p.role === role);
 
+export const getPersonById = (id: string): Person | undefined => PEOPLE.find((p) => p.id === id);
+
 /**
  * Collapses a display name to a comparison key so author lists match People
  * regardless of surface form: "Sung-Eun Kim" / "Sungeun Kim" / "SUNG EUN KIM"

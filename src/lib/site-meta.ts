@@ -31,7 +31,7 @@ type HeadOptions = {
   description: string;
   /** Absolute image URL; falls back to the site-wide OG image. */
   image?: string;
-  type?: "website" | "article";
+  type?: "website" | "article" | "profile";
 };
 
 type MetaTag = Record<string, string>;

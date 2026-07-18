@@ -35,7 +35,27 @@ function shortHash(s) {
 
 const staticPaths = ["/", "/people", "/projects", "/publications", "/news"];
 
+// Members with a hand-written profile get their own page. Keep the id list in
+// sync with PERSON_PROFILES in src/data/profiles.ts — those are the only
+// /people/<id> routes that resolve; every other id 404s.
+let personPaths = [];
+try {
+  const profiles = readFileSync(resolve(root, "src/data/profiles.ts"), "utf8");
+  const block = profiles.split("PERSON_PROFILES")[1] ?? "";
+  personPaths = [...block.matchAll(/^\s{2}"([a-z0-9-]+)":\s*\{/gm)].map((m) => `/people/${m[1]}`);
+  if (personPaths.length === 0) {
+    console.warn("[sitemap] no person profiles matched — sitemap will omit person pages.");
+  }
+} catch (err) {
+  console.warn(
+    `[sitemap] could not read profiles.ts (${err.message}) — sitemap will omit person pages.`,
+  );
+}
+
 let newsPaths = [];
+// Per-URL last-modified dates, so a news item reports the day it was published
+// rather than the day the site happened to be rebuilt.
+const lastmodByPath = new Map();
 try {
   const news = JSON.parse(readFileSync(resolve(root, "src/data/generated/news.json"), "utf8"));
   const baseCounts = new Map();
@@ -47,7 +67,10 @@ try {
     let slug = item.slug ?? newsSlugBase(item);
     if (!item.slug && (baseCounts.get(slug) ?? 0) > 1)
       slug = `${slug}-${shortHash(item.title ?? "")}`;
-    newsPaths.push(`/news/${slug}`);
+    const path = `/news/${slug}`;
+    newsPaths.push(path);
+    const date = String(item.date ?? "").slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date)) lastmodByPath.set(path, date);
   }
 } catch (err) {
   console.warn(
@@ -65,7 +88,9 @@ const today = new Date().toISOString().slice(0, 10);
 // Every page exists in both languages. Each <url> lists the whole language set
 // as xhtml:link alternates, which is what tells a search engine the English and
 // Korean pages are translations rather than duplicate content.
-const urls = [...staticPaths, ...newsPaths]
+const allPaths = [...staticPaths, ...personPaths, ...newsPaths];
+
+const urls = allPaths
   .flatMap((path) =>
     ["en", "ko"].map((lang) => {
       const alternates = ["en", "ko"]
@@ -77,7 +102,8 @@ const urls = [...staticPaths, ...newsPaths]
           `    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE_URL}${localizedPath(path, "en")}"/>`,
         )
         .join("\n");
-      return `  <url>\n    <loc>${SITE_URL}${localizedPath(path, lang)}</loc>\n${alternates}\n    <lastmod>${today}</lastmod>\n  </url>`;
+      const lastmod = lastmodByPath.get(path) ?? today;
+      return `  <url>\n    <loc>${SITE_URL}${localizedPath(path, lang)}</loc>\n${alternates}\n    <lastmod>${lastmod}</lastmod>\n  </url>`;
     }),
   )
   .join("\n");
@@ -88,7 +114,5 @@ if (!existsSync(dirname(outPath))) {
   console.warn(`[sitemap] ${dirname(outPath)} does not exist — run after build. Skipping.`);
 } else {
   writeFileSync(outPath, xml, "utf8");
-  console.log(
-    `[sitemap] wrote ${(staticPaths.length + newsPaths.length) * 2} URLs (en + ko) to dist/client/sitemap.xml`,
-  );
+  console.log(`[sitemap] wrote ${allPaths.length * 2} URLs (en + ko) to dist/client/sitemap.xml`);
 }
