@@ -1,5 +1,4 @@
 import publicationsData from "./generated/publications.json";
-import { getPersonByName, type Person } from "./people";
 
 // Single source of truth for publications.
 
@@ -35,17 +34,6 @@ export const PUB_TYPE_ORDER: PubType[] = ["journal", "conference", "book"];
 
 export const getPublicationById = (id: string): Publication | undefined =>
   PUBLICATIONS.find((p) => p.id === id);
-
-/**
- * Publications `person` authored, newest first. Author strings are resolved
- * through the People name index, so every romanization and alias of the name
- * matches — not just the spelling used on the People page.
- */
-export function getPublicationsByPerson(person: Person): Publication[] {
-  return PUBLICATIONS.filter((pub) =>
-    pub.authors.some((author) => getPersonByName(author)?.id === person.id),
-  ).sort((a, b) => b.year - a.year || b.id.localeCompare(a.id));
-}
 
 /**
  * Publications grouped by year (desc), then by type in `PUB_TYPE_ORDER`.

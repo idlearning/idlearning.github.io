@@ -3,12 +3,11 @@ import { useEffect, useRef, useState } from "react";
 
 import { Page, PageHeading } from "../components/Page";
 import { GoogleScholarIcon } from "../components/icons";
-import { LocalLink } from "../components/LocalLink";
 import { useT } from "../lib/i18n";
 import { usePreferences } from "../lib/preferences";
 import { getPeopleByRole, type Person, type PersonRole } from "../data/people";
-import { getProfile } from "../data/profiles";
-import { SITE_NAME } from "../lib/site-meta";
+import { getProfile, type PersonProfile } from "../data/profiles";
+import { SITE_NAME, SITE_URL, absoluteUrl } from "../lib/site-meta";
 
 function PersonName({ person, size }: { person: Person; size: "lg" | "md" }) {
   const { lang } = usePreferences();
@@ -342,29 +341,61 @@ function groupAlumniByYear(people: Person[]): { key: string; label: string; peop
 }
 
 /**
- * The professor entry, linking through to their own page when one exists.
- * That link is also how the prerender crawler discovers /people/<id> — without
- * it the detail page would never be built into the static output.
+ * schema.org Person for a member with a profile entry. This is what lets a
+ * search for the person's name resolve to the lab: `sameAs` ties the name to
+ * the same human's Google Scholar and university pages, `alternateName` covers
+ * the Korean spelling, and `knowsAbout` associates them with research topics
+ * rather than only with a string of characters.
  */
+function personJsonLd(person: Person, profile: PersonProfile): string {
+  const alternateNames = [person.nameKo, ...(person.aliases ?? [])].filter(Boolean);
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: person.nameEn,
+    ...(alternateNames.length > 0 && { alternateName: alternateNames }),
+    url: absoluteUrl("/people"),
+    ...(person.img && { image: person.img }),
+    ...(person.email && { email: `mailto:${person.email}` }),
+    jobTitle: profile.jobTitle.en,
+    affiliation: {
+      "@type": "CollegeOrUniversity",
+      name: profile.institution.en,
+      alternateName: profile.institution.ko,
+      department: {
+        "@type": "Organization",
+        name: profile.department.en,
+        alternateName: profile.department.ko,
+      },
+      url: "https://www.ewha.ac.kr",
+    },
+    worksFor: {
+      "@type": "ResearchOrganization",
+      name: "Interaction Design for Learning Lab",
+      alternateName: SITE_NAME,
+      url: SITE_URL,
+    },
+    knowsAbout: profile.researchAreas.en,
+    ...(profile.sameAs?.length && { sameAs: profile.sameAs }),
+  });
+}
+
+/** The professor entry, with the affiliation line and schema.org markup. */
 function ProfessorBlock({ person }: { person: Person }) {
   const { lang } = usePreferences();
   const profile = getProfile(person.id);
 
   return (
     <div className="flex flex-col sm:flex-row gap-8 items-start">
+      {profile && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: personJsonLd(person, profile) }}
+        />
+      )}
       <Avatar person={person} className="w-44 h-44 rounded-lg shrink-0" />
       <div>
-        {profile ? (
-          <LocalLink
-            to="/people/$personId"
-            params={{ personId: person.id }}
-            className="inline-block hover:text-idl-blue transition-colors"
-          >
-            <PersonName person={person} size="lg" />
-          </LocalLink>
-        ) : (
-          <PersonName person={person} size="lg" />
-        )}
+        <PersonName person={person} size="lg" />
         {profile && (
           <p className="text-text-muted text-sm mb-1" style={{ wordBreak: "keep-all" }}>
             {lang === "ko"

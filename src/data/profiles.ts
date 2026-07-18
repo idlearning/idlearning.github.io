@@ -1,11 +1,11 @@
-// Hand-maintained profile detail for the lab members who get their own page.
+// Hand-maintained profile detail for lab members, supplementing the sheet.
 //
 // This is deliberately NOT in src/data/generated/people.json: that file is
 // overwritten by `scripts/sync-sheets.mjs` on every sheet sync, so anything
 // written there by hand would be lost. Keyed by `Person.id`.
 //
-// Only people listed here get a /people/<id> detail page — the route 404s for
-// everyone else, so adding an entry is what publishes a page.
+// Members listed here get their affiliation shown on the People page and a
+// schema.org `Person` node emitted for them.
 
 import type { Lang } from "../lib/lang";
 
@@ -17,13 +17,8 @@ export type PersonProfile = {
   /** Institution. */
   institution: Record<Lang, string>;
   /**
-   * Free-form biography, rendered as paragraphs. Left empty until the lab
-   * supplies the copy — the page simply omits the section while it is blank.
-   */
-  bio: Record<Lang, string[]>;
-  /**
-   * Research areas. Also emitted as schema.org `knowsAbout`, which is how a
-   * search engine associates the person with a topic rather than just a name.
+   * Research areas, emitted as schema.org `knowsAbout` — how a search engine
+   * associates the person with a topic rather than just a name.
    */
   researchAreas: Record<Lang, string[]>;
   /**
@@ -42,8 +37,6 @@ export const PERSON_PROFILES: Record<string, PersonProfile> = {
       ko: "교육공학과",
     },
     institution: { en: "Ewha Womans University", ko: "이화여자대학교" },
-    // TODO(lab): supply the professor's biography. Each string is one paragraph.
-    bio: { en: [], ko: [] },
     researchAreas: {
       en: [
         "Learning Sciences",
