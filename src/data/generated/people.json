@@ -5,7 +5,7 @@
     "role": "professor",
     "nameKo": "소효정",
     "email": "hyojeongso@ewha.ac.kr",
-    "img": "https://cdn.imweb.me/thumbnail/20250305/1ecffa243b6be.png",
+    "img": "/images/people/hyo-jeong-so.png",
     "scholar": "https://scholar.google.com/citations?user=dI0biU8AAAAJ&hl=kr&oi=ao",
     "homepage": "https://www.ewha.ac.kr/ewha/professor/info.do?mode=view&pId=aUu8X%2F6dSe7uJ%2F5ElYusAA%3D%3D"
   },
@@ -15,7 +15,7 @@
     "role": "doctoral",
     "nameKo": "김성은",
     "email": "soul_81@naver.com",
-    "img": "https://cdn.imweb.me/thumbnail/20250121/06e4bc3f64575.jpg",
+    "img": "/images/people/sungeun-kim.jpg",
     "interests": "GBL, CSCL",
     "education": [
       "이화여자대학교 교육대학원 교육공학과 석사",
@@ -28,7 +28,7 @@
     "role": "doctoral",
     "nameKo": "박효성",
     "email": "hyosungpark@ewhain.net",
-    "img": "https://cdn.imweb.me/thumbnail/20250311/4f8019b864911.jpeg",
+    "img": "/images/people/hyosung-park.jpg",
     "interests": "AIED, GBL",
     "education": [
       "이화여자대학교 교육대학원 교육공학과 석사",
@@ -45,7 +45,7 @@
     "role": "doctoral",
     "nameKo": "이가영",
     "email": "lgy1202@gmail.com",
-    "img": "https://cdn.imweb.me/thumbnail/20250121/e933fc9b06d68.jpg",
+    "img": "/images/people/ga-young-lee.jpg",
     "interests": "Human-Computer Interaction (HCI), Affective Computing",
     "education": [
       "고려대학교 영재교육원 강사 (2023.3 – 현재)",
@@ -59,7 +59,7 @@
     "role": "doctoral",
     "nameKo": "최지은",
     "email": "merry0916@naver.com",
-    "img": "https://cdn.imweb.me/thumbnail/20250331/dd7c0789a6bbe.jpg",
+    "img": "/images/people/jieun-choi.jpg",
     "interests": "ID/ISD, CSCL, K-12",
     "education": [
       "경희사이버대학교 교수설계 (2020.6 – 2022.6)",
@@ -74,7 +74,7 @@
     "role": "doctoral",
     "international": true,
     "email": "jinlingxi@ewha.ac.kr",
-    "img": "https://cdn.imweb.me/thumbnail/20250121/01f9c366cc917.jpg",
+    "img": "/images/people/lingxi-jin.jpg",
     "interests": "AIED, Human-Computer Interaction (HCI), Learning Experience Design, Learning Analytics",
     "education": [
       "Research Engineer in Inha Engineering Education Innovation Center, Inha University (2022.6 – 2022.10)",
@@ -92,7 +92,7 @@
     "role": "doctoral",
     "international": true,
     "email": "iriswang@ewhain.net",
-    "img": "https://cdn.imweb.me/thumbnail/20250331/bc169f2566cac.png",
+    "img": "/images/people/wang-yue-iris-wang.png",
     "interests": "Language learning with technology; Ethical education game design; Personalized learning",
     "education": [
       "Instructional Designer for Primary English, Joyy (2023.4 – 2023.11)",
@@ -109,7 +109,7 @@
     "role": "doctoral",
     "nameKo": "송주영",
     "email": "sjy93@ewha.ac.kr",
-    "img": "https://cdn.imweb.me/thumbnail/20250330/8898c29e408aa.jpg",
+    "img": "/images/people/juyeong-song.jpg",
     "interests": "테크놀로지 활용 교육, AI 융합 교육",
     "education": [
       "한국교육개발원 연구원 (2023.6 – 현재)",
@@ -126,7 +126,7 @@
     "role": "doctoral",
     "nameKo": "김은영",
     "email": "eykim@ewha.ac.kr",
-    "img": "https://cdn.imweb.me/thumbnail/20260323/768ea49fc8570.jpg",
+    "img": "/images/people/eunyoung-kim.jpg",
     "interests": "AIED, Learning Sciences, Human-AI Collaboration, Human-Computer Interaction (HCI)",
     "education": [
       "국립암센터 연구원 (2025.3 – 현재)",
@@ -143,7 +143,7 @@
     "role": "doctoral",
     "nameKo": "김민선",
     "email": "min5929@ewha.ac.kr",
-    "img": "https://cdn.imweb.me/thumbnail/20250904/904e69279ddd0.jpg",
+    "img": "/images/people/minseon-kim.jpg",
     "interests": "AIED, 학습과학, CSCL, K-12",
     "education": [
       "한국교육개발원 연구원 (2024.8 – 2025.8)",
@@ -159,7 +159,7 @@
     "role": "doctoral",
     "nameKo": "김수연",
     "email": "suyunguya@naver.com",
-    "img": "https://cdn.imweb.me/thumbnail/20260117/bff8e614c8a3b.jpg",
+    "img": "/images/people/su-yeoun-kim.jpg",
     "interests": "PBL, CSCL, SEA, 테크놀로지 기반학습",
     "education": [
       "충청남도교육청 소속 미술 중등교사 (2020.3 – 현재)",
@@ -175,7 +175,7 @@
     "role": "masters",
     "nameKo": "김민정",
     "email": "bomkmj@ewhain.net",
-    "img": "https://cdn.imweb.me/thumbnail/20250121/a4ae059045b94.jpg",
+    "img": "/images/people/minjeong-kim.jpg",
     "interests": "e-learning, CBL, 교사교육",
     "education": [
       "(주)챔프스터디 해커스 HRD 사업팀 e-learning 교수설계자 (2024.7 – 현재)",
@@ -189,7 +189,7 @@
     "role": "masters",
     "nameKo": "송예림",
     "email": "yelmtic@ewha.ac.kr",
-    "img": "https://cdn.imweb.me/thumbnail/20250330/e2669f34da797.jpg",
+    "img": "/images/people/yelim-song.jpg",
     "interests": "AIED, ITS, 적응형 학습 시스템",
     "education": [
       "강원대학교 교육학과 학사"
@@ -201,7 +201,7 @@
     "role": "masters",
     "nameKo": "김규원",
     "email": "kyuwonkim95@ewha.ac.kr",
-    "img": "https://cdn.imweb.me/thumbnail/20260319/88c8505789a2b.jpg",
+    "img": "/images/people/kyuwon-kim.jpg",
     "interests": "Human-Computer Interaction (HCI), AIED",
     "education": [
       "서울로봇인공지능과학관",
@@ -216,7 +216,7 @@
     "role": "masters",
     "nameKo": "이진희",
     "email": "jinnylee26@ewha.ac.kr",
-    "img": "https://cdn.imweb.me/thumbnail/20250331/ea677e12e29ef.png",
+    "img": "/images/people/jean-hee-lee.png",
     "interests": "TEL, AIED, Science Education",
     "education": [
       "이화여자대학교 과학교육과 화학교육전공 / 통합과학 연계전공 / 커뮤니케이션·미디어학부 학사"
@@ -228,7 +228,7 @@
     "role": "masters",
     "nameKo": "이윤경",
     "email": "yklee26@ewha.ac.kr",
-    "img": "https://cdn.imweb.me/thumbnail/20250404/84c03eba44ac2.png",
+    "img": "/images/people/yoon-kyeong-lee.png",
     "interests": "AIED, K-12, ID/ISD, 학습과학",
     "education": [
       "경기도성남교육지원청 소속 유치원교사 (2022.3 – 2025.2)",
@@ -242,7 +242,7 @@
     "role": "masters",
     "nameKo": "박시은",
     "email": "sieunp25@ewha.ac.kr",
-    "img": "https://cdn.imweb.me/thumbnail/20250614/4f692616ce1a2.jpg",
+    "img": "/images/people/sieun-park.jpg",
     "interests": "Student-centered Learning, TEL, PBL",
     "education": [
       "(주)자라나는씨앗 독서토론 교수설계 (2024.7 – 2025.1)",
@@ -255,7 +255,7 @@
     "role": "masters",
     "international": true,
     "email": "elaineyiyi@ewha.ac.kr",
-    "img": "https://cdn.imweb.me/thumbnail/20250620/79a3b0af13787.jpg",
+    "img": "/images/people/xu-yi-elaine-xu.jpg",
     "interests": "AIED, Gamification, STEM Education",
     "education": [
       "Bachelor of Science Education, Jiangsu Second Normal University"
@@ -267,7 +267,7 @@
     "role": "masters",
     "nameKo": "김평화",
     "email": "ph.kim@ewha.ac.kr",
-    "img": "https://cdn.imweb.me/thumbnail/20260117/e6dde54b40c45.jpg",
+    "img": "/images/people/pyunghwa-kim.jpg",
     "interests": "Place-Based Learning, Design Thinking, Informal Learning, LXD",
     "education": [
       "부강비케이 바이오연료팀 PM (2024.5 – 2025.5)",
@@ -283,7 +283,7 @@
     "role": "masters",
     "nameKo": "박지현",
     "email": "gh4920@naver.com",
-    "img": "https://cdn.imweb.me/thumbnail/20260117/c6c04efba372a.jpeg",
+    "img": "/images/people/jihyun-park.jpg",
     "interests": "GBL, Gamification, AI Ethics Education",
     "education": [
       "동국대학교 서울캠퍼스 (2025.2 – 2026.2)",
