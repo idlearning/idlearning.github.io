@@ -298,6 +298,16 @@ async function fetchCsv(spreadsheetId, tabName, gidByName) {
     const res = await fetch(url, { redirect: "follow" });
     if (res.ok) return res.text();
     // fall through to the gviz fallback below on failure
+  } else if (Object.keys(gidByName ?? {}).length) {
+    // Discovery worked but this tab name is not among the sheet's tabs — usually a
+    // rename. gviz may still answer from a stale cache under the OLD name, which
+    // silently deploys outdated data, so make the mismatch loud.
+    console.warn(
+      `[sync] tab "${tabName}" not found in the spreadsheet (tabs: ${Object.keys(gidByName)
+        .map((n) => `"${n}"`)
+        .join(", ")}) — falling back to gviz by name, which may serve stale cached data. ` +
+        `Update scripts/sheets.config.json if the tab was renamed.`,
+    );
   }
   const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}`;
   const res = await fetch(url, { redirect: "follow" });
