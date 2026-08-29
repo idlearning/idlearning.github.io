@@ -9,7 +9,7 @@ import type { ReactNode } from "react";
 //
 // Supported subset: paragraphs, single line breaks, `##`/`###` headings,
 // `-`/`*` bullet lists, `1.` numbered lists, **bold**, *italic*, `code`,
-// [text](url) links, and `:::paper` blocks. Anything else renders as plain text.
+// and [text](url) links. Anything else renders as plain text.
 
 /** Allow only safe link targets; everything else falls back to plain text. */
 function safeHref(url: string): string | null {
@@ -94,159 +94,169 @@ function renderLines(block: string, keyPrefix: string): ReactNode[] {
   return out;
 }
 
-type ContentBlock = { kind: "markdown"; content: string } | { kind: "paper"; content: string };
+type ContentBlock =
+  | { type: "markdown"; content: string }
+  | { type: "paper"; title: string; paperType?: string; authors?: string; link?: string };
 
 /**
- * Split the body into ordinary Markdown blocks and custom paper blocks.
- *
- * A paper block is deliberately line-oriented so it remains easy to enter in
- * a Google Form textarea:
+ * Pull paper cards out of the news body. This deliberately uses a tiny,
+ * spreadsheet-friendly syntax instead of raw HTML or JSON:
  *
  * :::paper
- * Paper title
- * Full Paper · AIED 2026
- * Author One, Author Two
+ * title: Paper title
+ * type: Full Paper
+ * authors: First Author, Second Author
+ * link: https://example.org/paper
  * :::
- *
- * An unclosed directive is kept as ordinary text instead of swallowing the
- * rest of the news body.
  */
-function splitContentBlocks(content: string): ContentBlock[] {
+function splitPaperBlocks(content: string): ContentBlock[] {
   const lines = content.replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
-  const blocks: ContentBlock[] = [];
-  let pending: string[] = [];
+  const result: ContentBlock[] = [];
+  let text: string[] = [];
 
-  const flushMarkdown = () => {
-    const chunk = pending.join("\n");
-    pending = [];
-    chunk
-      .split(/\n\s*\n/)
-      .map((part) => part.trim())
-      .filter(Boolean)
-      .forEach((part) => blocks.push({ kind: "markdown", content: part }));
+  const flushText = () => {
+    const value = text.join("\n").trim();
+    if (value) result.push({ type: "markdown", content: value });
+    text = [];
   };
 
   for (let i = 0; i < lines.length; i++) {
-    if (!/^:::paper\s*$/i.test(lines[i].trim())) {
-      pending.push(lines[i]);
+    if (lines[i].trim() !== ":::paper") {
+      text.push(lines[i]);
       continue;
     }
 
-    const close = lines.findIndex((line, index) => index > i && line.trim() === ":::");
-    if (close === -1) {
-      pending.push(lines[i]);
+    const start = i;
+    const fields: Record<string, string> = {};
+    i++;
+    while (i < lines.length && lines[i].trim() !== ":::") {
+      const match = lines[i].match(/^\s*(title|type|authors|link)\s*:\s*(.*?)\s*$/i);
+      if (match) fields[match[1].toLowerCase()] = match[2];
+      i++;
+    }
+
+    // A malformed block stays visible as ordinary text, so editors never lose
+    // content because of a missing closing marker.
+    if (i >= lines.length || !fields.title) {
+      text.push(...lines.slice(start, i >= lines.length ? lines.length : i + 1));
       continue;
     }
 
-    flushMarkdown();
-    const paper = lines
-      .slice(i + 1, close)
-      .join("\n")
-      .trim();
-    if (paper) blocks.push({ kind: "paper", content: paper });
-    i = close;
+    flushText();
+    result.push({
+      type: "paper",
+      title: fields.title,
+      paperType: fields.type,
+      authors: fields.authors,
+      link: fields.link,
+    });
   }
-
-  flushMarkdown();
-  return blocks;
+  flushText();
+  return result;
 }
 
-function PaperBlock({ content, blockKey }: { content: string; blockKey: string }) {
-  const lines = content
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
-  const [title, ...details] = lines;
+function PaperBlock({ title, paperType, authors, link }: Extract<ContentBlock, { type: "paper" }>) {
+  const href = link ? safeHref(link) : null;
+  const titleNode = href ? (
+    <a
+      href={href}
+      className="font-semibold text-text-main hover:text-idl-blue hover:underline underline-offset-2"
+      {...(/^https?:\/\//i.test(href) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
+      {title}
+    </a>
+  ) : (
+    <span className="font-semibold text-text-main">{title}</span>
+  );
 
   return (
-    <article className="my-6 rounded-r-lg border-l-4 border-idl-blue bg-idl-blue/[0.05] px-4 py-3 first:mt-0 last:mb-0">
-      <span className="mb-1.5 inline-block text-[0.68rem] font-bold uppercase tracking-widest text-idl-blue">
-        Paper
-      </span>
-      <p className="text-base font-semibold leading-snug text-text-main">
-        {parseInline(title, `${blockKey}-title`)}
-      </p>
-      {details.map((line, index) => (
-        <p
-          key={`${blockKey}-detail-${index}`}
-          className={
-            index === 0
-              ? "mt-1 text-sm font-medium text-text-muted"
-              : "mt-0.5 text-sm text-text-main"
-          }
-        >
-          {parseInline(line, `${blockKey}-detail-${index}`)}
-        </p>
-      ))}
-    </article>
+    <section className="my-5 rounded-lg border border-idl-blue/20 bg-idl-blue/5 px-4 py-3 last:mb-0">
+      <div className="flex gap-2">
+        <span aria-hidden="true" className="mt-0.5 text-sm leading-5">
+          📄
+        </span>
+        <div className="min-w-0">
+          {titleNode}
+          {paperType && <p className="mt-1 text-sm font-medium text-idl-blue">{paperType}</p>}
+          {authors && <p className="mt-1 text-sm text-text-muted">{authors}</p>}
+        </div>
+      </div>
+    </section>
   );
 }
 
 export function Markdown({ content, className }: { content: string; className?: string }) {
-  const blocks = splitContentBlocks(content);
+  const contentBlocks = splitPaperBlocks(content);
 
   return (
     <div
       className={className ?? "text-sm text-text-main leading-relaxed"}
       style={{ wordBreak: "keep-all" }}
     >
-      {blocks.map((entry, bi) => {
-        const key = `b${bi}`;
-        if (entry.kind === "paper") {
-          return <PaperBlock key={key} content={entry.content} blockKey={key} />;
+      {contentBlocks.flatMap((contentBlock, contentBlockIndex) => {
+        if (contentBlock.type === "paper") {
+          return <PaperBlock key={`paper-${contentBlockIndex}`} {...contentBlock} />;
         }
 
-        const block = entry.content;
-        const lines = block.split("\n");
+        // Normalise newlines, then split ordinary Markdown into blocks on blank lines.
+        const blocks = contentBlock.content
+          .split(/\n\s*\n/)
+          .map((b) => b.trim())
+          .filter(Boolean);
 
-        // Heading: `## text` / `### text`
-        const heading = block.match(/^(#{2,4})\s+(.*)$/);
-        if (heading && lines.length === 1) {
-          const level = heading[1].length; // 2, 3, or 4
-          const cls =
-            level === 2
-              ? "text-lg font-bold text-text-main mt-6 mb-2 first:mt-0"
-              : "text-base font-semibold text-text-main mt-5 mb-2 first:mt-0";
-          const Tag = (level === 2 ? "h2" : level === 3 ? "h3" : "h4") as "h2" | "h3" | "h4";
+        return blocks.map((block, bi) => {
+          const key = `b${contentBlockIndex}-${bi}`;
+          const lines = block.split("\n");
+
+          // Heading: `## text` / `### text`
+          const heading = block.match(/^(#{2,4})\s+(.*)$/);
+          if (heading && lines.length === 1) {
+            const level = heading[1].length; // 2, 3, or 4
+            const cls =
+              level === 2
+                ? "text-lg font-bold text-text-main mt-6 mb-2 first:mt-0"
+                : "text-base font-semibold text-text-main mt-5 mb-2 first:mt-0";
+            const Tag = (level === 2 ? "h2" : level === 3 ? "h3" : "h4") as "h2" | "h3" | "h4";
+            return (
+              <Tag key={key} className={cls}>
+                {parseInline(heading[2], key)}
+              </Tag>
+            );
+          }
+
+          // Unordered list: every line starts with `-` or `*`
+          if (lines.every((l) => /^\s*[-*]\s+/.test(l))) {
+            return (
+              <ul key={key} className="list-disc pl-5 mb-4 last:mb-0 space-y-1">
+                {lines.map((l, li) => (
+                  <li key={`${key}-i${li}`}>
+                    {parseInline(l.replace(/^\s*[-*]\s+/, ""), `${key}-i${li}`)}
+                  </li>
+                ))}
+              </ul>
+            );
+          }
+
+          // Ordered list: every line starts with `1.` `2.` ...
+          if (lines.every((l) => /^\s*\d+\.\s+/.test(l))) {
+            return (
+              <ol key={key} className="list-decimal pl-5 mb-4 last:mb-0 space-y-1">
+                {lines.map((l, li) => (
+                  <li key={`${key}-i${li}`}>
+                    {parseInline(l.replace(/^\s*\d+\.\s+/, ""), `${key}-i${li}`)}
+                  </li>
+                ))}
+              </ol>
+            );
+          }
+
+          // Plain paragraph (single line breaks preserved as <br/>).
           return (
-            <Tag key={key} className={cls}>
-              {parseInline(heading[2], key)}
-            </Tag>
+            <p key={key} className="mb-4 last:mb-0">
+              {renderLines(block, key)}
+            </p>
           );
-        }
-
-        // Unordered list: every line starts with `-` or `*`
-        if (lines.every((l) => /^\s*[-*]\s+/.test(l))) {
-          return (
-            <ul key={key} className="list-disc pl-5 mb-4 last:mb-0 space-y-1">
-              {lines.map((l, li) => (
-                <li key={`${key}-i${li}`}>
-                  {parseInline(l.replace(/^\s*[-*]\s+/, ""), `${key}-i${li}`)}
-                </li>
-              ))}
-            </ul>
-          );
-        }
-
-        // Ordered list: every line starts with `1.` `2.` ...
-        if (lines.every((l) => /^\s*\d+\.\s+/.test(l))) {
-          return (
-            <ol key={key} className="list-decimal pl-5 mb-4 last:mb-0 space-y-1">
-              {lines.map((l, li) => (
-                <li key={`${key}-i${li}`}>
-                  {parseInline(l.replace(/^\s*\d+\.\s+/, ""), `${key}-i${li}`)}
-                </li>
-              ))}
-            </ol>
-          );
-        }
-
-        // Plain paragraph (single line breaks preserved as <br/>).
-        return (
-          <p key={key} className="mb-4 last:mb-0">
-            {renderLines(block, key)}
-          </p>
-        );
+        });
       })}
     </div>
   );
