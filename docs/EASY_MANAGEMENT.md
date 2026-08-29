@@ -134,9 +134,45 @@ Publications 탭의 저자 이름은 People 탭의 `영문명`·`한국어명`�
 >
 > 1. 번호 항목 1
 > 2. 번호 항목 2
+>
+> :::paper
+> 논문 제목
+> Full Paper · AIED 2026
+> Ga Young Lee, Hyo-Jeong So
+> :::
 > ```
 >
 > 별도 문법 없이 그냥 텍스트만 써도 됩니다(줄바꿈·문단 그대로 표시).
+
+#### 뉴스 본문에 논문 표시하기
+
+본문에서 논문 정보를 강조할 때는 아래처럼 `:::paper`와 `:::` 사이에 세 줄을
+입력합니다. Publications 등록 여부와 관계없이 바로 사용할 수 있습니다.
+
+```text
+:::paper
+Supporting Scientific Sensemaking under Uncertainty in Inquiry-Based Learning with an AI-based Chatbot
+Full Paper · AIED 2026
+Ga Young Lee, Hyo-Jeong So
+:::
+```
+
+- 첫째 줄: 논문 제목
+- 둘째 줄: 발표 유형과 학회명(선택)
+- 셋째 줄 이후: 저자 또는 추가 정보(선택)
+
+제목이나 추가 정보에는 일반 본문과 동일하게 굵게 표시하거나 링크를 넣을 수 있습니다.
+
+```text
+:::paper
+**[논문 제목](https://doi.org/...)**
+Journal Article · 2026
+저자 1, 저자 2
+:::
+```
+
+`:::paper`와 마지막 `:::`는 각각 별도의 줄에 입력해야 합니다. 블록 내부에는 빈 줄을
+넣지 않는 것을 권장합니다.
 
 ---
 

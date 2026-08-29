@@ -9,7 +9,7 @@ import type { ReactNode } from "react";
 //
 // Supported subset: paragraphs, single line breaks, `##`/`###` headings,
 // `-`/`*` bullet lists, `1.` numbered lists, **bold**, *italic*, `code`,
-// and [text](url) links. Anything else renders as plain text.
+// [text](url) links, and `:::paper` blocks. Anything else renders as plain text.
 
 /** Allow only safe link targets; everything else falls back to plain text. */
 function safeHref(url: string): string | null {
@@ -94,22 +94,109 @@ function renderLines(block: string, keyPrefix: string): ReactNode[] {
   return out;
 }
 
-export function Markdown({ content, className }: { content: string; className?: string }) {
-  // Normalise newlines, then split into blocks on blank lines.
-  const blocks = content
-    .replace(/\r\n/g, "\n")
-    .replace(/\r/g, "\n")
-    .split(/\n\s*\n/)
-    .map((b) => b.trim())
+type ContentBlock = { kind: "markdown"; content: string } | { kind: "paper"; content: string };
+
+/**
+ * Split the body into ordinary Markdown blocks and custom paper blocks.
+ *
+ * A paper block is deliberately line-oriented so it remains easy to enter in
+ * a Google Form textarea:
+ *
+ * :::paper
+ * Paper title
+ * Full Paper · AIED 2026
+ * Author One, Author Two
+ * :::
+ *
+ * An unclosed directive is kept as ordinary text instead of swallowing the
+ * rest of the news body.
+ */
+function splitContentBlocks(content: string): ContentBlock[] {
+  const lines = content.replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
+  const blocks: ContentBlock[] = [];
+  let pending: string[] = [];
+
+  const flushMarkdown = () => {
+    const chunk = pending.join("\n");
+    pending = [];
+    chunk
+      .split(/\n\s*\n/)
+      .map((part) => part.trim())
+      .filter(Boolean)
+      .forEach((part) => blocks.push({ kind: "markdown", content: part }));
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    if (!/^:::paper\s*$/i.test(lines[i].trim())) {
+      pending.push(lines[i]);
+      continue;
+    }
+
+    const close = lines.findIndex((line, index) => index > i && line.trim() === ":::");
+    if (close === -1) {
+      pending.push(lines[i]);
+      continue;
+    }
+
+    flushMarkdown();
+    const paper = lines
+      .slice(i + 1, close)
+      .join("\n")
+      .trim();
+    if (paper) blocks.push({ kind: "paper", content: paper });
+    i = close;
+  }
+
+  flushMarkdown();
+  return blocks;
+}
+
+function PaperBlock({ content, blockKey }: { content: string; blockKey: string }) {
+  const lines = content
+    .split("\n")
+    .map((line) => line.trim())
     .filter(Boolean);
+  const [title, ...details] = lines;
+
+  return (
+    <article className="my-6 rounded-r-lg border-l-4 border-idl-blue bg-idl-blue/[0.05] px-4 py-3 first:mt-0 last:mb-0">
+      <span className="mb-1.5 inline-block text-[0.68rem] font-bold uppercase tracking-widest text-idl-blue">
+        Paper
+      </span>
+      <p className="text-base font-semibold leading-snug text-text-main">
+        {parseInline(title, `${blockKey}-title`)}
+      </p>
+      {details.map((line, index) => (
+        <p
+          key={`${blockKey}-detail-${index}`}
+          className={
+            index === 0
+              ? "mt-1 text-sm font-medium text-text-muted"
+              : "mt-0.5 text-sm text-text-main"
+          }
+        >
+          {parseInline(line, `${blockKey}-detail-${index}`)}
+        </p>
+      ))}
+    </article>
+  );
+}
+
+export function Markdown({ content, className }: { content: string; className?: string }) {
+  const blocks = splitContentBlocks(content);
 
   return (
     <div
       className={className ?? "text-sm text-text-main leading-relaxed"}
       style={{ wordBreak: "keep-all" }}
     >
-      {blocks.map((block, bi) => {
+      {blocks.map((entry, bi) => {
         const key = `b${bi}`;
+        if (entry.kind === "paper") {
+          return <PaperBlock key={key} content={entry.content} blockKey={key} />;
+        }
+
+        const block = entry.content;
         const lines = block.split("\n");
 
         // Heading: `## text` / `### text`
