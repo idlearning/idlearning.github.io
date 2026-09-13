@@ -9,6 +9,15 @@ import { getPeopleByRole, type Person, type PersonRole } from "../data/people";
 import { getProfile, type PersonProfile } from "../data/profiles";
 import { SITE_NAME, SITE_URL, absoluteUrl } from "../lib/site-meta";
 
+type StudentDetailMode = "inline" | "modal";
+
+/**
+ * Production default for current-student details.
+ * Change only this value to "modal" to restore the previous click-to-open layout.
+ * A `?studentDetails=inline|modal` query parameter can override it for comparison.
+ */
+const DEFAULT_STUDENT_DETAIL_MODE: StudentDetailMode = "inline";
+
 function PersonName({ person, size }: { person: Person; size: "lg" | "md" }) {
   const { lang } = usePreferences();
   // International students (or anyone without a Korean name) show the English name only.
@@ -97,6 +106,15 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
   );
 }
 
+function EducationRows({ education }: { education: string[] }) {
+  return education.map((line, i) => (
+    <span key={i}>
+      {line}
+      {i < education.length - 1 && <br />}
+    </span>
+  ));
+}
+
 /** Title text with a small link icon appended right after it, when a URL is set. */
 function DocLine({ title, url }: { title: string; url?: string }) {
   if (!url) return <span>{title}</span>;
@@ -133,13 +151,15 @@ function PersonCard({
   person,
   onOpen,
   variant = "student",
+  studentDetailMode,
 }: {
   person: Person;
   onOpen: (p: Person) => void;
   variant?: "student" | "alumni";
+  studentDetailMode: StudentDetailMode;
 }) {
   const t = useT();
-  const clickable = variant !== "alumni" && hasModalDetail(person);
+  const clickable = variant !== "alumni" && studentDetailMode === "modal" && hasModalDetail(person);
   const showPhoto = variant !== "alumni";
   const degreeLabel = person.alumniDegree ? DEGREE_LABEL[person.alumniDegree] : null;
   const dissertationLabel =
@@ -200,7 +220,17 @@ function PersonCard({
             <ProfileLinks person={person} />
           </DetailRow>
         )}
-        {person.interests && <DetailRow label={t.people.interests}>{person.interests}</DetailRow>}
+        {variant !== "alumni" && person.interests && (
+          <DetailRow label={t.people.interests}>{person.interests}</DetailRow>
+        )}
+        {variant !== "alumni" &&
+          studentDetailMode === "inline" &&
+          person.education &&
+          person.education.length > 0 && (
+            <DetailRow label={t.people.education}>
+              <EducationRows education={person.education} />
+            </DetailRow>
+          )}
         {person.thesis && (
           <DetailRow label={t.people.thesis}>
             <DocLine title={person.thesis} url={person.thesisUrl} />
@@ -270,12 +300,7 @@ function StudentModal({ person, onClose }: { person: Person; onClose: () => void
           {person.interests && <DetailRow label={t.people.interests}>{person.interests}</DetailRow>}
           {person.education && person.education.length > 0 && (
             <DetailRow label={t.people.education}>
-              {person.education.map((line, i) => (
-                <span key={i}>
-                  {line}
-                  {i < person.education!.length - 1 && <br />}
-                </span>
-              ))}
+              <EducationRows education={person.education} />
             </DetailRow>
           )}
           {person.thesis && (
@@ -301,15 +326,23 @@ function PeopleGrid({
   people,
   onOpen,
   variant,
+  studentDetailMode,
 }: {
   people: Person[];
   onOpen: (p: Person) => void;
   variant?: "student" | "alumni";
+  studentDetailMode: StudentDetailMode;
 }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12">
       {people.map((person) => (
-        <PersonCard key={person.id} person={person} onOpen={onOpen} variant={variant} />
+        <PersonCard
+          key={person.id}
+          person={person}
+          onOpen={onOpen}
+          variant={variant}
+          studentDetailMode={studentDetailMode}
+        />
       ))}
     </div>
   );
@@ -415,6 +448,16 @@ function ProfessorBlock({ person }: { person: Person }) {
 export function PeoplePage() {
   const t = useT();
   const [selected, setSelected] = useState<Person | null>(null);
+  const [studentDetailMode, setStudentDetailMode] = useState<StudentDetailMode>(
+    DEFAULT_STUDENT_DETAIL_MODE,
+  );
+
+  useEffect(() => {
+    const requestedMode = new URLSearchParams(window.location.search).get("studentDetails");
+    if (requestedMode === "inline" || requestedMode === "modal") {
+      setStudentDetailMode(requestedMode);
+    }
+  }, []);
 
   const professor = getPeopleByRole("professor")[0];
   const alumniGroups = groupAlumniByYear(getPeopleByRole("alumni"));
@@ -441,7 +484,11 @@ export function PeoplePage() {
                 <h3 className="text-lg font-bold text-text-main mb-6 pb-2 border-b border-border">
                   {t.people[sec.key]}
                 </h3>
-                <PeopleGrid people={people} onOpen={setSelected} />
+                <PeopleGrid
+                  people={people}
+                  onOpen={setSelected}
+                  studentDetailMode={studentDetailMode}
+                />
               </div>
             );
           })}
@@ -458,7 +505,12 @@ export function PeoplePage() {
                 <h3 className="text-lg font-bold text-text-main mb-6 pb-2 border-b border-border">
                   {g.label}
                 </h3>
-                <PeopleGrid people={g.people} onOpen={setSelected} variant="alumni" />
+                <PeopleGrid
+                  people={g.people}
+                  onOpen={setSelected}
+                  variant="alumni"
+                  studentDetailMode={studentDetailMode}
+                />
               </div>
             ))}
           </div>
