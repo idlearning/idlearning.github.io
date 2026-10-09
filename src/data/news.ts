@@ -32,7 +32,21 @@ export const NEWS_WRAP_DEFAULT =
   "h-40 overflow-hidden bg-gray-100 flex items-center justify-center";
 export const NEWS_IMG_DEFAULT = "w-full h-full object-cover";
 
-const NEWS_INPUT: NewsInput[] = newsData as NewsInput[];
+/** Shown when a news item has no image of its own. */
+export const NEWS_IMG_FALLBACK = "/images/news/default-idl-lab-logo.png";
+
+/** Per-item image overrides, matched by a substring of the title. */
+const NEWS_IMG_OVERRIDES: { match: string; img: string }[] = [
+  {
+    match: "장혜지 박사, 한양사이버대학교 전임교수 임용",
+    img: "/images/news/alumni-hyeji-jang-hanyang-cyber.webp",
+  },
+];
+
+const NEWS_INPUT: NewsInput[] = (newsData as NewsInput[]).map((item) => {
+  const override = NEWS_IMG_OVERRIDES.find((o) => item.title?.includes(o.match));
+  return { ...item, img: override?.img ?? (item.img?.trim() || NEWS_IMG_FALLBACK) };
+});
 
 /**
  * Base slug from an item's date + ASCII-ified title. Korean-only titles reduce
