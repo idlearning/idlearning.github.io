@@ -8,7 +8,8 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const SITE_URL = "https://idlearning.github.io";
+// Keep in sync with SITE_URL in src/lib/site-meta.ts.
+const SITE_URL = process.env.VITE_SITE_URL || "https://idlearning.org";
 const outPath = resolve(root, "dist/client/sitemap.xml");
 
 // Keep this in sync with `newsSlug` in src/data/news.ts.

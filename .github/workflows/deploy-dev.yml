@@ -1,0 +1,65 @@
+name: Deploy dev site
+
+# Build the `dev` branch and publish it to https://dev.idlearning.org.
+#
+# A repo can only host one GitHub Pages site, so the dev build is pushed to the
+# `gh-pages` branch of a separate repo (idlearning/dev-site) whose Pages custom
+# domain is dev.idlearning.org. Setup steps: docs/DEV_SITE.md.
+#
+# Requires the DEV_DEPLOY_KEY secret: the private half of an SSH deploy key
+# that has write access to idlearning/dev-site.
+
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-dev
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VITE_SITE_URL: https://dev.idlearning.org
+      # Adds a noindex meta tag and a blocking robots.txt so the dev site stays
+      # out of search results.
+      VITE_NOINDEX: "true"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Type-check
+        run: bun run type-check
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Sync content from Google Sheet
+        run: bun run sync
+
+      - name: Build static site
+        run: bun run build
+
+      - name: Publish to idlearning/dev-site
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          deploy_key: ${{ secrets.DEV_DEPLOY_KEY }}
+          external_repository: idlearning/dev-site
+          publish_branch: gh-pages
+          publish_dir: dist/client
+          cname: dev.idlearning.org
+          # Keep only the latest build so the target repo doesn't grow forever.
+          force_orphan: true

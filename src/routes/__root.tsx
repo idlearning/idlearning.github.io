@@ -7,16 +7,22 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "../components/SiteHeader";
 import { SiteFooter } from "../components/SiteFooter";
 import { LocalLink } from "../components/LocalLink";
 import { useT } from "../lib/i18n";
 import { HTML_LANG, langFromPathname } from "../lib/lang";
-import { SITE_TITLE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, OG_IMAGE } from "../lib/site-meta";
+import {
+  SITE_TITLE,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+  OG_IMAGE,
+  NOINDEX,
+} from "../lib/site-meta";
 
 /** Shared button styling for the 404 / error screens. */
 const PRIMARY_BUTTON =
@@ -49,10 +55,6 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const t = useT();
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
-
   return (
     <main className="flex flex-grow items-center justify-center px-4 py-24">
       <div className="max-w-md text-center">
@@ -102,6 +104,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:title", content: SITE_TITLE },
       { name: "twitter:description", content: SITE_DESCRIPTION },
       { name: "twitter:image", content: OG_IMAGE },
+      // Keep the dev site out of search results.
+      ...(NOINDEX ? [{ name: "robots", content: "noindex, nofollow" }] : []),
     ],
     links: [
       // Pretendard is bundled into this stylesheet (see src/fonts.css), so there
