@@ -32,10 +32,16 @@ GitHub에서 `idlearning` 조직에 **`dev-site`** 저장소를 만듭니다.
 터미널에서:
 
 ```bash
-ssh-keygen -t ed25519 -C "deploy dev-site" -N "" -f dev-site-deploy-key
+ssh-keygen -t ed25519 -C "deploy dev-site" -f dev-site-deploy-key
 ```
 
+암호(passphrase)를 두 번 물어보면 **아무것도 입력하지 말고 Enter만 두 번** 누르세요
+(암호가 걸린 키는 GitHub Actions에서 쓸 수 없습니다). Windows PowerShell, macOS, Linux
+모두 같은 명령어로 동작합니다.
+
 `dev-site-deploy-key`(개인키)와 `dev-site-deploy-key.pub`(공개키) 두 파일이 생깁니다.
+파일 내용은 PowerShell에서는 `Get-Content <파일명>`, macOS/Linux에서는 `cat <파일명>`으로
+확인해 복사합니다.
 
 1. **공개키 등록** — `idlearning/dev-site` → Settings → Deploy keys → Add deploy key
    - Title: `idlearning.github.io deploy`
@@ -44,7 +50,8 @@ ssh-keygen -t ed25519 -C "deploy dev-site" -N "" -f dev-site-deploy-key
 2. **개인키 등록** — `idlearning/idlearning.github.io` → Settings → Secrets and variables
    → Actions → New repository secret
    - Name: `DEV_DEPLOY_KEY`
-   - Secret: `dev-site-deploy-key` 파일 내용 전체 (`-----BEGIN ...`부터 `-----END ...`까지)
+   - Secret: `dev-site-deploy-key` 파일 내용 전체
+     (`-----BEGIN OPENSSH PRIVATE KEY-----`부터 `-----END OPENSSH PRIVATE KEY-----`까지)
 3. 등록이 끝나면 두 키 파일은 컴퓨터에서 지워도 됩니다.
 
 ### 1-3. DNS 레코드 추가
