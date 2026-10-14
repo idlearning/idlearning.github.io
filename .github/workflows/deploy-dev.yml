@@ -26,8 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VITE_SITE_URL: https://dev.idlearning.org
-      # Adds a noindex meta tag and a blocking robots.txt so the dev site stays
-      # out of search results.
+      # Adds a noindex meta tag to every page (and drops the sitemap from
+      # robots.txt) so the dev site stays out of search results.
       VITE_NOINDEX: "true"
     steps:
       - name: Checkout
