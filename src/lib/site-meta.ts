@@ -7,7 +7,10 @@
 
 import { LANGS, OG_LOCALE, localizedPath, type Lang } from "./lang";
 
-export const SITE_URL = "https://idlearning.github.io";
+// Builds for the dev site (dev.idlearning.org) override this via VITE_SITE_URL.
+export const SITE_URL: string = import.meta.env.VITE_SITE_URL || "https://idlearning.org";
+/** True for non-production builds (the dev site) that search engines must not index. */
+export const NOINDEX = import.meta.env.VITE_NOINDEX === "true";
 export const SITE_NAME = "IDL Lab";
 export const SITE_TITLE = "IDL Lab — Interaction Design for Learning";
 export const SITE_DESCRIPTION =

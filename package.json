@@ -7,7 +7,7 @@
     "dev": "vite dev",
     "sync": "node scripts/sync-sheets.mjs",
     "build": "vite build",
-    "postbuild": "node scripts/copy-spa-fallback.mjs && node scripts/gen-sitemap.mjs",
+    "postbuild": "node scripts/copy-spa-fallback.mjs && node scripts/gen-sitemap.mjs && node scripts/gen-robots.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",

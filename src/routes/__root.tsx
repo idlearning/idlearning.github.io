@@ -15,7 +15,14 @@ import { SiteFooter } from "../components/SiteFooter";
 import { LocalLink } from "../components/LocalLink";
 import { useT } from "../lib/i18n";
 import { HTML_LANG, langFromPathname } from "../lib/lang";
-import { SITE_TITLE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, OG_IMAGE } from "../lib/site-meta";
+import {
+  SITE_TITLE,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+  OG_IMAGE,
+  NOINDEX,
+} from "../lib/site-meta";
 
 /** Shared button styling for the 404 / error screens. */
 const PRIMARY_BUTTON =
@@ -97,6 +104,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:title", content: SITE_TITLE },
       { name: "twitter:description", content: SITE_DESCRIPTION },
       { name: "twitter:image", content: OG_IMAGE },
+      // Keep the dev site out of search results.
+      ...(NOINDEX ? [{ name: "robots", content: "noindex, nofollow" }] : []),
     ],
     links: [
       // Pretendard is bundled into this stylesheet (see src/fonts.css), so there
