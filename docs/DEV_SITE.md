@@ -80,11 +80,32 @@ ssh-keygen -t ed25519 -C "deploy dev-site" -f dev-site-deploy-key
 ## 2. 평소 작업 흐름
 
 ```
-작업 브랜치 → dev에 merge → dev.idlearning.org에서 확인
-           → dev → main PR 생성 → merge → idlearning.org에 반영
+① dev에서 작업 브랜치 만들기
+② 작업 → dev로 PR → merge
+③ dev.idlearning.org에서 확인 (merge 후 1분 안에 자동 배포)
+④ 괜찮으면 dev → main PR → merge
+⑤ idlearning.org에 반영
 ```
 
-- `dev`에 push될 때마다 dev 사이트가 자동으로 다시 배포됩니다.
+- 작은 수정은 ①을 건너뛰고 `dev`에 바로 push해도 됩니다.
+- ④는 dev에 쌓인 변경을 한 번에 실제 사이트로 내보내는 단계라, 여러 작업을 모아서 해도
+  됩니다.
+- Claude에게 작업을 맡기면 저장소 루트의 `CLAUDE.md`에 따라 자동으로 dev 기준으로 작업하고
+  PR도 dev로 올립니다.
+
+### 꼭 지킬 것
+
+1. **dev → main PR은 "Create a merge commit"으로 merge하세요** (merge 버튼 옆 ▼에서 선택).
+   "Squash and merge"를 쓰면 두 브랜치의 기록이 어긋나서, 다음 dev → main PR에 이미 반영한
+   변경이 또 나오거나 충돌이 납니다.
+2. **급한 수정을 `main`에 바로 했다면 `main`을 `dev`에도 merge하세요.** 안 그러면 `dev`가
+   뒤처집니다.
+3. **저장소의 기본 브랜치(default branch)는 `main`으로 두세요.** 매시간 도는 자동 배포
+   (`deploy.yml`의 schedule)는 기본 브랜치의 코드로 실행되므로, 기본 브랜치를 `dev`로 바꾸면
+   확인 안 된 dev 코드가 실제 사이트에 올라갈 수 있습니다.
+
+### 콘텐츠(구글 시트)
+
 - 구글 시트 콘텐츠는 dev와 무관하게 실제 사이트(`main`)에 매시간 자동 반영됩니다.
-  dev 사이트의 콘텐츠는 `dev`에 push하거나 workflow를 수동 실행할 때 갱신됩니다.
-- `dev`가 `main`보다 뒤처지면 `main`을 `dev`에 merge해서 맞춰 주세요.
+- dev 사이트의 콘텐츠는 `dev`에 push하거나 Actions 탭에서 **Deploy dev site**를 수동 실행할
+  때만 갱신되므로, 실제 사이트보다 조금 오래된 내용일 수 있습니다 (정상).
