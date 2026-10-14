@@ -12,8 +12,8 @@ GitHub Pages는 저장소 하나에 사이트 하나만 열 수 있어서, dev �
 별도 저장소(`idlearning/dev-site`)에 올립니다. 배포는
 `.github/workflows/deploy-dev.yml`이 담당합니다.
 
-dev 사이트는 검색엔진에 노출되지 않습니다 (`noindex` 메타 태그 + 모든 크롤러를 막는
-`robots.txt`).
+dev 사이트는 검색엔진에 노출되지 않습니다 (모든 페이지에 `noindex` 메타 태그, `robots.txt`에
+sitemap 미포함).
 
 ---
 
