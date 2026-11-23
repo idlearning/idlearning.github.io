@@ -47,8 +47,25 @@ jobs:
       - name: Lint
         run: bun run lint
 
+      # Photos the sync step downloads from Google Drive (News form uploads).
+      # Restored from earlier runs so each run only downloads new ones.
+      - name: Restore Drive image cache
+        uses: actions/cache/restore@v4
+        with:
+          path: public/images/news/drive
+          key: drive-images-${{ github.run_id }}
+          restore-keys: drive-images-
+
       - name: Sync content from Google Sheet
         run: bun run sync
+
+      - name: Save Drive image cache
+        if: hashFiles('public/images/news/drive/**') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: public/images/news/drive
+          key: drive-images-${{ hashFiles('public/images/news/drive/**') }}
+        continue-on-error: true
 
       - name: Build static site
         run: bun run build

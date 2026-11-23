@@ -108,13 +108,13 @@ Publications 탭의 저자 이름은 People 탭의 `영문명`·`한국어명`�
 
 **News 탭**
 
-| 헤더        | 설명                                             |
-| ----------- | ------------------------------------------------ |
-| `날짜`      | `YYYY-MM-DD`                                     |
-| `제목`      |                                                  |
-| `국문 본문` | 상세 페이지 국문 — **마크다운 지원** (아래 참고) |
-| `영문 본문` | 상세 페이지 영문 — **마크다운 지원** (아래 참고) |
-| `썸네일`    | 이미지 경로 — 아래 "이미지 넣는 법" 참고         |
+| 헤더        | 설명                                                                 |
+| ----------- | -------------------------------------------------------------------- |
+| `날짜`      | `YYYY-MM-DD`                                                         |
+| `제목`      |                                                                      |
+| `국문 본문` | 상세 페이지 국문 — **마크다운 지원** (아래 참고)                     |
+| `영문 본문` | 상세 페이지 영문 — **마크다운 지원** (아래 참고)                     |
+| `썸네일`    | 이미지 경로 또는 **구글 드라이브 링크** — 아래 "이미지 넣는 법" 참고 |
 
 > 📝 **뉴스 본문 마크다운 치트시트** — 본문 칸에 아래 문법을 쓰면 서식이 적용됩니다.
 > (안전상 원시 HTML은 무시되며, 아래 문법만 렌더링됩니다.)
@@ -194,6 +194,20 @@ CDN(`cdn.imweb.me`)에 있었는데, 그쪽 구독이 끝나면 사이트 이미
 **용량 팁.** 프로필 사진은 가로 800px, 썸네일은 가로 1200px 정도면 충분합니다.
 휴대폰 원본(3~5 MB)을 그대로 올리면 페이지가 느려집니다.
 
+**News 썸네일은 구글 드라이브 링크도 됩니다.** `썸네일` 칸에
+`https://drive.google.com/open?id=…` 같은 드라이브 링크가 있으면, 배포할 때 sync가
+그 이미지를 내려받아 사이트에 함께 올립니다(가로 1600px로 자동 축소, 아이폰 HEIC도
+JPG로 변환). 그래서 News 폼의 "사진" 업로드가 **손대지 않아도 자동으로** 썸네일이
+됩니다. 조건은 드라이브 파일이 **"링크가 있는 모든 사용자: 뷰어"** 로 공유되어 있는
+것 하나뿐입니다 — 아래 "실전 적용: News 등록 폼"의 한 번만 할 설정을 참고하세요.
+
+- 내려받은 사본은 `public/images/news/drive/`에 생기며 저장소에는 커밋되지 않습니다
+  (배포마다 새로 만들고, GitHub Actions 캐시로 새 사진만 받습니다).
+- 내려받기에 실패하면(공유 안 됨, 파일 삭제 등) 그 소식은 기본 로고 이미지로 나가고,
+  Actions 로그의 **Sync content from Google Sheet** 단계에
+  `could not download Drive image for "제목"` 경고가 남습니다.
+- 지금은 News만 지원합니다. People 사진 · Projects 이미지는 위처럼 저장소에 올려 주세요.
+
 ---
 
 ## 2. 시트를 링크 공개로 전환하기 (한 번만)
@@ -241,7 +255,7 @@ CDN(`cdn.imweb.me`)에 있었는데, 그쪽 구독이 끝나면 사이트 이미
 ### 실전 적용: News 등록 폼 (설정 완료됨)
 
 News는 **작성자(교수님)와 관리자(랩실)가 다르기** 때문에 폼으로 받습니다.
-작성자는 폼만 채우면 되고, 이미지 업로드만 관리자가 처리합니다.
+작성자는 폼만 채우면 되고, 폼에 올린 사진도 자동으로 썸네일이 됩니다.
 
 **폼 문항 (5개)**
 
@@ -261,7 +275,7 @@ News는 **작성자(교수님)와 관리자(랩실)가 다르기** 때문에 폼
 | 탭            | 역할                                                   |
 | ------------- | ------------------------------------------------------ |
 | `News Form`   | 폼 응답이 쌓이는 탭 (건드리지 않음)                    |
-| `News Photos` | 관리자가 제목 ↔ 이미지 경로를 적는 2열 탭              |
+| `News Photos` | (선택) 썸네일을 다른 이미지로 바꿀 때만 쓰는 2열 탭    |
 | `News`        | sync가 읽는 탭. 위 둘을 수식으로 합침 (직접 입력 금지) |
 
 1. `News Form` 컬럼 순서 확인 — 로그인을 켜면 B열에 이메일이 생깁니다:
@@ -275,28 +289,46 @@ News는 **작성자(교수님)와 관리자(랩실)가 다르기** 때문에 폼
    =QUERY('News Form'!A2:G, "select D, C, E, F where C is not null", 0)
    ```
 
-5. `News` 탭 **E2 셀**에 — 제목으로 이미지 경로를 찾아옵니다(E열 채움):
+5. `News` 탭 **E2 셀**에 — 제목으로 썸네일을 찾아옵니다(E열 채움).
+   `News Photos`에 그 제목이 있으면 그 경로를, 없으면 폼에 올린 사진(`News Form`
+   G열의 드라이브 링크)을 씁니다:
 
    ```text
-   =ARRAYFORMULA(IF(B2:B="","",IFERROR(VLOOKUP(B2:B,'News Photos'!A:B,2,FALSE),"")))
+   =ARRAYFORMULA(IF(B2:B="","",IFERROR(VLOOKUP(B2:B,'News Photos'!A:B,2,FALSE),IFERROR(VLOOKUP(B2:B,'News Form'!C2:G,5,FALSE),""))))
    ```
+
+   > `'News Form'!C2:G, 5` 는 "C열(제목)에서 찾아 5번째 열(G=사진)을 가져오라"는
+   > 뜻입니다. 폼 문항 순서가 바뀌어 사진 열이 G가 아니게 되면 이 숫자를 고치세요.
 
 > 💡 **왜 VLOOKUP인가?** 썸네일을 행 순서로 맞추면 폼 응답을 하나 지웠을 때
 > 이미지가 통째로 밀립니다. 제목으로 찾으면 행이 밀려도 안 깨집니다.
 > 사이트는 날짜 기준으로 알아서 최신순 정렬하므로(`src/data/news.ts`) 시트
 > 행 순서는 신경 쓰지 않아도 됩니다.
 
-**새 소식이 올라왔을 때 관리자가 하는 일** (사진이 있을 때만)
+**사진 자동 반영을 위한 설정 (한 번만)** — 폼에 올라온 사진을 배포 서버가 내려받을 수
+있도록 **"링크가 있는 모든 사용자: 뷰어"** 로 공유해 둡니다. 둘 중 하나만 하면 됩니다.
 
-1. `News Form` G열의 드라이브 링크를 열어 이미지를 내려받습니다
-2. `public/images/news/`에 업로드 (위 "이미지 넣는 법")
-3. `News Photos` 탭에 한 줄 추가: `제목` | `/images/news/파일명.jpg`
+- **방법 ① 업로드 폴더를 공유 (클릭 몇 번)** — 폼 소유자 계정의 구글 드라이브에서
+  `<폼 이름> (File responses)` 폴더 → 우클릭 **공유** → 일반 액세스를
+  **링크가 있는 모든 사용자 · 뷰어** 로 변경. 이후 폼으로 올라오는 사진도 이 설정을
+  물려받습니다.
+- **방법 ② Apps Script로 사진마다 자동 공유** — 아래 5번 스크립트를 설치하면 폼 제출 때
+  그 사진만 공유하고 곧바로 배포까지 돌립니다. ①을 했는데도 Actions 로그에
+  `is the file shared 'Anyone with the link'?` 경고가 나오면 ②를 쓰세요.
 
-사진이 없는 소식은 **아무것도 안 해도 됩니다.** 다음 배포(매시간)에 자동 반영됩니다.
+> 사진은 어차피 홈페이지에 공개되는 이미지지만, 링크 공유를 켜면 링크를 아는 사람은
+> 드라이브 원본도 볼 수 있습니다. 공개하면 안 되는 파일은 이 폴더에 두지 마세요.
+> 학교 구글 계정 정책상 외부 링크 공유가 막혀 있다면 두 방법 모두 동작하지 않으니,
+> 그때는 아래 "수동으로 바꾸기"처럼 저장소에 올려 주세요.
 
-> 이 3단계마저 없애고 싶으면 아래 5번의 Apps Script를 확장해 드라이브 파일을
-> 저장소에 자동 커밋하게 만들 수 있습니다(토큰에 `Contents: Read and write` 권한
-> 추가 필요). 먼저 위 방식으로 운영해 보고 번거로우면 자동화하세요.
+**새 소식이 올라왔을 때 관리자가 하는 일 — 없음.** 사진이 있든 없든 다음 배포(매시간,
+또는 5번 스크립트를 설치했다면 제출 직후)에 자동 반영됩니다.
+
+**썸네일을 다른 이미지로 바꾸고 싶을 때만 (수동으로 바꾸기)**
+
+1. 원하는 이미지를 `public/images/news/`에 업로드 (위 "이미지 넣는 법")
+2. `News Photos` 탭에 한 줄 추가: `제목` | `/images/news/파일명.jpg`
+   (드라이브 링크를 적어도 됩니다.) `News Photos`가 폼 사진보다 우선합니다.
 
 ### 방법 A — 브릿지 탭(QUERY)로 연결 (권장)
 
@@ -345,9 +377,10 @@ News는 **작성자(교수님)와 관리자(랩실)가 다르기** 때문에 폼
 - **스팸 방지 (중요):** 승인 절차 없이 즉시 게시되므로, 폼 설정 ⚙️ →
   **응답 → "Ewha 계정으로 로그인 필요" + "응답 1회로 제한"** 을 켜서
   외부인의 무단 게시를 막으세요. (내부용 폼 전제)
-- **이미지:** 폼의 "파일 업로드"로 받은 이미지는 구글 드라이브에 저장되어
-  `<img>`로 바로 안 붙습니다. 썸네일은 **이미지 URL을 붙여넣는 단답형 질문**으로
-  받으세요.
+- **이미지:** 폼의 "파일 업로드"로 받은 이미지는 구글 드라이브 링크로 들어옵니다.
+  News 썸네일은 sync가 이 링크를 내려받아 처리하므로 그대로 쓰면 됩니다(위 "사진
+  자동 반영을 위한 설정" 참고). People·Projects는 아직 드라이브 링크를 지원하지
+  않습니다.
 - **뉴스 본문:** 위 "마크다운 치트시트"를 폼 안내문에 넣어 두면 제출자가
   서식을 넣어 보낼 수 있습니다.
 
@@ -468,10 +501,12 @@ venue · type · ssci · scopus · kci · pdf · doi · acmdl · website · awar
 데이터셋이 **여러 탭**을 읽어 이어붙이게 할 수도 있습니다(코드 변경 필요,
 시트 수식은 단순해짐). 필요하면 요청하세요.
 
-## 5. (선택) 폼 제출 시 자동 배포
+## 5. (선택) 폼 제출 시 사진 공유 + 자동 배포
 
 폼 제출 즉시 사이트를 갱신하려면, 시트에 연결된 **Apps Script**로 GitHub 배포를
-트리거합니다.
+트리거합니다. 같은 스크립트가 News 폼에 올라온 사진을 "링크가 있는 모든 사용자:
+뷰어"로 공유해 주므로, 썸네일 자동 반영도 함께 해결됩니다. (사진 공유만 필요하면
+1번 토큰은 건너뛰어도 됩니다 — 토큰이 없으면 배포 트리거만 생략합니다.)
 
 1. GitHub에서 **Fine-grained Personal Access Token** 발급
    (Settings → Developer settings → Fine-grained tokens):
@@ -481,9 +516,50 @@ venue · type · ssci · scopus · kci · pdf · doi · acmdl · website · awar
    `PROJECT SETTINGS → Script properties`에 `GH_TOKEN` = 발급한 토큰을 저장합니다.
 
 ```javascript
-// 폼 제출 시 GitHub Actions 배포 워크플로우를 트리거합니다.
-function onFormSubmit() {
+// 폼 제출 시: ① News 폼에 올라온 사진을 '링크가 있는 모든 사용자: 뷰어'로 공유하고
+//            ② GitHub Actions 배포를 바로 트리거합니다.
+var NEWS_FORM_TAB = "News Form"; // 폼 응답 탭 이름
+var PHOTO_COLUMN = 7; // 사진 열 번호 (G열 = 7)
+
+function onFormSubmit(e) {
+  var range = e && e.range;
+  if (range && range.getSheet().getName() === NEWS_FORM_TAB) {
+    shareDriveLinks_(range.getSheet().getRange(range.getRow(), PHOTO_COLUMN).getValue());
+  }
+  triggerDeploy_();
+}
+
+// 이미 들어와 있는 응답의 사진을 한 번에 공유하려면 이 함수를 한 번 직접 실행하세요.
+function shareExistingNewsPhotos() {
+  var sheet = SpreadsheetApp.getActive().getSheetByName(NEWS_FORM_TAB);
+  var last = sheet.getLastRow();
+  if (last < 2) return;
+  sheet
+    .getRange(2, PHOTO_COLUMN, last - 1, 1)
+    .getValues()
+    .forEach(function (row) {
+      shareDriveLinks_(row[0]);
+    });
+}
+
+function shareDriveLinks_(text) {
+  var re = /drive\.google\.com\/(?:open\?id=|file\/d\/)([\w-]{10,})/g;
+  var m;
+  while ((m = re.exec(String(text || "")))) {
+    try {
+      DriveApp.getFileById(m[1]).setSharing(
+        DriveApp.Access.ANYONE_WITH_LINK,
+        DriveApp.Permission.VIEW,
+      );
+    } catch (err) {
+      console.warn("사진 공유 실패 " + m[1] + ": " + err);
+    }
+  }
+}
+
+function triggerDeploy_() {
   var token = PropertiesService.getScriptProperties().getProperty("GH_TOKEN");
+  if (!token) return;
   var url =
     "https://api.github.com/repos/idlearning/idlearning.github.io" +
     "/actions/workflows/deploy.yml/dispatches";
@@ -499,6 +575,9 @@ function onFormSubmit() {
 
 3. Apps Script의 **트리거(⏰) → 트리거 추가** → 함수 `onFormSubmit`,
    이벤트 소스 **스프레드시트에서**, 이벤트 유형 **양식 제출 시**.
+   처음 저장할 때 드라이브·외부 요청 권한을 묻는데, 폼 소유자 계정으로 허용하세요.
+4. 이미 들어와 있는 News 응답의 사진도 공유하려면 함수 목록에서
+   `shareExistingNewsPhotos`를 골라 **실행**을 한 번 누릅니다.
 
 > 토큰은 구글 클라우드(Script Properties)에만 저장되며, 공개 사이트에는 절대
 > 노출되지 않습니다.

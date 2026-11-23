@@ -35,3 +35,6 @@ pnpm-lock.yaml
 *.njsproj
 *.sln
 *.sw?
+
+# Images the sheet sync downloads from Google Drive (rebuilt every deploy)
+public/images/news/drive/

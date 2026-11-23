@@ -11,7 +11,7 @@
 //   - If a single tab fails to fetch/parse, its existing JSON seed is kept.
 //
 // Usage: node scripts/sync-sheets.mjs   (also: npm run sync)
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, resolve } from "node:path";
 
@@ -272,6 +272,119 @@ const TRANSFORMS = {
   news: transformNews,
 };
 
+// --- Google Drive images (News photos uploaded through the Google Form) ---
+//
+// A form "file upload" answer lands in the sheet as a Drive link
+// (https://drive.google.com/open?id=<id>). Browsers can't reliably embed those,
+// and hotlinking Drive breaks under its rate limits, so at sync time we download
+// each linked image into public/images/news/drive/<id>.<ext> (shipped with the
+// build, gitignored) and point the item at that local path instead. The file
+// must be shared "Anyone with the link: Viewer" (see docs/EASY_MANAGEMENT.md).
+//
+// Already-downloaded files are reused (CI caches the folder between runs), so
+// each run only fetches new photos. If a download fails the item falls back to
+// the default image rather than shipping a broken Drive URL.
+const DRIVE_IMG_DIR = resolve(root, "public/images/news/drive");
+const DRIVE_IMG_PATH = "/images/news/drive";
+const DRIVE_MAX_BYTES = 15 * 1024 * 1024;
+const IMAGE_EXT = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/gif": "gif",
+};
+
+/** Drive file id from a Drive/Docs share or download link, else null. Takes the first of several links. */
+function driveFileId(value) {
+  const first = clean(value).split(/[\s,]+/)[0];
+  let url;
+  try {
+    url = new URL(first);
+  } catch {
+    return null;
+  }
+  if (!/^(drive|docs)\.google\.com$|^lh\d\.googleusercontent\.com$/.test(url.hostname)) return null;
+  const id = url.searchParams.get("id") ?? url.pathname.match(/\/d\/([\w-]+)/)?.[1];
+  return id && /^[\w-]{10,}$/.test(id) ? id : null;
+}
+
+/** Download a publicly shared Drive image, preferring Drive's resized rendition (also converts HEIC to JPEG). */
+async function downloadDriveImage(id, fetchImpl = fetch) {
+  const urls = [
+    `https://drive.google.com/thumbnail?id=${id}&sz=w1600`,
+    `https://drive.google.com/uc?export=download&id=${id}`,
+  ];
+  let reason = "unknown error";
+  for (const url of urls) {
+    try {
+      const res = await fetchImpl(url, { redirect: "follow", signal: AbortSignal.timeout(30_000) });
+      const type = (res.headers.get("content-type") ?? "").split(";")[0].trim().toLowerCase();
+      if (!res.ok) {
+        reason = `HTTP ${res.status}`;
+        continue;
+      }
+      const ext = IMAGE_EXT[type];
+      if (!ext) {
+        reason = type.startsWith("text/html")
+          ? "got a web page instead of an image — is the file shared 'Anyone with the link'?"
+          : `unsupported content type "${type}"`;
+        continue;
+      }
+      const buf = Buffer.from(await res.arrayBuffer());
+      if (buf.length === 0 || buf.length > DRIVE_MAX_BYTES) {
+        reason = `bad size (${buf.length} bytes)`;
+        continue;
+      }
+      return { buf, ext };
+    } catch (err) {
+      reason = err.message;
+    }
+  }
+  throw new Error(reason);
+}
+
+/** Replace Drive links in news `img` with local copies; removes copies no longer referenced. */
+async function localizeDriveImages(items, { dir = DRIVE_IMG_DIR, fetchImpl = fetch } = {}) {
+  mkdirSync(dir, { recursive: true });
+  const cached = new Map(
+    readdirSync(dir)
+      .filter((f) => /^[\w-]+\.\w+$/.test(f))
+      .map((f) => [f.replace(/\.\w+$/, ""), f]),
+  );
+  const used = new Set();
+  for (const item of items) {
+    const id = driveFileId(item.img);
+    if (!id) continue;
+    let file = cached.get(id);
+    if (!file) {
+      try {
+        const { buf, ext } = await downloadDriveImage(id, fetchImpl);
+        file = `${id}.${ext}`;
+        writeFileSync(resolve(dir, file), buf);
+        cached.set(id, file);
+        console.log(`[sync] news: downloaded Drive image for "${item.title}"`);
+      } catch (err) {
+        console.warn(
+          `[sync] news: could not download Drive image for "${item.title}" (${err.message}) — using the default image`,
+        );
+        item.img = "";
+        continue;
+      }
+    }
+    used.add(file);
+    item.img = `${DRIVE_IMG_PATH}/${file}`;
+  }
+  for (const file of cached.values()) {
+    if (!used.has(file)) rmSync(resolve(dir, file));
+  }
+  return items;
+}
+
+/** Async per-dataset steps that run after the transform (network work). */
+const POST_PROCESS = {
+  news: (items) => localizeDriveImages(items),
+};
+
 // Google's gviz CSV endpoint (tqx=out:csv&sheet=<name>) can serve a stale cached
 // response for a few minutes right after an edit. The /export?format=csv&gid=<id>
 // endpoint reliably reflects the latest content, but needs a numeric gid rather
@@ -338,8 +451,9 @@ async function main() {
     try {
       const csv = await fetchCsv(spreadsheetId, tabName, gidByName);
       const rows = parseCSV(csv);
-      const data = TRANSFORMS[key](rows);
+      let data = TRANSFORMS[key](rows);
       if (!data.length) throw new Error(`tab "${tabName}" produced 0 rows`);
+      if (POST_PROCESS[key]) data = await POST_PROCESS[key](data);
       const next = JSON.stringify(data, null, 2) + "\n";
       const prev = existsSync(outPath) ? readFileSync(outPath, "utf8") : "";
       if (next !== prev) {
@@ -364,4 +478,12 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { parseCSV, transformPeople, transformProjects, transformPublications, transformNews };
+export {
+  parseCSV,
+  transformPeople,
+  transformProjects,
+  transformPublications,
+  transformNews,
+  driveFileId,
+  localizeDriveImages,
+};
