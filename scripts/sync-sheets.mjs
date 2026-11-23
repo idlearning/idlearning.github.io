@@ -3,21 +3,40 @@
 //
 // The sheet is read as CSV (no API key needed; sharing must be set to "Anyone
 // with the link" as Viewer). Column mapping is by header NAME, so column order
-// is irrelevant and Google Form response tabs work too.
+// is irrelevant.
+//
+// A dataset can read SEVERAL tabs (e.g. a hand-edited tab plus a Google Form
+// response tab); their rows are concatenated in the order listed in
+// scripts/sheets.config.json. A tab's `columns` map renames its headers (form
+// question titles) to the canonical headers the transforms below expect, so
+// no bridging formulas are needed in the sheet itself.
+//
+// All shaping happens here, in one place: ids, sorting, news URL slugs, date
+// normalization. The sheet only holds raw input.
 //
 // Safe by design:
 //   - If scripts/sheets.config.json has no spreadsheetId, this is a no-op and the
 //     committed seeds are kept (so local/CI builds work before setup is done).
-//   - If a single tab fails to fetch/parse, its existing JSON seed is kept.
+//   - If any tab of a dataset fails to fetch/parse, that dataset's existing JSON
+//     seed is kept (never a partial dataset).
+//   - Data problems (bad dates, unknown types, missing images, ...) are reported
+//     as warnings — GitHub Actions annotations in CI — but never block a deploy.
 //
-// Usage: node scripts/sync-sheets.mjs   (also: npm run sync)
+// Usage: node scripts/sync-sheets.mjs   (also: bun run sync)
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, resolve } from "node:path";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const genDir = resolve(root, "src/data/generated");
-const config = JSON.parse(readFileSync(resolve(root, "scripts/sheets.config.json"), "utf8"));
+const publicDir = resolve(root, "public");
+
+// --- warnings -----------------------------------------------------------------
+const warnings = [];
+/** Record a data problem; printed at the end (and as a CI annotation). */
+function warn(dataset, message) {
+  warnings.push({ dataset, message });
+}
 
 // --- tiny RFC-4180 CSV parser (handles quoted fields, embedded newlines/commas/quotes) ---
 function parseCSV(text) {
@@ -89,12 +108,19 @@ const splitLines = (s) =>
     .map((x) => x.trim())
     .filter(Boolean);
 
-const stripDoi = (s) => clean(s).replace(/^https?:\/\/(dx\.)?doi\.org\//i, "");
+/** Placeholder answers people type into optional form fields ("n/a", "-", "없음"). */
+const isPlaceholder = (v) =>
+  ["n/a", "na", "-", "--", "x", "none", "없음", "해당없음", "해당 없음"].includes(
+    clean(v).toLowerCase(),
+  );
+
+const stripDoi = (s) =>
+  isPlaceholder(s) ? "" : clean(s).replace(/^https?:\/\/(dx\.)?doi\.org\//i, "");
 
 /** Truthy for spreadsheet flag cells like 1 / TRUE / O / Y; falsy for 0 / X / - / blank. */
 const isTrue = (v) => {
   const s = clean(v).toLowerCase();
-  return s !== "" && !["0", "false", "no", "n", "-", "x", "false"].includes(s);
+  return s !== "" && !["0", "false", "no", "n", "-", "x"].includes(s);
 };
 
 /** Set key on obj only when value is a non-empty string. */
@@ -102,6 +128,51 @@ const put = (obj, key, val) => {
   const v = clean(val);
   if (v) obj[key] = v;
 };
+
+/**
+ * Normalize the date formats a sheet/form produces ("2026-11-14",
+ * "2026. 11. 14", "2026/11/14", "2026-11-14 9:00:00") to ISO `YYYY-MM-DD`.
+ * Returns "" when the value isn't a recognizable date.
+ */
+function normalizeDate(v) {
+  const m = clean(v).match(/^(\d{4})\s*[-./]\s*(\d{1,2})\s*[-./]\s*(\d{1,2})/);
+  if (!m) return "";
+  return `${m[1]}-${m[2].padStart(2, "0")}-${m[3].padStart(2, "0")}`;
+}
+
+/** Collapse whitespace so "A  B" and "A B " count as the same title. */
+const titleKey = (s) => clean(s).replace(/\s+/g, " ").toLowerCase();
+
+/**
+ * Validate an image cell. Site images live in the repo under public/images/ and
+ * are referenced as "/images/...". Google Drive links (what a form's file-upload
+ * question stores) can't be embedded, so they're dropped. Returns the usable
+ * value or "".
+ */
+function checkImage(dataset, label, img) {
+  const v = clean(img);
+  if (!v) return "";
+  if (/^https?:\/\/(drive|docs)\.google\.com\//i.test(v)) {
+    warn(
+      dataset,
+      `"${label}": image is a Google Drive link (${v}) — upload the file to public/images/ and enter its /images/... path instead.`,
+    );
+    return "";
+  }
+  if (/^https?:\/\//i.test(v)) return v; // external URL: allowed, not checked
+  if (!v.startsWith("/")) {
+    warn(
+      dataset,
+      `"${label}": image path "${v}" must start with "/" (e.g. /images/news/file.jpg).`,
+    );
+    return "";
+  }
+  if (!existsSync(resolve(publicDir, "." + decodeURI(v)))) {
+    warn(dataset, `"${label}": image "${v}" does not exist in public/ — upload it first.`);
+    return "";
+  }
+  return v;
+}
 
 // --- per-dataset transforms ---
 const STATUS_ROLE = {
@@ -130,17 +201,20 @@ function transformPeople(rows) {
     .filter((r) => clean(r["영문명"]))
     .map((r) => {
       const status = clean(r["상태"]);
-      const mapped = STATUS_ROLE[status] || { role: "alumni", alumniDegree: "ma" };
+      const mapped = STATUS_ROLE[status];
+      if (!mapped)
+        warn("people", `"${clean(r["영문명"])}": unknown 상태 "${status}" — treated as 석사 졸업.`);
+      const { role, alumniDegree } = mapped || { role: "alumni", alumniDegree: "ma" };
       const nameKo = clean(r["한국어명"]);
       const p = {
-        id: makeId(r["영문명"], mapped.role),
+        id: makeId(r["영문명"], role),
         nameEn: clean(r["영문명"]),
-        role: mapped.role,
+        role,
       };
       if (nameKo) p.nameKo = nameKo;
-      else if (mapped.role !== "professor") p.international = true;
+      else if (role !== "professor") p.international = true;
       put(p, "email", r["이메일"]);
-      put(p, "img", r["사진"] || r["사진 URL"] || r["photo"]);
+      put(p, "img", checkImage("people", p.nameEn, r["사진"] || r["사진 URL"] || r["photo"]));
       put(p, "interests", r["관심분야"]);
       const edu = splitLines(r["교육 및 경력"]);
       if (edu.length) p.education = edu;
@@ -149,7 +223,7 @@ function transformPeople(rows) {
       put(p, "affiliation", r["소속"]);
       put(p, "dissertation", r["학위논문"]);
       put(p, "dissertationUrl", r["학위논문 링크"]);
-      if (mapped.alumniDegree) p.alumniDegree = mapped.alumniDegree;
+      if (alumniDegree) p.alumniDegree = alumniDegree;
       const gy = clean(r["졸업연도"]);
       if (gy && !Number.isNaN(Number(gy))) p.gradYear = Number(gy);
       put(p, "scholar", r["구글 스칼라"]);
@@ -176,7 +250,7 @@ function transformProjects(rows) {
         funder: clean(r["지원기관"]),
         members: clean(r["참여연구원"]),
       };
-      put(proj, "img", r["이미지 URL"] || r["이미지"]);
+      put(proj, "img", checkImage("projects", titleKo || titleEn, r["이미지 URL"] || r["이미지"]));
       proj.description = clean(r["프로젝트 설명"]);
       const rel = splitLines(r["연관 논문 ID"]).map((x) => x.replace(/,+$/, "").trim());
       if (rel.length) proj.relatedPubIds = rel;
@@ -184,11 +258,21 @@ function transformProjects(rows) {
     });
 }
 
+const PUB_TYPES = ["journal", "conference", "book"];
+
 function transformPublications(rows) {
   const pubs = rows
     .filter((r) => clean(r["title"]))
     .map((r) => {
-      const type = clean(r["type"]).toLowerCase() || "journal";
+      const title = clean(r["title"]);
+      let type = clean(r["type"]).toLowerCase();
+      if (!PUB_TYPES.includes(type)) {
+        warn(
+          "publications",
+          `"${title}": unknown type "${clean(r["type"])}" — expected journal/conference/book; using journal.`,
+        );
+        type = "journal";
+      }
       const journal = clean(r["journal"]);
       const vol = clean(r["volume_issue"]);
       let venue = clean(r["venue"]);
@@ -196,7 +280,7 @@ function transformPublications(rows) {
         venue = type === "journal" && journal ? journal + (vol ? `, ${vol}` : "") : journal;
 
       const badges = [];
-      const award = clean(r["award"]).replace(/🏆/g, "").trim();
+      const award = isPlaceholder(r["award"]) ? "" : clean(r["award"]).replace(/🏆/g, "").trim();
       if (award) badges.push({ label: award, kind: "award" });
       const indexCol = clean(r["index"]);
       if (indexCol) {
@@ -211,16 +295,20 @@ function transformPublications(rows) {
         if (isTrue(r["kci"])) badges.push({ label: "KCI", kind: "index" });
       }
 
+      const year = Number(clean(r["year"])) || 0;
+      if (!year) warn("publications", `"${title}": missing or invalid year "${clean(r["year"])}".`);
       const pub = {
         id: clean(r["id"]),
-        title: clean(r["title"]),
+        title,
         authors: splitAuthors(r["authors"]),
         venue,
-        year: Number(clean(r["year"])) || 0,
+        year,
         type,
       };
       if (badges.length) pub.badges = badges;
       const doi = stripDoi(r["doi"]);
+      if (doi && !/^10\.\S+\/\S+/.test(doi))
+        warn("publications", `"${title}": DOI "${doi}" doesn't look like a DOI (10.xxxx/...).`);
       if (doi) pub.doi = doi;
       put(pub, "pdf", r["pdf"]);
       put(pub, "acmdl", r["acmdl"]);
@@ -228,10 +316,11 @@ function transformPublications(rows) {
       return pub;
     });
 
-  // Auto-assign scheme ids (YYYY-<t>-NNN) to rows with a blank id, continuing
-  // the sequence after the highest explicit number for that year+type so newer
-  // entries (e.g. form submissions) get higher numbers. The id isn't shown on
-  // the site but drives ordering (newest-first) and related-publication links.
+  // Auto-assign scheme ids (YYYY-<t>-NNN) to rows with a blank id (e.g. form
+  // submissions), continuing the sequence after the highest explicit number for
+  // that year+type, in row order — so newer entries get higher numbers. The id
+  // isn't shown on the site but drives ordering (newest-first) and Projects'
+  // related-publication links.
   const maxSeq = {};
   for (const p of pubs) {
     const m = p.id.match(/^(\d{4})-([a-z])-0*(\d+)$/i);
@@ -242,27 +331,132 @@ function transformPublications(rows) {
   }
   for (const p of pubs) {
     if (p.id) continue;
-    const letter = (p.type[0] || "x").toLowerCase();
+    const letter = p.type[0];
     const key = `${p.year}-${letter}`;
     const next = (maxSeq[key] = (maxSeq[key] || 0) + 1);
     p.id = `${p.year}-${letter}-${String(next).padStart(3, "0")}`;
   }
-  return pubs;
+
+  const seenIds = new Set();
+  const seenTitles = new Map();
+  for (const p of pubs) {
+    if (seenIds.has(p.id)) warn("publications", `duplicate id "${p.id}" ("${p.title}").`);
+    seenIds.add(p.id);
+    const k = titleKey(p.title);
+    if (seenTitles.has(k))
+      warn(
+        "publications",
+        `"${p.title}" appears twice (ids ${seenTitles.get(k)} and ${p.id}) — delete one of the rows.`,
+      );
+    seenTitles.set(k, p.id);
+  }
+
+  // Newest first: year+type group order is decided by the page; id desc within.
+  return pubs.sort((a, b) => b.id.localeCompare(a.id));
 }
 
+// News URL slugs: date + ASCII-ified title. Korean-only titles reduce to just
+// the date, so when several items share a base slug, EVERY one of them gets a
+// short title hash — keeping slugs independent of row order. An explicit `slug`
+// cell always wins (use it to keep a URL stable after editing a title).
+// Changing this algorithm changes published URLs.
+function newsSlugBase(item) {
+  const titlePart = String(item.title ?? "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .slice(0, 40)
+    .replace(/-+$/, "");
+  return titlePart ? `${item.date}-${titlePart}` : item.date;
+}
+
+/** Short deterministic FNV-1a hash (base36). */
+function shortHash(s) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(36).slice(0, 5);
+}
+
+function assignNewsSlugs(items) {
+  const baseCounts = new Map();
+  for (const item of items) {
+    const b = item.slug ?? newsSlugBase(item);
+    baseCounts.set(b, (baseCounts.get(b) ?? 0) + 1);
+  }
+  for (const item of items) {
+    if (item.slug) continue;
+    const base = newsSlugBase(item);
+    item.slug = (baseCounts.get(base) ?? 0) > 1 ? `${base}-${shortHash(item.title)}` : base;
+  }
+  const seen = new Set();
+  for (const item of items) {
+    if (seen.has(item.slug))
+      warn(
+        "news",
+        `"${item.title}": URL slug "${item.slug}" is used twice — set a different slug.`,
+      );
+    seen.add(item.slug);
+  }
+  return items;
+}
+
+// News headers (as on the hand-edited News tab): 날짜, 제목, 국문 본문, 영문 본문,
+// 썸네일, plus optional `slug` and `사진 업로드` (a form's file-upload answer,
+// used only to remind the admin that a photo is waiting to be added).
 function transformNews(rows) {
-  return rows
-    .filter((r) => clean(r["title"] ?? r["제목"]))
-    .map((r) => {
-      const item = {
-        title: clean(r["title"] ?? r["제목"]),
-        date: clean(r["date"] ?? r["날짜"]).slice(0, 10),
-        img: clean(r["img"] ?? r["썸네일"]),
-      };
-      put(item, "contentKo", r["contentKo"] ?? r["국문 본문"]);
-      put(item, "contentEn", r["contentEn"] ?? r["영문 본문"]);
-      return item;
-    });
+  // Rows with the same title are one item (e.g. a form submission that was also
+  // copied into the hand-edited tab, or a corrected re-submission). Merge them
+  // field by field; a non-empty value from a LATER row/tab wins.
+  const byTitle = new Map();
+  for (const r of rows) {
+    const title = clean(r["제목"]);
+    if (!title) continue;
+    const fields = {
+      title,
+      date: clean(r["날짜"]),
+      img: clean(r["썸네일"]),
+      slug: clean(r["slug"]),
+      contentKo: clean(r["국문 본문"]),
+      contentEn: clean(r["영문 본문"]),
+      upload: clean(r["사진 업로드"]),
+    };
+    const k = titleKey(title);
+    const prev = byTitle.get(k) ?? {};
+    for (const [f, v] of Object.entries(fields)) if (v) prev[f] = v;
+    byTitle.set(k, prev);
+  }
+
+  const items = [];
+  for (const m of byTitle.values()) {
+    const date = normalizeDate(m.date);
+    if (!date) {
+      // Without a date the item can't be sorted or given a URL — leave it out.
+      warn(
+        "news",
+        `"${m.title}": missing or invalid 날짜 "${m.date ?? ""}" (use YYYY-MM-DD) — skipped.`,
+      );
+      continue;
+    }
+    if (m.upload && !m.img)
+      warn(
+        "news",
+        `"${m.title}": a photo was submitted (${m.upload}) but 썸네일 is empty — upload it to public/images/news/ and enter its path.`,
+      );
+    const item = { title: m.title, date, img: checkImage("news", m.title, m.img) };
+    put(item, "slug", m.slug);
+    put(item, "contentKo", m.contentKo);
+    put(item, "contentEn", m.contentEn);
+    items.push(item);
+  }
+
+  // Stable newest-first order (ties broken by title) so the JSON diff stays quiet.
+  items.sort((a, b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title));
+  return assignNewsSlugs(items);
 }
 
 const TRANSFORMS = {
@@ -272,8 +466,53 @@ const TRANSFORMS = {
   news: transformNews,
 };
 
+/** Headers each dataset can't work without (checked after column mapping). */
+const REQUIRED_HEADERS = {
+  people: ["영문명"],
+  projects: ["영문명"],
+  publications: ["title"],
+  news: ["제목", "날짜"],
+};
+
+/** Checks that span datasets; run on the final data (fresh or kept). */
+function validateCrossRefs(data) {
+  const pubIds = new Set((data.publications ?? []).map((p) => p.id));
+  for (const proj of data.projects ?? []) {
+    for (const id of proj.relatedPubIds ?? []) {
+      if (!pubIds.has(id))
+        warn(
+          "projects",
+          `"${proj.titleKo || proj.titleEn}": 연관 논문 ID "${id}" matches no publication.`,
+        );
+    }
+  }
+}
+
+// --- config -------------------------------------------------------------------
+/**
+ * Normalize `tabs` config. Each dataset is a tab name, or a list of tab names /
+ * `{ "name": "...", "columns": { "<sheet header>": "<canonical header>" } }`.
+ */
+function datasetTabs(spec) {
+  const list = Array.isArray(spec) ? spec : [spec];
+  return list.map((t) =>
+    typeof t === "string" ? { name: t, columns: {} } : { columns: {}, ...t },
+  );
+}
+
+/** Rename a row's headers per a tab's `columns` map (unmapped headers pass through). */
+function applyColumns(rows, columns) {
+  return rows.map((r) => {
+    const out = {};
+    for (const [h, v] of Object.entries(r)) out[columns[h] ?? h] = v;
+    return out;
+  });
+}
+
+// --- fetching -----------------------------------------------------------------
 // Google's gviz CSV endpoint (tqx=out:csv&sheet=<name>) can serve a stale cached
-// response for a few minutes right after an edit. The /export?format=csv&gid=<id>
+// response for a few minutes right after an edit, and drops cells whose type
+// differs from the rest of their column. The /export?format=csv&gid=<id>
 // endpoint reliably reflects the latest content, but needs a numeric gid rather
 // than a tab name. We discover name->gid by scraping the public htmlview page
 // (which lists every tab's gid), then fetch export by gid. If that discovery
@@ -295,27 +534,58 @@ async function fetchCsv(spreadsheetId, tabName, gidByName) {
   const gid = gidByName?.[tabName];
   if (gid != null) {
     const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv&gid=${gid}`;
-    const res = await fetch(url, { redirect: "follow" });
-    if (res.ok) return res.text();
-    // fall through to the gviz fallback below on failure
+    try {
+      const res = await fetch(url, { redirect: "follow" });
+      if (res.ok) return res.text();
+    } catch {
+      // fall through to the gviz fallback below
+    }
   } else if (Object.keys(gidByName ?? {}).length) {
     // Discovery worked but this tab name is not among the sheet's tabs — usually a
     // rename. gviz may still answer from a stale cache under the OLD name, which
     // silently deploys outdated data, so make the mismatch loud.
-    console.warn(
-      `[sync] tab "${tabName}" not found in the spreadsheet (tabs: ${Object.keys(gidByName)
+    throw new Error(
+      `tab "${tabName}" not found in the spreadsheet (tabs: ${Object.keys(gidByName)
         .map((n) => `"${n}"`)
-        .join(", ")}) — falling back to gviz by name, which may serve stale cached data. ` +
-        `Update scripts/sheets.config.json if the tab was renamed.`,
+        .join(", ")}). Update scripts/sheets.config.json if the tab was renamed.`,
     );
   }
-  const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}`;
+  // headers=1: without it gviz guesses the header row count and can glue the
+  // first data row onto the headers.
+  const url =
+    `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&headers=1` +
+    `&sheet=${encodeURIComponent(tabName)}`;
   const res = await fetch(url, { redirect: "follow" });
   if (!res.ok) throw new Error(`HTTP ${res.status} for tab "${tabName}"`);
   return res.text();
 }
 
+/** Fetch every tab of a dataset, map its columns, and concatenate the rows. */
+async function loadDatasetRows(key, tabs, spreadsheetId, gidByName) {
+  const all = [];
+  const headers = new Set();
+  for (const { name, columns } of tabs) {
+    const rows = parseCSV(await fetchCsv(spreadsheetId, name, gidByName));
+    const tabHeaders = new Set(rows.length ? Object.keys(rows[0]) : []);
+    for (const h of Object.keys(columns)) {
+      if (!tabHeaders.has(h))
+        warn(
+          key,
+          `tab "${name}" has no column "${h}" (mapped to "${columns[h]}") — was the form question renamed? Update scripts/sheets.config.json.`,
+        );
+    }
+    const mapped = applyColumns(rows, columns);
+    if (mapped.length) Object.keys(mapped[0]).forEach((h) => headers.add(h));
+    all.push(...mapped);
+  }
+  const missing = REQUIRED_HEADERS[key].filter((h) => !headers.has(h));
+  if (missing.length)
+    throw new Error(`no ${missing.map((h) => `"${h}"`).join(", ")} column in any tab`);
+  return all;
+}
+
 async function main() {
+  const config = JSON.parse(readFileSync(resolve(root, "scripts/sheets.config.json"), "utf8"));
   const spreadsheetId = clean(config.spreadsheetId);
   if (!spreadsheetId) {
     console.log(
@@ -333,27 +603,43 @@ async function main() {
   }
 
   let anyChange = false;
-  for (const [key, tabName] of Object.entries(config.tabs)) {
+  const finalData = {};
+  for (const [key, spec] of Object.entries(config.tabs)) {
     const outPath = resolve(genDir, `${key}.json`);
+    const prev = existsSync(outPath) ? readFileSync(outPath, "utf8") : "";
+    const tabs = datasetTabs(spec);
     try {
-      const csv = await fetchCsv(spreadsheetId, tabName, gidByName);
-      const rows = parseCSV(csv);
+      if (!TRANSFORMS[key]) throw new Error(`unknown dataset "${key}"`);
+      const rows = await loadDatasetRows(key, tabs, spreadsheetId, gidByName);
       const data = TRANSFORMS[key](rows);
-      if (!data.length) throw new Error(`tab "${tabName}" produced 0 rows`);
+      if (!data.length)
+        throw new Error(`tabs ${tabs.map((t) => `"${t.name}"`).join(", ")} produced 0 rows`);
       const next = JSON.stringify(data, null, 2) + "\n";
-      const prev = existsSync(outPath) ? readFileSync(outPath, "utf8") : "";
       if (next !== prev) {
         writeFileSync(outPath, next, "utf8");
         anyChange = true;
       }
+      finalData[key] = data;
       console.log(
-        `[sync] ${key}: ${data.length} rows${next !== prev ? " (updated)" : " (unchanged)"}`,
+        `[sync] ${key}: ${data.length} rows from ${tabs.map((t) => `"${t.name}"`).join(" + ")}` +
+          (next !== prev ? " (updated)" : " (unchanged)"),
       );
     } catch (err) {
-      console.warn(`[sync] ${key}: FAILED (${err.message}) — keeping existing ${key}.json`);
+      warn(key, `sync FAILED (${err.message}) — kept the existing ${key}.json.`);
+      if (prev) finalData[key] = JSON.parse(prev);
     }
   }
-  console.log(anyChange ? "[sync] done (some files updated)." : "[sync] done (no changes).");
+  validateCrossRefs(finalData);
+
+  for (const { dataset, message } of warnings) {
+    // `::warning::` lines become annotations on the GitHub Actions run summary.
+    if (process.env.GITHUB_ACTIONS) console.log(`::warning title=Sheet ${dataset}::${message}`);
+    else console.warn(`[sync] ⚠ ${dataset}: ${message}`);
+  }
+  console.log(
+    (anyChange ? "[sync] done (some files updated)" : "[sync] done (no changes)") +
+      (warnings.length ? `, ${warnings.length} warning(s).` : "."),
+  );
 }
 
 // Only run the CLI when executed directly (not when imported for testing).
@@ -364,4 +650,14 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { parseCSV, transformPeople, transformProjects, transformPublications, transformNews };
+export {
+  parseCSV,
+  normalizeDate,
+  applyColumns,
+  datasetTabs,
+  transformPeople,
+  transformProjects,
+  transformPublications,
+  transformNews,
+  warnings,
+};
