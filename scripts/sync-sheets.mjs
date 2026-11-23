@@ -257,7 +257,8 @@ function transformNews(rows) {
       const item = {
         title: clean(r["title"] ?? r["제목"]),
         date: clean(r["date"] ?? r["날짜"]).slice(0, 10),
-        img: clean(r["img"] ?? r["썸네일"]),
+        // 썸네일 (typed by hand) wins; otherwise the form photo the sheet looks up by title.
+        img: clean(r["img"] ?? r["썸네일"]) || clean(r["폼 사진"]),
       };
       put(item, "contentKo", r["contentKo"] ?? r["국문 본문"]);
       put(item, "contentEn", r["contentEn"] ?? r["영문 본문"]);
