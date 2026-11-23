@@ -23,7 +23,7 @@
 //     as warnings — GitHub Actions annotations in CI — but never block a deploy.
 //
 // Usage: node scripts/sync-sheets.mjs   (also: bun run sync)
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, resolve } from "node:path";
 
@@ -405,10 +405,77 @@ function assignNewsSlugs(items) {
   return items;
 }
 
+// Photos uploaded through the News form live in Google Drive. They're fetched
+// at sync time into public/images/news/form/ (git-ignored, rebuilt every
+// deploy), so nobody has to download and re-upload them by hand. This needs the
+// form's upload folder shared as "Anyone with the link: Viewer".
+const FORM_PHOTO_DIR = "images/news/form";
+const IMAGE_EXT = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
+
+/** Drive file id from an "open?id=…" / "/file/d/…/" link, or "". */
+function driveFileId(link) {
+  const m = clean(link).match(/[?&]id=([\w-]{20,})|\/d\/([\w-]{20,})/);
+  return m ? (m[1] ?? m[2]) : "";
+}
+
+/**
+ * Download a form-uploaded Drive photo into public/images/news/form/ and return
+ * its site path, or "" (with a warning) when it can't be used.
+ */
+async function fetchDrivePhoto(title, upload) {
+  // A file-upload answer can hold several links (comma-separated); use the first.
+  const link = upload.split(/[,\s]+/).find(Boolean) ?? "";
+  const id = driveFileId(link);
+  if (!id) {
+    warn("news", `"${title}": 뉴스 사진 "${upload}" is not a Google Drive link.`);
+    return "";
+  }
+  let res;
+  try {
+    res = await fetch(`https://drive.google.com/uc?export=download&id=${id}`, {
+      redirect: "follow",
+      signal: AbortSignal.timeout(30_000),
+    });
+  } catch (err) {
+    warn("news", `"${title}": could not download the form photo (${err.message}).`);
+    return "";
+  }
+  const type = (res.headers.get("content-type") ?? "").split(";")[0].trim();
+  if (!res.ok || !type.startsWith("image/")) {
+    warn(
+      "news",
+      `"${title}": the form photo isn't publicly readable (HTTP ${res.status}, ${type || "no type"}). ` +
+        `Share the form's upload folder in Google Drive as "Anyone with the link: Viewer", or fill 썸네일 by hand.`,
+    );
+    return "";
+  }
+  let buf = Buffer.from(await res.arrayBuffer());
+  let ext = IMAGE_EXT[type];
+  if (!ext) {
+    // Other formats (GIF, TIFF, AVIF, ...) are converted to JPEG for the site.
+    try {
+      const { default: sharp } = await import("sharp");
+      buf = await sharp(buf).rotate().jpeg({ quality: 85 }).toBuffer();
+      ext = "jpg";
+    } catch {
+      warn(
+        "news",
+        `"${title}": the form photo is ${type}, which browsers can't show (e.g. iPhone HEIC). ` +
+          `Ask for a JPG/PNG, or fill 썸네일 by hand.`,
+      );
+      return "";
+    }
+  }
+  const dir = resolve(publicDir, FORM_PHOTO_DIR);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(resolve(dir, `${id}.${ext}`), buf);
+  return `/${FORM_PHOTO_DIR}/${id}.${ext}`;
+}
+
 // News headers (as on the hand-edited News tab): 날짜, 제목, 국문 본문, 영문 본문,
-// 썸네일, plus optional `slug` and `사진 업로드` (a form's file-upload answer,
-// used only to remind the admin that a photo is waiting to be added).
-function transformNews(rows) {
+// 썸네일, plus optional `slug` and `사진 업로드` (a form's file-upload answer).
+// 썸네일 wins; when it's empty, the uploaded photo is downloaded and used.
+async function transformNews(rows) {
   // Rows with the same title are one item (e.g. a form submission that was also
   // copied into the hand-edited tab, or a corrected re-submission). Merge them
   // field by field; a non-empty value from a LATER row/tab wins.
@@ -442,11 +509,7 @@ function transformNews(rows) {
       );
       continue;
     }
-    if (m.upload && !m.img)
-      warn(
-        "news",
-        `"${m.title}": a photo was submitted (${m.upload}) but 썸네일 is empty — upload it to public/images/news/ and enter its path.`,
-      );
+    if (m.upload && !m.img) m.img = await fetchDrivePhoto(m.title, m.upload);
     const item = { title: m.title, date, img: checkImage("news", m.title, m.img) };
     put(item, "slug", m.slug);
     put(item, "contentKo", m.contentKo);
@@ -611,7 +674,7 @@ async function main() {
     try {
       if (!TRANSFORMS[key]) throw new Error(`unknown dataset "${key}"`);
       const rows = await loadDatasetRows(key, tabs, spreadsheetId, gidByName);
-      const data = TRANSFORMS[key](rows);
+      const data = await TRANSFORMS[key](rows);
       if (!data.length)
         throw new Error(`tabs ${tabs.map((t) => `"${t.name}"`).join(", ")} produced 0 rows`);
       const next = JSON.stringify(data, null, 2) + "\n";

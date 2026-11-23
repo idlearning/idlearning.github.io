@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 
+# News photos downloaded from the form's Google Drive folder by `bun run sync`.
+public/images/news/form/
+
 # This project uses bun.lock; ignore lockfiles from other package managers.
 package-lock.json
 yarn.lock
