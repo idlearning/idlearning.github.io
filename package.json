@@ -7,7 +7,7 @@
     "dev": "vite dev",
     "sync": "node scripts/sync-sheets.mjs",
     "build": "vite build",
-    "postbuild": "node scripts/copy-spa-fallback.mjs && node scripts/gen-sitemap.mjs && node scripts/gen-robots.mjs",
+    "postbuild": "node scripts/optimize-images.mjs && node scripts/copy-spa-fallback.mjs && node scripts/gen-sitemap.mjs && node scripts/gen-robots.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
@@ -40,6 +40,7 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^15.15.0",
     "prettier": "^3.7.3",
+    "sharp": "^0.35.5",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
     "vite": "^8.0.16"
