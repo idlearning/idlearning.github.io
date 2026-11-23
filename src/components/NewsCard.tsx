@@ -1,5 +1,5 @@
 import { LocalLink } from "./LocalLink";
-import { type NewsItem, NEWS_IMG_DEFAULT, NEWS_WRAP_DEFAULT } from "../data/news";
+import { type NewsItem } from "../data/news";
 import { useLang } from "../lib/preferences";
 import { stripMarkdown } from "../lib/markdown";
 
@@ -15,10 +15,10 @@ export function NewsCard({ item }: { item: NewsItem }) {
       params={{ slug: item.slug }}
       className="group bg-card rounded-xl border border-border shadow-sm overflow-hidden flex flex-col h-full hover:shadow-md hover:border-idl-blue/40 transition-all"
     >
-      <div className={item.wrapClass ?? NEWS_WRAP_DEFAULT}>
+      <div className="h-40 overflow-hidden bg-gray-100 flex items-center justify-center">
         <img
           alt={item.title}
-          className={item.imgClass ?? NEWS_IMG_DEFAULT}
+          className="w-full h-full object-cover"
           src={item.img}
           loading="lazy"
           onError={(e) => {

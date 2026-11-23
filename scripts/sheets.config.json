@@ -3,7 +3,31 @@
   "tabs": {
     "people": "People",
     "projects": "Projects",
-    "publications": "(수정 X) Publications",
-    "news": "News"
+    "publications": [
+      "(수정 X) Pub-Manual",
+      {
+        "name": "Pub-Form",
+        "columns": {
+          "논문 유형": "type",
+          "제목 (Title)": "title",
+          "저자 (Authors)": "authors",
+          "출판 연도 (Year)": "year",
+          "게재처 (Venue)": "venue",
+          "색인 (Index)": "index",
+          "DOI": "doi",
+          "수상 (Award)": "award"
+        }
+      }
+    ],
+    "news": [
+      {
+        "name": "News-Form",
+        "columns": {
+          "뉴스 제목": "제목",
+          "뉴스 사진": "사진 업로드"
+        }
+      },
+      "News"
+    ]
   }
 }
